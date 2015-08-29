@@ -1,0 +1,3 @@
+# default config
+project_name = 'coy'
+port = 5001

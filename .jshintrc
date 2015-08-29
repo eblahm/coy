@@ -1,0 +1,51 @@
+{
+  /*
+   * ENVIRONMENTS
+   * =================
+   */
+
+  // Define globals exposed by Node.js.
+  "node": true,
+  "browser": true,
+
+  /*
+   * ENFORCING OPTIONS
+   * =================
+   */
+
+  // Prohibit use of == and != in favor of === and !==.
+  "eqeqeq": true,
+
+  // Suppress warnings about == null comparisons.
+  "eqnull": true,
+
+  // Require capitalized names for constructor functions.
+  "newcap": true,
+
+  // Enforce use of single quotation marks for strings.
+  "quotmark": "single",
+
+  // Prohibit trailing whitespace.
+  "trailing": true,
+
+  // Prohibit use of explicitly undeclared variables.
+  "undef": true,
+
+  // Warn when variables are defined but never used.
+  "unused": "vars",
+
+  // Enforce placing 'use strict' at the top function scope
+  "strict": false,
+
+  "esnext": true,
+  "noyield": true,
+
+  "globals": {
+    "after": true,
+    "before": true,
+    "describe": true,
+    "it": true,
+    "require": true
+  }
+
+}

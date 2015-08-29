@@ -2,9 +2,13 @@
   "name": "coy",
   "version": "0.0.1",
   "description": "a dynamic generated static site framework with git, rss and full text search",
-  "main": "index.js",
+  "main": "server/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node bin/www.js"
+  },
+  "engines": {
+    "node": "3.1.0"
   },
   "repository": {
     "type": "git",
@@ -15,5 +19,14 @@
   "bugs": {
     "url": "https://github.com/eblahm/coy/issues"
   },
-  "homepage": "https://github.com/eblahm/coy"
+  "homepage": "https://github.com/eblahm/coy",
+  "dependencies": {
+    "config": "^1.15.0",
+    "koa": "^1.0.0",
+    "toml": "^2.3.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-nodemon": "^2.0.4"
+  }
 }
