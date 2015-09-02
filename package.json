@@ -23,6 +23,7 @@
   "dependencies": {
     "config": "^1.15.0",
     "koa": "^1.0.0",
+    "nunjucks": "^2.0.0",
     "toml": "^2.3.0"
   },
   "devDependencies": {
