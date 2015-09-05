@@ -4,7 +4,7 @@ var app = koa();
 var nunjucks = require('nunjucks').configure('views', {});
 
 app.use(function *(next) {
-  this.render = function(...args) {
+  this.render = (...args) => {
     this.body = nunjucks.render.apply(nunjucks, args);
   };
   yield next;
