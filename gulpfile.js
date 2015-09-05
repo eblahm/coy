@@ -7,18 +7,28 @@ gulp.task('clean', function() {
   return del(['dist']);
 });
 
-gulp.task('build', ['clean'], function() {
+gulp.task('copy', ['clean'], function() {
+  return gulp.src([
+      'src/*',
+      'src/**/*',
+      '!src/*.js',
+      '!src/**/*.js'
+    ])
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task('build', ['copy'], function() {
   return gulp.src([
       'src/*.js',
       'src/**/*.js'
     ])
     .pipe(babel({
-      whitelist: 'es6.arrowFunctions'
+      whitelist: 'es6.arrowFunctions,es6.parameters,strict'
     }))
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('start', function() {
+gulp.task('start', ['build'], function() {
   nodemon({
     script: 'dist/bin/www.js',
     ext: 'js html',
