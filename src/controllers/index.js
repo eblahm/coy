@@ -1,4 +1,5 @@
 
 module.exports = {
-  home: require('./home')
+  home: require('./home'),
+  auth: require('./auth')
 };

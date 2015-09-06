@@ -16,9 +16,11 @@ app.use(session({
   store: new MongoStore({url: config.get('database_url')})
 }));
 
-require('nunjucks').configure(path.join(__dirname, '../views'), {express: app});
+require('nunjucks')
+  .configure(path.join(__dirname, '../views'), {express: app});
 
 app.get('/', controllers.home);
+app.use('/github', controllers.auth);
 
 // error handler
 app.use((err, req, res, next) => {

@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/eblahm/coy",
   "dependencies": {
+    "bluebird": "^2.9.34",
     "config": "^1.15.0",
     "connect-mongo": "^0.8.2",
     "del": "^2.0.1",
@@ -31,6 +32,7 @@
     "gulp-nodemon": "^2.0.4",
     "lodash": "^3.10.1",
     "nunjucks": "^2.0.0",
+    "request": "^2.61.0",
     "toml": "^2.3.0"
   }
 }
