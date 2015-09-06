@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var app = require('../server/app');
+var app = require('../app');
 var config = require('config');
 const PROJECT_NAME = config.get('project_name');
 const PORT = config.get('port');

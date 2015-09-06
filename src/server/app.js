@@ -6,7 +6,7 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var config = require('config');
 
-var controllers = require('../controllers');
+var controllers = require('./controllers');
 var _ = require('lodash');
 
 var app = express();
@@ -17,7 +17,9 @@ app.use(session({
 }));
 
 require('nunjucks')
-  .configure(path.join(__dirname, '../views'), {express: app});
+  .configure(path.join(__dirname, 'views'), {express: app});
+
+app.use(express.static(path.join(__dirname, '../client')));
 
 app.get('/', controllers.home);
 app.use('/github', controllers.auth);
