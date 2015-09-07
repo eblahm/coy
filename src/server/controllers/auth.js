@@ -38,7 +38,7 @@ router.get('/callback', (req, res, next) => {
     },
     json: true
   }).spread((resp, body) => {
-    assert.equal(body.scope, 'public_repo');
+    assert.equal(body.scope, config.get('github.scope'));
     req.session.githubToken = body.access_token;
     res.redirect('/');
   })

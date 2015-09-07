@@ -3,6 +3,7 @@ var express = require('express');
 var inspect = require('util').inspect;
 var path = require('path');
 var session = require('express-session');
+var bodyParser = require('body-parser');
 var MongoStore = require('connect-mongo')(session);
 var config = require('config');
 
@@ -20,9 +21,11 @@ require('nunjucks')
   .configure(path.join(__dirname, 'views'), {express: app});
 
 app.use(express.static(path.join(__dirname, '../client')));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', controllers.home);
 app.use('/github', controllers.auth);
+app.use('/article', controllers.article);
 
 // error handler
 app.use((err, req, res, next) => {

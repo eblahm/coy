@@ -43,7 +43,11 @@ gulp.task('build', ['copy'], function() {
       'src/server/**/*.js'
     ])
     .pipe(babel({
-      whitelist: 'es6.arrowFunctions,es6.parameters,strict'
+      whitelist: [
+        'es6.arrowFunctions',
+        'es6.parameters',
+        'strict,es6.spread'
+      ].join(',')
     }))
     .pipe(gulp.dest('dist/server'));
 });
