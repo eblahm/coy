@@ -16,7 +16,7 @@ router.post('', (req, res, next) => {
 
   console.log('attempting to make commit %j', req.body);
 
-  repo.commit(fname, req.body.content, `update ${req.name}`, (err, data) => {
+  repo.commit(fname, req.body.content, `update ${req.body.name}.md`, (err, data) => {
     if (err) { return next(err); }
     res.json(data).end();
   });
