@@ -24,6 +24,7 @@ app.use(express.static(path.join(__dirname, '../client')));
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', controllers.home);
+app.get('/admin', controllers.admin);
 app.use('/github', controllers.auth);
 app.use('/article', controllers.article);
 

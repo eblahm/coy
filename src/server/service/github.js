@@ -9,13 +9,15 @@ var modes = require('js-git/lib/modes');
 var _ = require('lodash');
 var run = require('gen-run');
 
-var githubService = {};
 var commitGenerator = function* (repoObj, fname, content, message, ref = 'refs/heads/master') {
+  if (_.contains(fname, '..')) { throw new Error('file name must not contain ".." '); }
 
-  console.log('loading git ref:%s', ref);
+  fname = 'content/' + fname;
+
+  console.log(`loading git ref:${ref}`);
   var headHash = yield repoObj.readRef(ref);
 
-  console.log('loading commit for hash:%s', headHash);
+  console.log(`loading commit for hash:${headHash}`);
   var commit = yield repoObj.loadAs('commit', headHash);
 
   console.log('loading tree for commit:%j', commit);
@@ -39,7 +41,7 @@ var commitGenerator = function* (repoObj, fname, content, message, ref = 'refs/h
   console.log('attempting to create the updated tree %j', updates);
   var treeHash = yield repoObj.createTree(updates);
 
-  console.log('attempting to update the commit the updated tree:%s', treeHash);
+  console.log(`attempting to update the commit the updated tree:${treeHash}`);
   var commitHash = yield repoObj.saveAs('commit', {
     tree: treeHash,
     author: {
@@ -50,9 +52,11 @@ var commitGenerator = function* (repoObj, fname, content, message, ref = 'refs/h
     message: message
   });
 
-  console.log('attempting to update the ref:%s to commit:%s', ref, commitHash);
+  console.log(`attempting to update the ref:${ref} to commit:${commitHash}`);
   yield repoObj.updateRef(ref, commitHash);
 };
+
+var githubService = {};
 
 githubService.repo = (repName, githubToken) => {
   var service = {};
@@ -63,8 +67,9 @@ githubService.repo = (repName, githubToken) => {
   readCombiner(repoObj);
   formats(repoObj);
 
-  service.commit = (fname, content, message, callback) => {
-    run(commitGenerator(repoObj, fname, content, message), callback);
+  service.commit = (...args) => {
+    var callback = args.pop();
+    run(commitGenerator(...args), callback);
   };
 
   return service;

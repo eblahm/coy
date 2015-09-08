@@ -1,21 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Coy</title>
-  <meta charset="utf-8" />
-</head>
-<body>
-  <header>
-    <a href="/github/login">Login With Github</a>
-    <form method="post" action="/article">
-      <div>
-        <textarea id="editor" name="content"></textarea>
-      </div>
-      <button type="submit">Commit</button>
-    </form>
-  </header>
-  <footer>
-  </footer>
-  <script src="/start.js" type="text/javascript"></script>
-</body>
-</html>
+{% extends "decorator.html" %}
+
+{% block content %}
+  <h1>Welcome to Coy</h1>
+{% endblock %}

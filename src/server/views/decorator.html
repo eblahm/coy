@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{title if title else "Coy"}}</title>
+  <meta charset="utf-8" />
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <header>
+  {% block header %}{% endblock %}
+  </header>
+  <section id="main-container">
+    {% block content %}{% endblock %}
+  </section>
+  <footer>
+  </footer>
+  {% block endBody %}{% endblock %}
+</body>
+</html>

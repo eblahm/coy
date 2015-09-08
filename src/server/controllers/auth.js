@@ -40,7 +40,7 @@ router.get('/callback', (req, res, next) => {
   }).spread((resp, body) => {
     assert.equal(body.scope, config.get('github.scope'));
     req.session.githubToken = body.access_token;
-    res.redirect('/');
+    res.redirect('/admin');
   })
   .catch((err) => {
     console.error(err.stack);
