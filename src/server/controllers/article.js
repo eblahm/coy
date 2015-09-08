@@ -11,7 +11,7 @@ router.post('', (req, res, next) => {
 
   if (_.contains(req.body.name, '..')) { next(new Error('file name must not contain ".." ')); }
 
-  var fname = `content/${req.body.name}.md`;
+  var fname = `src/content/${req.body.name}.md`;
   var repo = github.repo('eblahm/coy', req.session.githubToken);
 
   console.log('attempting to make commit %j', req.body);
