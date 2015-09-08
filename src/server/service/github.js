@@ -10,9 +10,6 @@ var _ = require('lodash');
 var run = require('gen-run');
 
 var commitGenerator = function* (repoObj, fname, content, message, ref = 'refs/heads/master') {
-  if (_.contains(fname, '..')) { throw new Error('file name must not contain ".." '); }
-
-  fname = 'content/' + fname;
 
   console.log(`loading git ref:${ref}`);
   var headHash = yield repoObj.readRef(ref);
@@ -69,7 +66,7 @@ githubService.repo = (repName, githubToken) => {
 
   service.commit = (...args) => {
     var callback = args.pop();
-    run(commitGenerator(...args), callback);
+    run(commitGenerator(repoObj, ...args), callback);
   };
 
   return service;
