@@ -65,8 +65,11 @@ githubService.repo = (repName, githubToken) => {
   formats(repoObj);
 
   service.commit = (...args) => {
-    var callback = args.pop();
-    run(commitGenerator(repoObj, ...args), callback);
+    return new Promise((resolve, reject) => {
+      run(commitGenerator(repoObj, ...args), (err) => {
+        return err ? reject(err) : resolve();
+      });
+    });
   };
 
   return service;
