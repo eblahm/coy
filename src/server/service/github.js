@@ -58,6 +58,7 @@ var githubService = {};
 githubService.repo = (repName, githubToken) => {
   var service = {};
   var repoObj = {};
+
   githubDb(repoObj, repName, githubToken);
   createTree(repoObj);
   memcache(repoObj);

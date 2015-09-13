@@ -1,8 +1,8 @@
+
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
 var babel = require('gulp-babel');
 var del = require('del');
-
 var browserify = require('browserify');
 var gulp = require('gulp');
 var source = require('vinyl-source-stream');
@@ -10,16 +10,15 @@ var buffer = require('vinyl-buffer');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
+var babelify = require('babelify');
 
 gulp.task('clean', function() {
   return del(['dist']);
 });
 
 gulp.task('bundle', ['clean'], function () {
-  return browserify({
-      entries: './src/client/start.js',
-      debug: true
-    })
+  return browserify('./src/client/start.js', { debug: true })
+    .transform(babelify)
     .bundle()
     .pipe(source('start.js'))
     .pipe(buffer())

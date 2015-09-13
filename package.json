@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/eblahm/coy",
   "dependencies": {
+    "babelify": "^6.3.0",
     "bluebird": "^2.9.34",
     "body-parser": "^1.13.3",
     "browserify": "^11.0.1",
@@ -40,6 +41,7 @@
     "js-github": "^1.0.0",
     "lodash": "^3.10.1",
     "nunjucks": "^2.0.0",
+    "react": "^0.13.3",
     "request": "^2.61.0",
     "toml": "^2.3.0",
     "vinyl-buffer": "^1.0.0",
