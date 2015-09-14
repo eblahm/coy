@@ -6,6 +6,7 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var MongoStore = require('connect-mongo')(session);
 var config = require('config');
+var logger = require('morgan');
 
 var controllers = require('./controllers');
 var _ = require('lodash');
@@ -20,6 +21,7 @@ app.use(session({
 require('nunjucks')
   .configure(path.join(__dirname, 'views'), {express: app});
 
+app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(bodyParser.urlencoded({extended: true}));
 
