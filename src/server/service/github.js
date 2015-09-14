@@ -8,8 +8,9 @@ var formats = require('js-git/mixins/formats');
 var modes = require('js-git/lib/modes');
 var _ = require('lodash');
 var run = require('gen-run');
+var bluebird = require('bluebird');
 
-var commitGenerator = function* (repoObj, fname, content, message, ref = 'refs/heads/master') {
+var commitGenerator = function* (repoObj, updates, message, ref = 'refs/heads/master') {
 
   console.log(`loading git ref:${ref}`);
   var headHash = yield repoObj.readRef(ref);
@@ -21,16 +22,16 @@ var commitGenerator = function* (repoObj, fname, content, message, ref = 'refs/h
   var tree = yield repoObj.loadAs('tree', commit.tree);
 
   // fallback indicates new file
-  var mode = _.get(tree, '[fname].mode', modes.file);
 
   // Build the updates array
-  var updates = [
-    {
-      path: fname,
+  updates = _.map(updates, function(update) {
+    var mode = _.get(tree, `[${update.fname}].mode`, modes.file);
+    return {
+      path: update.fname,
       mode: mode,
-      content: content
-    }
-  ];
+      content: update.content
+    };
+  });
 
   updates.base = commit.tree;
 
@@ -73,7 +74,8 @@ githubService.repo = (repName, githubToken) => {
     });
   };
 
-  return service;
+  return _.assign(service, bluebird.promisifyAll(repoObj));
+
 };
 
 module.exports = githubService;
