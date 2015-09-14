@@ -1,5 +1,5 @@
 **strong text**
 
-```javascript
-console.log('hello world')
-```
+[link text][1]
+
+  [1]: http://hello.com
