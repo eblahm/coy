@@ -38,7 +38,7 @@ router.post('', (req, res, next) => {
   repo.commit([
     {fname: fname, content: content},
     {fname: metaFname, content: metaContent},
-  ], `update ${req.body.name}.md`)
+  ], `update ${slug}.md`)
     .then(() => {
       return bluebird.all([
         fs.writeFileAsync(fullPath, content),

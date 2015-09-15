@@ -32,6 +32,7 @@ gulp.task('bundle', ['clean'], function () {
 gulp.task('copy', ['bundle'], function() {
   return gulp.src([
       'src/**/*.html',
+      'src/**/*.json'
     ])
     .pipe(gulp.dest('dist'));
 });

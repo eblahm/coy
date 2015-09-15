@@ -4,9 +4,10 @@ var inspect = require('util').inspect;
 var path = require('path');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-var MongoStore = require('connect-mongo')(session);
+var RedisStore = require('connect-redis')(session);
 var config = require('config');
 var logger = require('morgan');
+var cache = require('./service/cache');
 
 var controllers = require('./controllers');
 var _ = require('lodash');
@@ -15,7 +16,7 @@ var app = express();
 
 app.use(session({
   secret: config.get('session_secret'),
-  store: new MongoStore({url: config.get('database_url')})
+  store: new RedisStore({client: cache})
 }));
 
 require('nunjucks')

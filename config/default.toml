@@ -10,3 +10,8 @@ database_url = 'mongodb://localhost:17017/coy'
   client_secret = 'f10633beddeb5c2512d852260af60f29ecb2f38a'
   redirect_uri = 'http://127.0.0.1:5001/github/callback'
   scope = 'repo,user'
+
+[redis]
+  port = 6379
+  url = '127.0.0.1'
+
