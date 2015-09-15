@@ -6,7 +6,7 @@ var _ = require('lodash');
 var bluebird = require('bluebird');
 var fs = bluebird.promisifyAll(require('fs'));
 var path = require('path');
-var meta = require('../service/metaService');
+var contentService = require('../content');
 
 var ROOT = path.resolve(__dirname, '../../../');
 
@@ -19,19 +19,19 @@ router.post('', (req, res, next) => {
   assert.ok(req.session.githubToken, 'must be logged in');
   assert(!_.contains(req.body.name, '..'), 'file name must not contain ".." ');
 
-  var fname = `src/content/${slug}.md`;
+  var fname = `src/server/content/${slug}.md`;
   var fullPath = path.join(ROOT, fname);
 
-  var metaFname = 'src/content/meta.json';
+  var metaFname = 'src/server/content/meta.json';
   var fullMetaPath = path.join(ROOT, metaFname);
 
   var nowISOString = new Date().toISOString();
-  var articleMeta = meta.get(slug) || {};
-  meta.update(slug, {
+  var articleMeta = contentService.getMeta(slug) || {};
+  contentService.updateMeta(slug, {
     created: articleMeta.created || nowISOString,
     updated: nowISOString
   });
-  var metaContent = JSON.stringify(meta.get(), undefined, 2);
+  var metaContent = JSON.stringify(contentService.getMeta(), undefined, 2);
 
   var repo = github.repo('eblahm/coy', req.session.githubToken);
   console.log('attempting to make commit %j', req.body);

@@ -30,6 +30,7 @@ app.get('/', controllers.home);
 app.get('/admin', controllers.admin);
 app.use('/github', controllers.auth);
 app.use('/article', controllers.article);
+app.get('/:article', controllers.home);
 
 // error handler
 app.use((err, req, res, next) => {
