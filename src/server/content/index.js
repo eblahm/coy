@@ -6,37 +6,50 @@ var parseMarkdown = require('megamark');
 var fs = require('fs');
 var _ = require('lodash');
 
-var refreshCache = (fname) => {
-  var ext = '.md';
-  var basename = path.basename(fname, ext);
-  var markdown = fs.readFileSync(path.join(__dirname, fname));
-  var html = parseMarkdown(markdown);
-  cache.setAsync(basename, html).catch((err) => console.error(err));
-  return html;
+var MARKDOWN_EXT = '.md';
+var META_KEY = 'meta-json';
+
+exports.updateMeta = (val) => {
+  return cache.hmsetAsync(META_KEY, val);
 };
 
-_.each(fs.readdirSync(__dirname), (fname) => {
-  if (path.extname(fname) === '.md') {
-    refreshCache(fname);
-  }
-});
-
-exports.updateMeta = (key, val) => {
-  meta[key] = val;
-};
-
-exports.getMeta = (key) => {
-  if (key) {
-    return meta[key];
-  } else {
-    return meta;
-  }
+exports.getMeta = () => {
+  return cache.getAsync(META_KEY).then(
+      (data) => data || _.clone(meta),
+      (err) => {
+        console.error(err);
+        return _.clone(meta);
+      }
+    );
 };
 
 exports.getContent = (key) => {
-  return cache.getAsync(key).then((content) => {
-    return content || refreshCache(key + '.md');
-  }, (err) => {
-    return refreshCache(key + '.md');
-  });
+  var load = () => {
+    var fullPath = path.join(__dirname, key, MARKDOWN_EXT);
+    return exports.setContent(key, fs.readFileSync(fullPath));
+  };
+  return cache.getAsync(key).then(
+      (content) => content || load(),
+      (err) => load()
+    );
 };
+
+exports.setContent = (key, markdownContent) => {
+  var html = parseMarkdown(markdownContent);
+  return cache.setAsync(key, html).then(
+    () => html,
+    (err) => {
+      console.error(err);
+      return html;
+    }
+  );
+};
+
+// refresh the cache on startup
+_.each(fs.readdirSync(__dirname), (fname) => {
+  var parsedfname = path.parse(fname);
+
+  if (parsedfname.ext === MARKDOWN_EXT) {
+    exports.getContent(parsedfname.name);
+  }
+});

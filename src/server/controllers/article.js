@@ -3,12 +3,10 @@ var router = require('express').Router();
 var github = require('../service/github');
 var assert = require('assert');
 var _ = require('lodash');
-var bluebird = require('bluebird');
-var fs = bluebird.promisifyAll(require('fs'));
-var path = require('path');
 var contentService = require('../content');
+var bluebird = require('bluebird');
 
-var ROOT = path.resolve(__dirname, '../../../');
+var PROJECT_RELATIVE_CONTENT_ROOT = 'src/server/content';
 
 router.post('', (req, res, next) => {
   var content = req.body.content;
@@ -19,35 +17,29 @@ router.post('', (req, res, next) => {
   assert.ok(req.session.githubToken, 'must be logged in');
   assert(!_.contains(req.body.name, '..'), 'file name must not contain ".." ');
 
-  var fname = `src/server/content/${slug}.md`;
-  var fullPath = path.join(ROOT, fname);
-
-  var metaFname = 'src/server/content/meta.json';
-  var fullMetaPath = path.join(ROOT, metaFname);
-
-  var nowISOString = new Date().toISOString();
-  var articleMeta = contentService.getMeta(slug) || {};
-  contentService.updateMeta(slug, {
-    created: articleMeta.created || nowISOString,
-    updated: nowISOString
-  });
-  var metaContent = JSON.stringify(contentService.getMeta(), undefined, 2);
-
   var repo = github.repo('eblahm/coy', req.session.githubToken);
   console.log('attempting to make commit %j', req.body);
-  repo.commit([
-    {fname: fname, content: content},
-    {fname: metaFname, content: metaContent},
-  ], `update ${slug}.md`)
+
+  contentService.getMeta().then((articleMeta) => {
+    var nowISOString = new Date().toISOString();
+    articleMeta[slug] = {
+      created: articleMeta.created || nowISOString,
+      updated: nowISOString
+    };
+    return repo.commit([
+        {fname: `${PROJECT_RELATIVE_CONTENT_ROOT}/${slug}.md`, content: content},
+        {fname: `${PROJECT_RELATIVE_CONTENT_ROOT}/meta.json`, content: JSON.stringify(articleMeta, undefined, 2)},
+      ], `update ${slug}.md`)
     .then(() => {
       return bluebird.all([
-        fs.writeFileAsync(fullPath, content),
-        fs.writeFileAsync(fullMetaPath, metaContent)
+        contentService.updateMeta(articleMeta),
+        contentService.setContent(slug, content)
       ]);
-    })
-    .then(() => {
-      res.redirect('/');
-    }, next);
+    });
+  })
+  .then(() => {
+    res.redirect('/');
+  }, next);
 
 });
 
