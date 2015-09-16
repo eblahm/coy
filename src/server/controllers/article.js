@@ -4,7 +4,6 @@ var github = require('../service/github');
 var assert = require('assert');
 var _ = require('lodash');
 var contentService = require('../content');
-var bluebird = require('bluebird');
 
 var PROJECT_RELATIVE_CONTENT_ROOT = 'src/server/content';
 
@@ -21,25 +20,29 @@ router.post('', (req, res, next) => {
   console.log('attempting to make commit %j', req.body);
 
   contentService.getMeta().then((articleMeta) => {
+
     var nowISOString = new Date().toISOString();
     articleMeta[slug] = {
-      created: articleMeta.created || nowISOString,
+      created: _.get(articleMeta, `[${slug}].created`, nowISOString),
       updated: nowISOString
     };
     return repo.commit([
-        {fname: `${PROJECT_RELATIVE_CONTENT_ROOT}/${slug}.md`, content: content},
-        {fname: `${PROJECT_RELATIVE_CONTENT_ROOT}/meta.json`, content: JSON.stringify(articleMeta, undefined, 2)},
+        {
+          fname: `${PROJECT_RELATIVE_CONTENT_ROOT}/${slug}.md`,
+          content: content
+        },
+        {
+          fname: `${PROJECT_RELATIVE_CONTENT_ROOT}/meta.json`,
+          content: JSON.stringify(articleMeta, undefined, 2)
+        },
       ], `update ${slug}.md`)
-    .then(() => {
-      return bluebird.all([
-        contentService.updateMeta(articleMeta),
-        contentService.setContent(slug, content)
-      ]);
-    });
-  })
-  .then(() => {
-    res.redirect('/');
-  }, next);
+    .then(() => contentService.updateMeta(articleMeta))
+    .then(() => contentService.setContent(slug, content, articleMeta[slug]))
+    .then(
+      (data) => res.json(data).end(),
+      (err) => next(err)
+    );
+  });
 
 });
 

@@ -9,8 +9,8 @@ var _ = require('lodash');
 var MARKDOWN_EXT = '.md';
 var META_KEY = 'meta-json';
 
-exports.updateMeta = (val) => {
-  return cache.hmsetAsync(META_KEY, val);
+exports.updateMeta = (update) => {
+  return cache.hmsetAsync(META_KEY, update);
 };
 
 exports.getMeta = () => {
@@ -25,24 +25,30 @@ exports.getMeta = () => {
 
 exports.getContent = (key) => {
   var load = () => {
-    var fullPath = path.join(__dirname, key, MARKDOWN_EXT);
-    return exports.setContent(key, fs.readFileSync(fullPath));
+    var fullPath = path.join(__dirname, key + MARKDOWN_EXT);
+    return exports.setContent(key, fs.readFileSync(fullPath), meta[key]);
   };
   return cache.getAsync(key).then(
       (content) => content || load(),
       (err) => load()
-    );
+    ).catch((err) => load());
 };
 
-exports.setContent = (key, markdownContent) => {
+exports.setContent = (key, markdownContent, articleMeta) => {
   var html = parseMarkdown(markdownContent);
-  return cache.setAsync(key, html).then(
-    () => html,
+  var data = _.assign({
+    html: html,
+    markdown: markdownContent
+  }, articleMeta);
+
+  return cache.hmsetAsync(key, data).then(
+    () => data,
     (err) => {
       console.error(err);
-      return html;
+      return data;
     }
   );
+
 };
 
 // refresh the cache on startup
