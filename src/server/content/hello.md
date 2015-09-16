@@ -1,3 +1,3 @@
 ```
-alert('salam, agha');
+// yawn
 ```
