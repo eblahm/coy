@@ -1,4 +1,6 @@
 {
-  "isFulfilled": false,
-  "isRejected": false
+  "hello": {
+    "created": "2015-09-16T01:51:29.013Z",
+    "updated": "2015-09-16T01:51:29.013Z"
+  }
 }

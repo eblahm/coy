@@ -1,3 +1,3 @@
-```
-alert('chillin');
+```javascript
+alert('code');
 ```
