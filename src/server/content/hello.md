@@ -1,4 +1,5 @@
 ```javascript
 alert('code');
-alert('power');
+alert('powers');
+alert('the');
 ```
