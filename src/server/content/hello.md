@@ -1,3 +1,3 @@
 ```
-alert('hello');
+alert('chillin');
 ```
