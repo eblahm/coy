@@ -10,12 +10,12 @@ var MARKDOWN_EXT = '.md';
 var META_KEY = 'meta-json';
 
 exports.updateMeta = (update) => {
-  return cache.hmsetAsync(META_KEY, update);
+  return cache.setAsync(META_KEY, JSON.stringify(update));
 };
 
 exports.getMeta = () => {
-  return cache.hgetallAsync(META_KEY).then(
-      (data) => data || _.clone(meta),
+  return cache.getAsync(META_KEY).then(
+      (data) => data ? JSON.parse(data) : _.clone(meta),
       (err) => {
         console.error(err);
         return _.clone(meta);
