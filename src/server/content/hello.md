@@ -1,4 +1,3 @@
 ```
-// yawn...
-alert('wake up');
+alert('little Einstein!');
 ```
