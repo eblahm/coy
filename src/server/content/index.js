@@ -14,7 +14,7 @@ exports.updateMeta = (update) => {
 };
 
 exports.getMeta = () => {
-  return cache.getAsync(META_KEY).then(
+  return cache.hgetallAsync(META_KEY).then(
       (data) => data || _.clone(meta),
       (err) => {
         console.error(err);
@@ -28,7 +28,7 @@ exports.getContent = (key) => {
     var fullPath = path.join(__dirname, key + MARKDOWN_EXT);
     return exports.setContent(key, fs.readFileSync(fullPath), meta[key]);
   };
-  return cache.getAsync(key).then(
+  return cache.hgetallAsync(key).then(
       (content) => content || load(),
       (err) => load()
     ).catch((err) => load());
