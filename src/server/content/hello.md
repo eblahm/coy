@@ -1,3 +1,3 @@
 ```
-alert('so many commits!')
+alert('so many commits!');
 ```
