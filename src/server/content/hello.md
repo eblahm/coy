@@ -1,3 +1,3 @@
 ```
-alert('little Einstein!');
+alert('so many commits!')
 ```
