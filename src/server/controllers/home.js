@@ -30,11 +30,10 @@ module.exports = (req, res, next) => {
   return getSlug()
   .then((slug) => {
     contentService.getContent(slug).then((content) => {
-        res.render('index.html', {content: content});
+        res.render('index.html', {content: content, title: slug});
       }, (err) => {
         console.error(err.stack);
         return next(new NotFoundError());
       });
   }).catch(next);
-
 };

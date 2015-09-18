@@ -11,13 +11,18 @@ var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var babelify = require('babelify');
+var less = require('gulp-less');
+var LessPluginCleanCSS = require('less-plugin-clean-css');
+var LessPluginAutoPrefix = require('less-plugin-autoprefix');
+var cleancss = new LessPluginCleanCSS({advanced: true});
+var autoprefix = new LessPluginAutoPrefix({browsers: ['last 2 versions']});
 
 gulp.task('clean', function() {
   return del(['dist']);
 });
 
 gulp.task('bundle', ['clean'], function () {
-  return browserify('./src/client/start.js', { debug: true })
+  return browserify('./src/client/start.js', {debug: true})
     .transform(babelify)
     .bundle()
     .pipe(source('start.js'))
@@ -29,7 +34,17 @@ gulp.task('bundle', ['clean'], function () {
     .pipe(gulp.dest('./dist/client'));
 });
 
-gulp.task('copy', ['bundle'], function() {
+gulp.task('less', ['bundle'], function() {
+  var lessPath = 'src/client/less/**/*.less';
+
+  return gulp.src(lessPath)
+    .pipe(less({
+      plugins: [autoprefix, cleancss]
+    }))
+    .pipe(gulp.dest('./dist/client/css'));
+});
+
+gulp.task('copy', ['less'], function() {
   return gulp.src([
       'src/**/*.html',
       'src/**/*.md',

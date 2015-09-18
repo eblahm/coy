@@ -1,6 +1,9 @@
 {% extends "decorator.html" %}
 
+{% block head %}
+<link rel="stylesheet" href="/css/main.css" type="text/css" media="screen" charset="utf-8">
+{% endblock %}
+
 {% block content %}
-  <h1>Welcome to Coy</h1>
   <div>{{content.html | safe}}</div>
 {% endblock %}
