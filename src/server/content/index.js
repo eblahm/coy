@@ -31,7 +31,7 @@ exports.getContent = (key) => {
   return cache.hgetallAsync(key).then(
       (content) => content || load(),
       (err) => load()
-    ).catch((err) => load());
+    );
 };
 
 exports.setContent = (key, markdownContent, articleMeta) => {

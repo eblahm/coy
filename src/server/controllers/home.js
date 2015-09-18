@@ -1,7 +1,10 @@
 
-var contentService = require('../content');
 var bluebird = require('bluebird');
 var _ = require('lodash');
+
+var contentService = require('../content');
+var NotFoundError = require('../models/NotFoundError');
+
 var sortByLastCreatedDesc = (data) => {
   return -1 * new Date(data.updated).getTime();
 };
@@ -25,9 +28,13 @@ module.exports = (req, res, next) => {
   };
 
   return getSlug()
-  .then(contentService.getContent)
-  .then((content) => {
-    res.render('index.html', {content: content});
-  }, next);
+  .then((slug) => {
+    contentService.getContent(slug).then((content) => {
+        res.render('index.html', {content: content});
+      }, (err) => {
+        console.error(err.stack);
+        return next(new NotFoundError());
+      });
+  }).catch(next);
 
 };
