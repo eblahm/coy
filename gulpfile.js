@@ -16,72 +16,104 @@ var LessPluginCleanCSS = require('less-plugin-clean-css');
 var LessPluginAutoPrefix = require('less-plugin-autoprefix');
 var cleancss = new LessPluginCleanCSS({advanced: true});
 var autoprefix = new LessPluginAutoPrefix({browsers: ['last 2 versions']});
+var runSequence = require('run-sequence');
+var _ = require('lodash');
+var path = require('path');
 
-gulp.task('clean', function() {
-  return del(['dist']);
+var SERVER_SIDE_JS = [
+  'src/server/*.js',
+  'src/server/**/*.js'
+];
+
+var CLIENT_SIDE_JS = [
+  'src/client/*.js',
+  'src/client/**/*.js'
+];
+
+var CLIENT_SIDE_LESS = [
+  'src/client/less/**/*.less'
+];
+
+var STATIC_FILES = [
+  'src/**/*.html',
+  'src/**/*.md',
+  'src/**/*.json'
+];
+
+var CLIENT_SIDE_APPS = [
+  './src/client/admin.js',
+  './src/client/home.js'
+];
+
+gulp.task('clean', function(done) {
+  del(['dist'], done);
 });
 
-gulp.task('bundle', ['clean'], function () {
-  return browserify([
-      './src/client/admin.js',
-      './src/client/home.js'
-    ], {debug: true})
-    .transform(babelify)
-    .bundle()
-    .pipe(source('*.js'))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(uglify())
-    .on('error', gutil.log)
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('./dist/client'));
+gulp.task('bundle', function () {
+  return _.map(CLIENT_SIDE_APPS, function(file) {
+    return browserify(file, {debug: true})
+      .transform(babelify)
+      .bundle()
+      .pipe(source(path.parse(file).base))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+      .pipe(uglify())
+      .on('error', gutil.log)
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest('./dist/client'));
+  });
 });
 
-gulp.task('less', ['bundle'], function() {
-  var lessPath = 'src/client/less/**/*.less';
+gulp.task('less', function() {
 
-  return gulp.src(lessPath)
+  return gulp.src(CLIENT_SIDE_LESS)
     .pipe(less({
       plugins: [autoprefix, cleancss]
     }))
     .pipe(gulp.dest('./dist/client/css'));
 });
 
-gulp.task('copy', ['less'], function() {
-  return gulp.src([
-      'src/**/*.html',
-      'src/**/*.md',
-      'src/**/*.json'
-    ])
+gulp.task('copy', function() {
+  return gulp.src(STATIC_FILES)
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('build', ['copy'], function() {
-  return gulp.src([
-      'src/server/*.js',
-      'src/server/**/*.js'
-    ])
+gulp.task('buildServer', ['copy'], function() {
+  return gulp.src(SERVER_SIDE_JS)
     .pipe(babel({
       whitelist: [
         'es6.arrowFunctions',
         'es6.parameters',
-        'strict,es6.spread'
+        'es6.spread',
+        'strict'
       ].join(',')
     }))
     .pipe(gulp.dest('dist/server'));
 });
 
-gulp.task('start', ['build'], function() {
-  nodemon({
+gulp.task('nodemon', ['buildServer', 'buildClient', 'watchClient'], function() {
+  return nodemon({
     script: 'dist/server/bin/www.js',
-    ext: 'js html',
+    watch: SERVER_SIDE_JS.concat(STATIC_FILES),
+    ext: 'html js json',
     env: {'NODE_ENV': 'development'},
-    tasks: ['build'],
+    tasks: ['buildServer'],
     nodeArgs: [
       '--debug=5858',
     ],
   });
 });
 
-gulp.task('default', ['build']);
+gulp.task('watchClient', function() {
+  gulp.watch(CLIENT_SIDE_JS, ['bundle']);
+  gulp.watch(CLIENT_SIDE_LESS, ['less']);
+});
+
+gulp.task('start', function(callback) {
+  return runSequence('clean', ['nodemon']);
+});
+
+gulp.task('start', ['clean', 'nodemon']);
+gulp.task('buildClient', ['less', 'bundle']);
+gulp.task('default', ['buildServer', 'buildClient']);
 
