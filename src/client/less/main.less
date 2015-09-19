@@ -1,10 +1,20 @@
 
-body {
+.main-container {
+  display: flex;
 
-  background-color: grey;
-  div {
-    color: black;
+  section.sidebar {
+    flex: 1;
+    order: 1;
   }
 
+  section.content {
+    flex: 1;
+    order: 2;
+  }
+
+}
+
+.sidebar {
+  display: none;
 }
 

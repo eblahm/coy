@@ -20,14 +20,26 @@ var runSequence = require('run-sequence');
 var _ = require('lodash');
 var path = require('path');
 
+var BABEL_TRANFORMS = [
+  'es6.arrowFunctions',
+  'es6.parameters',
+  'es6.spread',
+  'react',
+  'strict'
+].join(',');
+
 var SERVER_SIDE_JS = [
-  'src/server/*.js',
-  'src/server/**/*.js'
+  'src/**/*.js',
+  'src/*.js',
+  '!src/client/*.js',
+  '!src/client/**/*.js'
 ];
 
 var CLIENT_SIDE_JS = [
-  'src/client/*.js',
-  'src/client/**/*.js'
+  'src/**/*.js',
+  'src/*.js',
+  '!src/server/*.js',
+  '!src/server/**/*.js'
 ];
 
 var CLIENT_SIDE_LESS = [
@@ -41,8 +53,8 @@ var STATIC_FILES = [
 ];
 
 var CLIENT_SIDE_APPS = [
-  './src/client/admin.js',
-  './src/client/home.js'
+  './src/client/adminStart.js',
+  './src/client/homeStart.js'
 ];
 
 gulp.task('clean', function(done) {
@@ -52,12 +64,12 @@ gulp.task('clean', function(done) {
 gulp.task('bundle', function () {
   return _.map(CLIENT_SIDE_APPS, function(file) {
     return browserify(file, {debug: true})
-      .transform(babelify)
+      .transform(babelify.configure({whitelist: BABEL_TRANFORMS}))
       .bundle()
       .pipe(source(path.parse(file).base))
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
-      .pipe(uglify())
+      // .pipe(uglify())
       .on('error', gutil.log)
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest('./dist/client'));
@@ -80,15 +92,8 @@ gulp.task('copy', function() {
 
 gulp.task('buildServer', ['copy'], function() {
   return gulp.src(SERVER_SIDE_JS)
-    .pipe(babel({
-      whitelist: [
-        'es6.arrowFunctions',
-        'es6.parameters',
-        'es6.spread',
-        'strict'
-      ].join(',')
-    }))
-    .pipe(gulp.dest('dist/server'));
+    .pipe(babel({whitelist: BABEL_TRANFORMS}))
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('nodemon', ['buildServer', 'buildClient', 'watchClient'], function() {
@@ -113,7 +118,7 @@ gulp.task('start', function(callback) {
   return runSequence('clean', ['nodemon']);
 });
 
-gulp.task('start', ['clean', 'nodemon']);
+gulp.task('start', ['nodemon']);
 gulp.task('buildClient', ['less', 'bundle']);
 gulp.task('default', ['buildServer', 'buildClient']);
 
