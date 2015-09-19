@@ -22,10 +22,13 @@ gulp.task('clean', function() {
 });
 
 gulp.task('bundle', ['clean'], function () {
-  return browserify('./src/client/start.js', {debug: true})
+  return browserify([
+      './src/client/admin.js',
+      './src/client/home.js'
+    ], {debug: true})
     .transform(babelify)
     .bundle()
-    .pipe(source('start.js'))
+    .pipe(source('*.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(uglify())
@@ -78,10 +81,6 @@ gulp.task('start', ['build'], function() {
       '--debug=5858',
     ],
   });
-});
-
-gulp.task('watch', function() {
-  return gulp.watch('src/**', ['build']);
 });
 
 gulp.task('default', ['build']);
