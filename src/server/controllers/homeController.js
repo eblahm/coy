@@ -31,18 +31,18 @@ module.exports = (req, res, next) => {
   };
 
   return getSlug()
-    .then((slug) => {
-      contentService.getContent(slug).then((content) => {
-          res.render('home.html', {
-            content: content,
-            title: slug,
-            reactMarkup: React.renderToStaticMarkup(
-                React.createElement(reactHome, {path: slug, articleHtml: content.html})
-              )
-          });
-        }, (err) => {
-          console.error(err.stack);
-          return next(new NotFoundError());
+    .then(contentService.getContent)
+    .then((content) => {
+        res.render('home.html', {
+          content: content,
+          title: content.title,
+          reactMarkup: React.renderToStaticMarkup(
+              React.createElement(reactHome, {content: content})
+            )
         });
-    }).catch(next);
+      }, (err) => {
+        console.error(err.stack);
+        return next(new NotFoundError());
+      })
+    .catch(next);
 };

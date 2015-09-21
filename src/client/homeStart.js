@@ -7,7 +7,6 @@ var createBrowserHistory = require('history/lib/createBrowserHistory');
 
 var Home = require('../shared/views/home');
 
-
 React.render((
   <Router
     history={createBrowserHistory()}>

@@ -19,8 +19,7 @@ app.use(session({
   store: new RedisStore({client: cache})
 }));
 
-require('nunjucks')
-  .configure(path.join(__dirname, 'views'), {express: app});
+require('./middleware/templating')(app);
 
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, '../client')));
