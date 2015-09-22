@@ -4,7 +4,7 @@ module.exports = React.createClass({
 
   render: function() {
     return (
-      <section className="sidebar">
+      <section {...this.props}>
         <h1>About Me</h1>
         <p>
           Hi! My name is Matthew Halbe.  I'm a web developer working at Webs Inc.

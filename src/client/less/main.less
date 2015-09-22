@@ -1,20 +1,44 @@
 
-.main-container {
+html, body, #react-container {
+  height:100%;
+}
+
+.flex-container {
+  height:100%;
   display: flex;
 
   section.sidebar {
     flex: 1;
-    order: 1;
   }
 
-  section.content {
+  section.content-container {
     flex: 1;
-    order: 2;
   }
 
 }
 
 .sidebar {
+}
+
+section.content-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  nav {
+    position: fixed;
+    display: block;
+    top: 0;
+  }
+  .article-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.hidden {
   display: none;
 }
+
 

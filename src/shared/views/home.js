@@ -8,8 +8,14 @@ try {
 } catch(err) {
   content = {};
 }
+var cx = require('classnames');
 
 module.exports = React.createClass({
+  getInitialState() {
+    return {
+      displaySidebar: false
+    };
+  },
 
   getDefaultProps() {
     return {
@@ -17,20 +23,37 @@ module.exports = React.createClass({
     };
   },
 
+  onIconClick: function() {
+    this.setState({
+      displaySidebar: !this.state.displaySidebar
+    });
+  },
+
   render() {
     return (
-      <div className="react-container">
+      <div className="flex-container">
 
-        <Sidebar />
+        <Sidebar
+          className={cx({
+            hidden: !this.state.displaySidebar,
+            sidebar: true
+          })}
+          />
 
         <section className="content-container">
           <nav>
-            <div className="coy-icon">Coy</div>
+            <div
+              onClick={this.onIconClick}
+              className="coy-icon"
+              >Coy
+            </div>
           </nav>
 
-          <article
-            dangerouslySetInnerHTML={{__html: this.props.content.html}}
-          />
+          <div className="article-container">
+            <article
+              dangerouslySetInnerHTML={{__html: this.props.content.html}}
+            />
+          </div>
         </section>
       </div>
     )
