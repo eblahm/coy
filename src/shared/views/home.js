@@ -35,7 +35,12 @@ module.exports = React.createClass({
     return (
       <div className="flex-container">
 
-        <section className="content-container">
+        <section
+          className={cx({
+            "show-sidebar": this.state.displaySidebar,
+            "content-container": true
+          })}
+        >
           <nav
             onMouseOver={this.onRightNavHover}
           />

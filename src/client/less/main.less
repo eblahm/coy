@@ -5,6 +5,9 @@
 html, body, #react-container {
   height:100%;
   font-family: 'vll-regular';
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
 .flex-container {
@@ -14,18 +17,22 @@ html, body, #react-container {
   section.sidebar {
     flex: 1;
     overflow: hidden;
-    position: relative;
-    left: 0;
-    transition: left .5s ease-in-out;
-    &.hidden {
-      visibility: hidden;
-      flex: 0 0;
-      left: 40%;
-    }
+    position: absolute;
+    width: 33%;
+    right: 0;
+    z-index: 0;
+    background-color: grey;
+    height: 100%;
   }
 
   section.content-container {
     flex: 2;
+    z-index: 1;
+    background-color: white;
+    transition: margin-right .5s ease-in-out;
+    &.show-sidebar {
+      margin-right: 35%;
+    }
   }
 
 }
@@ -46,6 +53,7 @@ section.content-container {
     right: 0;
     height: 100%;
     width: 15%;
+    z-index: 3;
   }
   .article-container {
     flex: 1;
