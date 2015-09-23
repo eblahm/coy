@@ -9,9 +9,7 @@ module.exports = (app) => {
       express: app
     });
 
-  env.addFilter('stringify', function(obj) {
-    return JSON.stringify(obj, undefined, 2);
-  });
+  env.addFilter('stringify', (obj) => JSON.stringify(obj, undefined, 2));
 
 };
 
