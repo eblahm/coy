@@ -23,31 +23,22 @@ module.exports = React.createClass({
     };
   },
 
-  onIconClick: function() {
-    this.setState({
-      displaySidebar: !this.state.displaySidebar
-    });
+  onRightNavHover: function() {
+    this.setState({displaySidebar: true});
+  },
+
+  onSidebarLeave: function() {
+    this.setState({displaySidebar: false});
   },
 
   render() {
     return (
       <div className="flex-container">
 
-        <Sidebar
-          className={cx({
-            hidden: !this.state.displaySidebar,
-            sidebar: true
-          })}
-          />
-
         <section className="content-container">
-          <nav>
-            <div
-              onClick={this.onIconClick}
-              className="coy-icon"
-              >Coy
-            </div>
-          </nav>
+          <nav
+            onMouseOver={this.onRightNavHover}
+          />
 
           <div className="article-container">
             <article
@@ -55,6 +46,14 @@ module.exports = React.createClass({
             />
           </div>
         </section>
+
+        <Sidebar
+          className={cx({
+            hidden: !this.state.displaySidebar,
+            sidebar: true
+          })}
+          onMouseLeave={this.onSidebarLeave}
+          />
       </div>
     )
   }

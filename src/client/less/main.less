@@ -1,5 +1,6 @@
 
 @import "fonts";
+@import "typography";
 
 html, body, #react-container {
   height:100%;
@@ -12,15 +13,25 @@ html, body, #react-container {
 
   section.sidebar {
     flex: 1;
+    overflow: hidden;
+    position: relative;
+    left: 0;
+    transition: left .5s ease-in-out;
+    &.hidden {
+      visibility: hidden;
+      flex: 0 0;
+      left: 40%;
+    }
   }
 
   section.content-container {
-    flex: 1;
+    flex: 2;
   }
 
 }
 
 .sidebar {
+
 }
 
 section.content-container {
@@ -32,6 +43,9 @@ section.content-container {
     position: fixed;
     display: block;
     top: 0;
+    right: 0;
+    height: 100%;
+    width: 15%;
   }
   .article-container {
     flex: 1;
@@ -39,9 +53,3 @@ section.content-container {
     justify-content: center;
   }
 }
-
-.hidden {
-  display: none;
-}
-
-

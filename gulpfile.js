@@ -93,7 +93,8 @@ gulp.task('copy', function() {
 gulp.task('buildServer', ['copy'], function() {
   return gulp.src(SERVER_SIDE_JS)
     .pipe(babel({whitelist: BABEL_TRANFORMS}))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('dist'))
+    .on('error', gutil.log);
 });
 
 gulp.task('nodemon', ['buildServer', 'buildClient', 'watchClient'], function() {
@@ -106,7 +107,8 @@ gulp.task('nodemon', ['buildServer', 'buildClient', 'watchClient'], function() {
     nodeArgs: [
       '--debug=5858',
     ],
-  });
+  })
+  .on('error', gutil.log);
 });
 
 gulp.task('watchClient', function() {
