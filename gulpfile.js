@@ -46,11 +46,11 @@ var CLIENT_SIDE_LESS = [
   'src/client/less/**/*.less'
 ];
 
-var STATIC_FILES = [
-  'src/**/*.html',
-  'src/**/*.md',
-  'src/**/*.json'
-];
+var STATIC_FILES = _.map([
+  'html', 'md', 'json', 'woff', 'woff', 'ttf', 'eot'
+], function(ext) {
+  return 'src/**/*.' + ext;
+});
 
 var CLIENT_SIDE_APPS = [
   './src/client/adminStart.js',
