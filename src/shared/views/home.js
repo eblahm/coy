@@ -53,10 +53,7 @@ module.exports = React.createClass({
         </section>
 
         <Sidebar
-          className={cx({
-            hidden: !this.state.displaySidebar,
-            sidebar: true
-          })}
+          className="sidebar"
           onMouseLeave={this.onSidebarLeave}
           />
       </div>

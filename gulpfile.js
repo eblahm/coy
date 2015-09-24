@@ -47,7 +47,8 @@ var CLIENT_SIDE_LESS = [
 ];
 
 var STATIC_FILES = _.map([
-  'html', 'md', 'json', 'woff', 'woff', 'ttf', 'eot'
+  'html', 'md', 'json', 'woff',
+  'ttf', 'eot', 'svg'
 ], function(ext) {
   return 'src/**/*.' + ext;
 });

@@ -1,5 +1,6 @@
 
-@import "fonts";
+@import "vollkorn";
+@import "mfglabs";
 @import "typography";
 
 html, body, #react-container {
@@ -21,23 +22,37 @@ html, body, #react-container {
     width: 33%;
     right: 0;
     z-index: 0;
-    background-color: grey;
     height: 100%;
+    h1 {
+      padding-left: 35px;
+    }
   }
 
   section.content-container {
+    &:after {
+      font-family: 'mfglabs_icons';
+      content: "\2754";
+      font-size: 30px;
+      margin-left: -35px;
+      position: absolute;
+      top: 2px;
+      transition: all .5s ease-in-out;
+    }
     flex: 2;
     z-index: 1;
     background-color: white;
     transition: margin-right .5s ease-in-out;
+    border-right: 1px solid lightgrey;
+
     &.show-sidebar {
       margin-right: 35%;
+      &:after {
+        margin-left: 30px;
+        top: 17px;
+      }
     }
+
   }
-
-}
-
-.sidebar {
 
 }
 
