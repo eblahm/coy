@@ -67,6 +67,7 @@ gulp.task('bundle', function () {
     return browserify(file, {debug: true})
       .transform(babelify.configure({whitelist: BABEL_TRANFORMS}))
       .bundle()
+      .on('error', gutil.log)
       .pipe(source(path.parse(file).base))
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
@@ -83,7 +84,8 @@ gulp.task('less', function() {
     .pipe(less({
       plugins: [autoprefix, cleancss]
     }))
-    .pipe(gulp.dest('./dist/client/css'));
+    .pipe(gulp.dest('./dist/client/css'))
+    .on('error', gutil.log);
 });
 
 gulp.task('copy', function() {
@@ -113,8 +115,8 @@ gulp.task('nodemon', ['buildServer', 'buildClient', 'watchClient'], function() {
 });
 
 gulp.task('watchClient', function() {
-  gulp.watch(CLIENT_SIDE_JS, ['bundle']);
-  gulp.watch(CLIENT_SIDE_LESS, ['less']);
+  gulp.watch(CLIENT_SIDE_JS, ['bundle']).on('error', gutil.log);
+  gulp.watch(CLIENT_SIDE_LESS, ['less']).on('error', gutil.log);
 });
 
 gulp.task('start', function(callback) {

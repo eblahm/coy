@@ -14,65 +14,89 @@ html, body, #react-container {
 .flex-container {
   height:100%;
   display: flex;
+}
 
-  section.sidebar {
-    flex: 1;
-    overflow: hidden;
-    position: absolute;
-    width: 33%;
-    right: 0;
-    z-index: 0;
-    height: 100%;
-    h1 {
-      padding-left: 35px;
-    }
+section.sidebar {
+  flex: 1;
+  overflow: hidden;
+  position: absolute; // this makes it hidden in the context of flex
+  width: 33%;
+  right: 0;
+  z-index: 0;
+  height: 100%;
+
+  div.inner-sidebar {
+    padding: 0 25px;
   }
 
-  section.content-container {
-    &:after {
-      font-family: 'mfglabs_icons';
-      content: "\2754";
-      font-size: 30px;
-      margin-left: -35px;
-      position: absolute;
-      top: 2px;
-      transition: all .5s ease-in-out;
+  h1 {
+    padding-left: 35px;
+  }
+  .social-links ul {
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    font-size: 30px;
+    justify-content: center;
+    li {
+      flex: 1;
+      text-align: center;
     }
-    flex: 2;
-    z-index: 1;
-    background-color: white;
-    transition: margin-right .5s ease-in-out;
-    border-right: 1px solid lightgrey;
-
-    &.show-sidebar {
-      margin-right: 35%;
-      &:after {
-        margin-left: 30px;
-        top: 17px;
+    a {
+      text-decoration: none;
+      color: black;
+      &:hover {
+        color: blue;
       }
     }
-
   }
-
 }
 
 section.content-container {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 2;
+  z-index: 1;
+  background-color: white;
+  transition: margin-right .5s ease-in-out;
+  border-right: 1px solid lightgrey;
 
-  nav {
-    position: fixed;
-    display: block;
-    top: 0;
-    right: 0;
-    height: 100%;
-    width: 15%;
-    z-index: 3;
+  &:after {
+    font-family: 'mfglabs_icons';
+    content: "\2754";
+    font-size: 30px;
+    margin-left: -35px;
+    position: absolute;
+    top: 2px;
+    transition: all .5s ease-in-out;
   }
-  .article-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+
+  &.show-sidebar {
+    margin-right: 33%;
+    &:after {
+      margin-left: 30px;
+      top: 17px;
+    }
   }
 }
+
+nav.enable-right-sidebar {
+  position: fixed;
+  display: block;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 15%;
+  z-index: 2;
+  &.active {
+    z-index: 0;
+  }
+}
+
+.article-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+

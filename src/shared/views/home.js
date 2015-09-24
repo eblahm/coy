@@ -35,16 +35,19 @@ module.exports = React.createClass({
     return (
       <div className="flex-container">
 
+        <nav
+          className={cx({
+            "active": this.state.displaySidebar,
+            "enable-right-sidebar": true
+          })}
+          onMouseOver={this.onRightNavHover}
+        />
         <section
           className={cx({
             "show-sidebar": this.state.displaySidebar,
             "content-container": true
           })}
         >
-          <nav
-            onMouseOver={this.onRightNavHover}
-          />
-
           <div className="article-container">
             <article
               dangerouslySetInnerHTML={{__html: this.props.content.html}}
