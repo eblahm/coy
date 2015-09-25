@@ -25,7 +25,9 @@ var BABEL_TRANFORMS = [
   'es6.parameters',
   'es6.spread',
   'react',
-  'strict'
+  'strict',
+  'es6.properties.computed',
+  'es6.properties.shorthand'
 ].join(',');
 
 var SERVER_SIDE_JS = [
@@ -80,7 +82,7 @@ gulp.task('bundle', function () {
 
 gulp.task('less', function() {
 
-  return gulp.src(CLIENT_SIDE_LESS)
+  return gulp.src('src/client/less/main.less')
     .pipe(less({
       plugins: [autoprefix, cleancss]
     }))

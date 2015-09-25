@@ -1,0 +1,103 @@
+.secret-nav {
+  position: fixed;
+  display: block;
+  top: 0;
+  height: 100%;
+  z-index: 3;
+  &.active {
+    z-index: 0;
+  }
+}
+
+nav.enable-right-sidebar {
+  right: 0;
+  width: @right-sidebar-width / 2;
+}
+
+nav.enable-left-sidebar {
+  left: 0;
+  width: @left-sidebar-width / 2;
+}
+
+section.sidebar {
+  overflow: hidden;
+  position: absolute;
+  z-index: 1;
+
+  height: 100%;
+  &.left-sidebar {
+    left: 0;
+    width: @left-sidebar-width;
+  }
+  &.right-sidebar {
+    right: 0;
+    width: @right-sidebar-width;
+  }
+}
+
+section.content-container {
+  z-index: 2;
+  transition: margin .5s ease-in-out;
+
+  border-right: 1px solid lightgrey;
+  border-left: 1px solid lightgrey;
+
+  &.show-right-sidebar {
+    margin-right: @right-sidebar-width;
+    &:after {
+      margin-left: 30px;
+      top: 17px;
+    }
+  }
+  &.show-left-sidebar {
+    margin-left: @left-sidebar-width;
+  }
+}
+
+// icons
+section.content-container {
+  background-color: white;
+
+  &:before, &:after {
+    font-family: @icons-font;
+    opacity: 1;
+  }
+
+  &:not(.show-left-sidebar) {
+    &:before {
+      transition: opacity .5s ease-in-out .5s;
+    }
+  }
+  &:not(.show-right-sidebar) {
+    &:after {
+      transition: opacity .5s ease-in-out .5s;
+    }
+  }
+
+  &:before {
+    font-size: 25px;
+    content: "\f009"; // list icon
+    position: absolute;
+    top: 5px;
+    left: 10px;
+  }
+
+  &:after {
+    font-size: @nav-icon-font-size;
+    content: "\2754"; // question mark icon
+    margin-left: -35px;
+    position: absolute;
+    top: 2px;
+  }
+
+  &.show-right-sidebar {
+    &:after {
+      opacity: 0;
+    }
+  }
+  &.show-left-sidebar {
+    &:before {
+      opacity: 0;
+    }
+  }
+}

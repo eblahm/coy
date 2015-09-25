@@ -1,6 +1,7 @@
 
 var React = require('react');
-var Sidebar = require('./sidebar');
+var RightSidebar = require('./rightSidebar.js');
+var LeftSidebar = require('./leftSidebar.js');
 var _ = require('lodash');
 var content;
 try {
@@ -13,7 +14,8 @@ var cx = require('classnames');
 module.exports = React.createClass({
   getInitialState() {
     return {
-      displaySidebar: false
+      displayLeftSidebar: false,
+      displayRightSidebar: false
     };
   },
 
@@ -23,28 +25,42 @@ module.exports = React.createClass({
     };
   },
 
-  onRightNavHover: function() {
-    this.setState({displaySidebar: true});
+  onNavHover: function(event) {
+    var side = /left-sidebar/.test(event.currentTarget.className) ? 'Left' : 'Right';
+    this.setState({
+      [`display${side}Sidebar`]: true
+    });
   },
 
-  onSidebarLeave: function() {
-    this.setState({displaySidebar: false});
+  onSidebarLeave: function(event) {
+    var side = /left-sidebar/.test(event.currentTarget.className) ? 'Left' : 'Right';
+    this.setState({
+      [`display${side}Sidebar`]: false
+    });
   },
 
   render() {
     return (
       <div className="flex-container">
-
         <nav
           className={cx({
-            "active": this.state.displaySidebar,
-            "enable-right-sidebar": true
+            "active": this.state.displayLeftSidebar,
+            "enable-left-sidebar": true,
+            "secret-nav": true
           })}
-          onMouseOver={this.onRightNavHover}
+          onMouseOver={this.onNavHover}
         />
+
+        <LeftSidebar
+          className="sidebar left-sidebar"
+          onMouseOut={this.onSidebarLeave}
+        />
+
+
         <section
           className={cx({
-            "show-sidebar": this.state.displaySidebar,
+            "show-right-sidebar": this.state.displayRightSidebar,
+            "show-left-sidebar": this.state.displayLeftSidebar,
             "content-container": true
           })}
         >
@@ -55,10 +71,19 @@ module.exports = React.createClass({
           </div>
         </section>
 
-        <Sidebar
-          className="sidebar"
+        <RightSidebar
+          className="sidebar right-sidebar"
           onMouseLeave={this.onSidebarLeave}
           />
+        <nav
+          className={cx({
+            "active": this.state.displayRightSidebar,
+            "enable-right-sidebar": true,
+            "secret-nav": true
+          })}
+          onMouseOver={this.onNavHover}
+        />
+
       </div>
     )
   }

@@ -26,13 +26,6 @@ module.exports = React.createClass({
               <li><a href="https://twitter.com/_yonant"><i className="icon-twitter"></i></a></li>
             </ul>
           </div>
-          <nav>
-            <ul>
-              <li><a href="/articles">Articles</a></li>
-              <li><a href="/thoughts">Thoughts</a></li>
-              <li><a href="/resume">Thoughts</a></li>
-            </ul>
-          </nav>
         </div>
       </section>
     )
