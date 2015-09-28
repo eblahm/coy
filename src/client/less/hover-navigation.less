@@ -37,19 +37,21 @@ section.sidebar {
 
 section.content-container {
   z-index: 2;
-  transition: margin .5s ease-in-out;
 
   border-right: 1px solid lightgrey;
   border-left: 1px solid lightgrey;
+  transition: margin .5s ease-in-out .2s;
 
   &.show-right-sidebar {
     margin-right: @right-sidebar-width;
+    transition: margin-right .5s ease-in-out;
     &:after {
       margin-left: 30px;
       top: 17px;
     }
   }
   &.show-left-sidebar {
+    transition: margin-left .5s ease-in-out;
     margin-left: @left-sidebar-width;
   }
 }
