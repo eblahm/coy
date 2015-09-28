@@ -1,17 +1,28 @@
 {% extends "decorator.html" %}
 {% set title = "Coy Admin" %}
 
+{% block head %}
+  <link rel="stylesheet" href="/lib/editor-md/css/editormd.min.css" />
+{% endblock %}
+
 {% block body %}
+
   {% if isAdmin %}
-    <form method="post" action="/article">
-      Name: <input type="text" name="name" />
-      <div>
-        <textarea id="editor" name="content"></textarea>
-      </div>
-      <button type="submit">Commit</button>
-    </form>
-    <script src="/adminStart.js" type="text/javascript"></script>
+    <div id="editormd">
+          <textarea style="display:none;">### Hello Editor.md !</textarea>
+    </div>
+
+    <script src="/lib/editor-md/editormd.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var editor = editormd({
+                id   : "editormd",
+                path : "/lib/editor-md/lib/"
+            });
+        });
+    </script>
   {% else %}
     <a href="/github/login">Login With Github</a>
   {% endif %}
+
 {% endblock %}

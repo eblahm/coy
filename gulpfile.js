@@ -91,6 +91,14 @@ gulp.task('less', function() {
 });
 
 gulp.task('copy', function() {
+
+  gulp.src([
+    'woff', 'ttf', 'eot', 'svg', 'css', 'js'
+  ].map(function(ext) {
+    return './node_modules/editor.md/**/*.' + ext;
+  }))
+  .pipe(gulp.dest('./dist/client/lib/editor-md'));
+
   return gulp.src(STATIC_FILES)
     .pipe(gulp.dest('dist'));
 });

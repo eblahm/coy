@@ -8,10 +8,9 @@
   </script>
 {% endblock %}
 
-{% block reactContainer %}
+{% block body %}
+<div id="react-container">
   {{ reactMarkup | safe }}
-{% endblock %}
-
-{% block bodyEnd %}
-  <script src="/homeStart.js" type="text/javascript" charset="utf-8"></script>
+</div>
+<script src="/homeStart.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
