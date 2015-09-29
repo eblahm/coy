@@ -3,24 +3,23 @@
 
 {% block head %}
   <link rel="stylesheet" href="/lib/editor-md/css/editormd.min.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
 {% endblock %}
 
 {% block body %}
 
   {% if isAdmin %}
-    <div id="editormd">
-          <textarea style="display:none;">### Hello Editor.md !</textarea>
+
+    <div class="article-meta-input">
+      <input id="title" type="text" placeholder="Title.."/>
     </div>
 
+    <div id="editormd">
+          <textarea style="display:none;">###</textarea>
+    </div>
     <script src="/lib/editor-md/editormd.min.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            var editor = editormd({
-                id   : "editormd",
-                path : "/lib/editor-md/lib/"
-            });
-        });
-    </script>
+    <script src="/lib/editor-md/languages/en.js"></script>
+    <script src="/adminStart.js"></script>
   {% else %}
     <a href="/github/login">Login With Github</a>
   {% endif %}

@@ -82,7 +82,10 @@ gulp.task('bundle', function () {
 
 gulp.task('less', function() {
 
-  return gulp.src('src/client/less/main.less')
+  return gulp.src([
+      'src/client/less/main.less',
+      'src/client/less/admin.less'
+    ])
     .pipe(less({
       plugins: [autoprefix, cleancss]
     }))
@@ -93,7 +96,7 @@ gulp.task('less', function() {
 gulp.task('copy', function() {
 
   gulp.src([
-    'woff', 'ttf', 'eot', 'svg', 'css', 'js'
+    'woff', 'woff2', 'ttf', 'eot', 'svg', 'css', 'js'
   ].map(function(ext) {
     return './node_modules/editor.md/**/*.' + ext;
   }))
