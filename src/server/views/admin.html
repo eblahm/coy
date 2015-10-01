@@ -2,7 +2,6 @@
 {% set title = "Coy Admin" %}
 
 {% block head %}
-  <link rel="stylesheet" href="/lib/editor-md/css/editormd.min.css" />
   <link rel="stylesheet" href="/css/admin.css" />
 {% endblock %}
 
@@ -15,12 +14,9 @@
       <input id="slug" type="text" placeholder="Slug.."/>
     </div>
 
-    <div id="editormd">
-          <textarea style="display:none;">###</textarea>
-    </div>
+    <div id="epiceditor"></div>
 
-    <script src="/lib/editor-md/editormd.min.js"></script>
-    <script src="/lib/editor-md/languages/en.js"></script>
+    <script src="/lib/epiceditor/epiceditor/js/epiceditor.min.js"></script>
     <script src="/adminStart.js"></script>
   {% else %}
     <a href="/github/login">Login With Github</a>

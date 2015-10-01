@@ -1,10 +1,13 @@
-$(function() {
-    var editor = editormd({
-        id: 'editormd',
-        width: '100%',
-        height: '500px',
-        path: '/lib/editor-md/lib/',
-        location: 'en'
-    });
-});
 
+
+$(() => {
+  new EpicEditor({
+    basePath: '/lib/epiceditor/epiceditor',
+    theme: {
+      editor: '../../../../css/editor-theme.css',
+      preview: '../../../../css/editor-preview-theme.css',
+      base: '../../../../css/editor-base-theme.css'
+    }
+  }).load();
+
+});

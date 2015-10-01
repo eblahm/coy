@@ -55,6 +55,10 @@ var STATIC_FILES = _.map([
   return 'src/**/*.' + ext;
 });
 
+var STATIC_CLIENT_DEPENDENCIES = [
+  'node_modules/epiceditor/epiceditor/**/*'
+];
+
 var CLIENT_SIDE_APPS = [
   './src/client/adminStart.js',
   './src/client/homeStart.js'
@@ -84,7 +88,10 @@ gulp.task('less', function() {
 
   return gulp.src([
       'src/client/less/main.less',
-      'src/client/less/admin.less'
+      'src/client/less/admin.less',
+      'src/client/less/editor-theme.less',
+      'src/client/less/editor-preview-theme.less',
+      'src/client/less/editor-base-theme.less'
     ])
     .pipe(less({
       plugins: [autoprefix, cleancss]
@@ -93,20 +100,17 @@ gulp.task('less', function() {
     .on('error', gutil.log);
 });
 
+gulp.task('copy-static-lib', function() {
+  return gulp.src(STATIC_CLIENT_DEPENDENCIES, {base: './node_modules'})
+    .pipe(gulp.dest('dist/client/lib'));
+});
+
 gulp.task('copy', function() {
-
-  gulp.src([
-    'woff', 'woff2', 'ttf', 'eot', 'svg', 'css', 'js'
-  ].map(function(ext) {
-    return './node_modules/editor.md/**/*.' + ext;
-  }))
-  .pipe(gulp.dest('./dist/client/lib/editor-md'));
-
   return gulp.src(STATIC_FILES)
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('buildServer', ['copy'], function() {
+gulp.task('buildServer', ['copy', 'copy-static-lib'], function() {
   return gulp.src(SERVER_SIDE_JS)
     .pipe(babel({whitelist: BABEL_TRANFORMS}))
     .pipe(gulp.dest('dist'))
