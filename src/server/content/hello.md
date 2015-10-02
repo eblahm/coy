@@ -1,3 +1,4 @@
+```javascript
+alert(':)');
 ```
-alert('so many commits!');
-```
+
