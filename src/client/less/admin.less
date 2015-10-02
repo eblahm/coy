@@ -1,21 +1,47 @@
 @import "variables";
 @import "vollkorn";
 
+* {
+  box-sizing: border-box;
+}
+
+html, body, #react-container {
+  height:100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
 .editormd-preview, .markdown-body {
   font-family: 'vll-regular';
 }
 
-#editormd {
+.edit-form-container {
+  padding: 10px;
   height: 100%;
-}
-.article-meta-input {
-  padding: 5px 0;
-  font-size: 20px;
-  input {
-    font-size: 14px;
-    padding: 5px;
-    margin: 5px 0 0;
-    display: block;
-    width: 50%;
+
+  .article-meta-input {
+    padding: 5px 0;
+    font-size: 20px;
+    input {
+      font-size: 14px;
+      padding: 5px;
+      margin: 5px 0 0;
+      display: block;
+      width: 100%;
+    }
   }
+
+  #epiceditor {
+    height: 80%;
+    border: 1px solid lightgrey;
+  }
+
+  footer {
+    width: 100%;
+    text-align: right;
+    font-size: 20px;
+  }
+
 }
+

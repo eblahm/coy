@@ -8,13 +8,19 @@
 {% block body %}
 
   {% if isAdmin %}
-
+  <form class="edit-form-container" method="post" action="/article">
     <div class="article-meta-input">
-      <input id="title" type="text" placeholder="Title.."/>
+      <input id="title" name="name" type="text" placeholder="Title.."/>
       <input id="slug" type="text" placeholder="Slug.."/>
+      <textarea id="markdown-content" name="content" style="display:none"></textarea>
     </div>
 
     <div id="epiceditor"></div>
+    <footer>
+      <input type="submit" value="Submit"></input>
+    </footer>
+  </form>
+
 
     <script src="/lib/epiceditor/epiceditor/js/epiceditor.min.js"></script>
     <script src="/adminStart.js"></script>
