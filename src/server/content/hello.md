@@ -1,4 +1,4 @@
-# Hello People 
+# Hello Markdown Parser
 
 ```javascript
 alert(':)');
