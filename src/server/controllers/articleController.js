@@ -38,10 +38,7 @@ router.post('', (req, res, next) => {
       ], `update ${slug}.md`)
     .then(() => contentService.updateMeta(articleMeta))
     .then(() => contentService.setContent(slug, content, articleMeta[slug]))
-    .then(
-      (data) => res.json(data).end(),
-      (err) => next(err)
-    );
+    .then((data) => res.json(data).end(), next);
   });
 
 });

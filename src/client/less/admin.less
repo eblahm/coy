@@ -1,5 +1,6 @@
 @import "variables";
 @import "vollkorn";
+@import "typography";
 
 * {
   box-sizing: border-box;
@@ -14,9 +15,28 @@ html, body, #admin-container {
 
 .admin-container {
   display: flex;
+  margin: 10px;
+  section.title {
+    font-size: 16px;
+  }
 
   .files-sidebar {
     flex: 1;
+    margin-right: 5px;
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      li {
+        border: 1px solid lightgrey;
+        padding: 5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        &.active {
+          background-color: lightgrey;
+        }
+      }
+    }
   }
 
   .editormd-preview, .markdown-body {
@@ -26,16 +46,14 @@ html, body, #admin-container {
   form.edit-form-container {
     z-index: 2;
     flex: 6;
-    padding: 10px;
     height: 100%;
 
     .article-meta-input {
-      padding: 5px 0;
       font-size: 20px;
       input {
         font-size: 14px;
+        margin: 0 0 5px;
         padding: 5px;
-        margin: 5px 0 0;
         display: block;
         width: 100%;
       }

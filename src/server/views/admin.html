@@ -3,6 +3,10 @@
 
 {% block head %}
   <link rel="stylesheet" href="/css/admin.css" />
+  <script type="text/javascript" charset="utf-8">
+    COY_ADMIN = {};
+    COY_ADMIN.articles = {{ articles | stringify | safe }};
+  </script>
 {% endblock %}
 
 {% block body %}

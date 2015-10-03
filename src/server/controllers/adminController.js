@@ -1,8 +1,13 @@
 
+var contentService = require('../service/contentService');
+
 module.exports = (req, res, next) => {
 
-  res.render('admin.html', {
-    isAdmin: !!req.session.githubToken
-  });
+  contentService.getMeta().then((data) => {
+    res.render('admin.html', {
+      isAdmin: !!req.session.githubToken,
+      articles: data
+    });
+  }, next);
 
 };
