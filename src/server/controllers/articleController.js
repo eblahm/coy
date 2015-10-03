@@ -3,7 +3,7 @@ var router = require('express').Router();
 var github = require('../service/github');
 var assert = require('assert');
 var _ = require('lodash');
-var contentService = require('../content');
+var contentService = require('../service/contentService');
 
 var PROJECT_RELATIVE_CONTENT_ROOT = 'src/server/content';
 

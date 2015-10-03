@@ -2,7 +2,7 @@
 var bluebird = require('bluebird');
 var _ = require('lodash');
 
-var contentService = require('../content');
+var contentService = require('../service/contentService');
 var NotFoundError = require('../errors/NotFoundError');
 
 var React = require('react');

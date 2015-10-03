@@ -1,6 +1,6 @@
 
-var meta = require('./meta.json');
-var cache = require('../service/cache');
+var meta = require('../content/meta.json');
+var cache = require('./cache');
 var path = require('path');
 var parseMarkdown = require('megamark');
 var fs = require('fs');
