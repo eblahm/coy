@@ -2,7 +2,7 @@
 var meta = require('../content/meta.json');
 var cache = require('./cache');
 var path = require('path');
-var parseMarkdown = require('megamark');
+var markdownService = require('../../shared/service/markdownService');
 var fs = require('fs');
 var _ = require('lodash');
 
@@ -35,7 +35,7 @@ exports.getContent = (key) => {
 };
 
 exports.setContent = (key, markdownContent, articleMeta) => {
-  var html = parseMarkdown(markdownContent);
+  var html = markdownService.parse(markdownContent);
   var data = _.assign({
     html: html,
     markdown: markdownContent
