@@ -9,12 +9,15 @@ html, body, #react-container {
 .flex-container {
   height:100%;
   display: flex;
-  section.sidebar {
-    flex: 1;
+  .right-sidebar {
+    flex: @right-sidebar-flex;
+  }
+  .left-sidebar {
+    flex: @left-sidebar-flex;
   }
   section.content-container {
-    flex: 3;
     display: flex;
+    flex: @content-flex;
     align-items: center;
     justify-content: center;
     .article-container {

@@ -1,10 +1,6 @@
 @import "variables";
 @import "vollkorn";
 
-@sidebar-flex: 1;
-@editor-flex: 6;
-@margin-flex-offset: 100% * (@sidebar-flex/ (@editor-flex + @sidebar-flex));
-
 * {
   box-sizing: border-box;
 }
@@ -21,9 +17,6 @@ html, body, #admin-container {
 
   .files-sidebar {
     flex: 1;
-    overflow: hidden;
-    position: absolute;
-    z-index: 1;
   }
 
   .editormd-preview, .markdown-body {
@@ -35,7 +28,6 @@ html, body, #admin-container {
     flex: 6;
     padding: 10px;
     height: 100%;
-    margin-left: @margin-flex-offset;
 
     .article-meta-input {
       padding: 5px 0;

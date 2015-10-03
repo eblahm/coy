@@ -1,3 +1,4 @@
+
 .secret-nav {
   position: fixed;
   display: block;
@@ -11,27 +12,28 @@
 
 nav.enable-right-sidebar {
   right: 0;
-  width: @right-sidebar-width / 2;
+  width: 50% * @right-flex-ratio;
 }
 
 nav.enable-left-sidebar {
   left: 0;
-  width: @left-sidebar-width / 2;
+  width: 50% * @left-flex-ratio;
 }
 
 section.sidebar {
-  overflow: hidden;
   position: absolute;
   z-index: 1;
 
   height: 100%;
+
   &.left-sidebar {
     left: 0;
-    width: @left-sidebar-width;
+    width: 100% * @left-flex-ratio;
   }
+
   &.right-sidebar {
     right: 0;
-    width: @right-sidebar-width;
+    width: 100% * @right-flex-ratio;
   }
 }
 
@@ -43,7 +45,7 @@ section.content-container {
   transition: margin .5s ease-in-out .2s;
 
   &.show-right-sidebar {
-    margin-right: @right-sidebar-width;
+    margin-right: 100% * @right-flex-ratio;
     transition: margin-right .5s ease-in-out;
     &:after {
       margin-left: 30px;
@@ -52,7 +54,7 @@ section.content-container {
   }
   &.show-left-sidebar {
     transition: margin-left .5s ease-in-out;
-    margin-left: @left-sidebar-width;
+    margin-left: 100% * @left-flex-ratio;
   }
 }
 

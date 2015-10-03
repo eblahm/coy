@@ -1,6 +1,12 @@
 
-@right-sidebar-width: 20%;
-@left-sidebar-width: 10%;
 @icons-font: 'mfglabs_icons';
 @nav-icon-font-size: 30px;
 
+@right-sidebar-flex: 2;
+@left-sidebar-flex: 1;
+@content-flex: 5;
+
+@flex-sum: @left-sidebar-flex + @content-flex + @right-sidebar-flex;
+
+@right-flex-ratio: @right-sidebar-flex/ @flex-sum;
+@left-flex-ratio: @left-sidebar-flex/ @flex-sum;
