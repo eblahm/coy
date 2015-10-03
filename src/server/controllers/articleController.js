@@ -4,6 +4,7 @@ var github = require('../service/github');
 var assert = require('assert');
 var _ = require('lodash');
 var contentService = require('../service/contentService');
+var NotFoundError = require('../errors/NotFoundError');
 
 var PROJECT_RELATIVE_CONTENT_ROOT = 'src/server/content';
 
@@ -41,6 +42,16 @@ router.post('', (req, res, next) => {
     .then((data) => res.json(data).end(), next);
   });
 
+});
+
+router.get('/:slug', (req, res, next) => {
+  var slug = req.params.slug;
+  assert.ok(slug);
+
+  contentService.getContent(slug).then(
+    (data) => data ? res.json(data).end() : new NotFoundError(),
+    (err) => next(err)
+  );
 });
 
 module.exports = router;

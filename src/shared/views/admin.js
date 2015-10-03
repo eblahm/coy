@@ -3,6 +3,7 @@ var React = require('react');
 var EpicEditorComponent = require('./epicEditor');
 var _ = require('lodash');
 var cx = require('classnames');
+var $ = require('jquery');
 
 module.exports = React.createClass({
 
@@ -10,7 +11,7 @@ module.exports = React.createClass({
     var articles = _.get(window, 'COY_ADMIN.articles', {});
     return {
       articles: articles,
-      selectedArticle: _.keys(articles).pop()
+      selectedArticle: {}
     };
   },
 
@@ -27,13 +28,31 @@ module.exports = React.createClass({
         base: '../../../../css/editor-base-theme.css'
       }
     }).load();
+
+    // set the editor to some random content
+    var anyKey = _.keys(this.state.articles).pop();
+    return anyKey && this.setMarkdownContentForArticle(anyKey);
   },
 
-  onSidbarItemClick: function(selectedArticle) {
-    this.setState({selectedArticle: selectedArticle});
+  setMarkdownContentForArticle: function(articleSlug) {
+    var self = this;
+    $.getJSON(`/article/${articleSlug}`)
+      .then(
+        (data) => {
+          var cachedData = self.EPIC_EDITOR.getFiles(data.slug);
+          if (!_.get(cachedData, 'content', '').trim()) {
+            self.EPIC_EDITOR.importFile(data.slug, data.markdown.replace(/\r/g, ''));
+          }
+          self.EPIC_EDITOR.open(data.slug);
+          self.setState({selectedArticle: data});
+        },
+        (err) => console.error(err)
+      );
   },
 
   render() {
+    var selectedArticle = this.state.selectedArticle;
+
     return (
     <div className="admin-container">
       <div className="files-sidebar">
@@ -42,8 +61,8 @@ module.exports = React.createClass({
           {_.map(this.state.articles, (article, name) => {
             return <li
                 key={name}
-                onClick={_.curry(this.onSidbarItemClick, 3)(name)}
-                className={cx({active: name == this.state.selectedArticle})}
+                onClick={_.curry(this.setMarkdownContentForArticle, 3)(name)}
+                className={cx({active: name === selectedArticle.slug})}
               >
                 {name}
               </li>
@@ -53,8 +72,7 @@ module.exports = React.createClass({
       <form className="edit-form-container" method="post" action="/article">
         <section className="title vbold">Markdown Editor</section>
         <div className="article-meta-input">
-          <input id="title" name="name" type="text" style={{"display":"none"}} placeholder="Title.." value={this.state.selectedArticle}/>
-          <input id="slug" type="text" placeholder="Slug.."/>
+          <input id="title" name="name" type="text" style={{"display":"none"}} placeholder="Title.." value={selectedArticle.slug}/>
           <textarea id="markdown-content" name="content" style={{"display":"none"}}></textarea>
         </div>
 
