@@ -37,6 +37,7 @@ exports.getContent = (key) => {
 exports.setContent = (key, markdownContent, articleMeta) => {
   var html = markdownService.parse(markdownContent);
   var data = _.assign({
+    slug: key,
     html: html,
     markdown: markdownContent
   }, articleMeta);
