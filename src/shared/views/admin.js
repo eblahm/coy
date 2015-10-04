@@ -5,13 +5,15 @@ var _ = require('lodash');
 var cx = require('classnames');
 var $ = require('jquery');
 
+const KEYPRESS = {ENTER: 13};
+
 module.exports = React.createClass({
 
   getInitialState() {
-    var articles = _.get(window, 'COY_ADMIN.articles', {});
+    var articlesFromServer = _.get(window, 'COY_ADMIN.articles', {});
     return {
-      articles: articles,
-      selectedArticle: {}
+      articles: articlesFromServer,
+      selectedSlug: {}
     };
   },
 
@@ -29,29 +31,72 @@ module.exports = React.createClass({
       }
     }).load();
 
+    this.loadDirtyArticles();
+    this.loadInitialActiveArticle();
+  },
+
+  loadInitialActiveArticle: function() {
     // set the editor to some random content
-    var anyKey = _.keys(this.state.articles).pop();
-    return anyKey && this.setMarkdownContentForArticle(anyKey);
+    var anySlug = _.keys(this.state.articles).pop();
+    return anySlug && this.openArticle(anySlug);
+  },
+
+  openArticle: function(slug) {
+    this.EPIC_EDITOR.open(slug);
+    this.setState({selectedSlug: slug});
+    this.setMarkdownContentForArticle(slug);
   },
 
   setMarkdownContentForArticle: function(articleSlug) {
-    var self = this;
+    var editor = this.EPIC_EDITOR;
+    var cachedData = editor.getFiles(articleSlug);
+
+    if (_.get(cachedData, 'content', '').trim()) {
+      return;
+    }
+
     $.getJSON(`/article/${articleSlug}`)
       .then(
-        (data) => {
-          var cachedData = self.EPIC_EDITOR.getFiles(data.slug);
-          if (!_.get(cachedData, 'content', '').trim()) {
-            self.EPIC_EDITOR.importFile(data.slug, data.markdown.replace(/\r/g, ''));
-          }
-          self.EPIC_EDITOR.open(data.slug);
-          self.setState({selectedArticle: data});
-        },
-        (err) => console.error(err)
+        (data) => editor.importFile(data.slug, data.markdown.replace(/\r/g, ''))
       );
   },
 
+  loadDirtyArticles: function() {
+    var cachedData = this.EPIC_EDITOR.getFiles();
+    var combinedArticles = _.reduce(cachedData, (articles, data, key) => {
+      articles[key] = {
+        create: data.created,
+        updated: data.modified
+      };
+      return articles;
+    }, _.clone(this.state.articles));
+    this.setState({articles: combinedArticles});
+  },
+
+  onNewArticleCreate: function(articleSlug) {
+    var articles = this.state.articles;
+    var newArticle = {
+      slug: articleSlug
+    };
+
+    this.setState({
+      articles: _.assign(articles, {[articleSlug]: newArticle}),
+      selectedSlug: articleSlug
+    });
+
+    this.EPIC_EDITOR.open(articleSlug);
+
+  },
+
+  onNewArticleKeyPress: function(event) {
+    var val = event.currentTarget.value;
+    if (event.charCode === KEYPRESS.ENTER && val) {
+      this.onNewArticleCreate(val);
+    }
+  },
+
   render() {
-    var selectedArticle = this.state.selectedArticle;
+    var selectedSlug = this.state.selectedSlug;
 
     return (
     <div className="admin-container">
@@ -61,18 +106,25 @@ module.exports = React.createClass({
           {_.map(this.state.articles, (article, name) => {
             return <li
                 key={name}
-                onClick={_.curry(this.setMarkdownContentForArticle, 3)(name)}
-                className={cx({active: name === selectedArticle.slug})}
+                onClick={_.curry(this.openArticle, 3)(name)}
+                className={cx({active: name === selectedSlug})}
               >
                 {name}
               </li>
           })}
+          <li className="new-article">
+            <input
+              type="text"
+              placeholder="add article..."
+              onKeyPress={this.onNewArticleKeyPress}
+            />
+          </li>
         </ul>
       </div>
       <form className="edit-form-container" method="post" action="/article">
         <section className="title vbold">Markdown Editor</section>
         <div className="article-meta-input">
-          <input id="title" name="name" type="text" style={{"display":"none"}} placeholder="Title.." value={selectedArticle.slug}/>
+          <input id="title" name="name" type="text" style={{"display":"none"}} placeholder="Title.." value={selectedSlug}/>
           <textarea id="markdown-content" name="content" style={{"display":"none"}}></textarea>
         </div>
 

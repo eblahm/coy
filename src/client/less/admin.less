@@ -1,6 +1,7 @@
 @import "variables";
 @import "vollkorn";
 @import "typography";
+@import "mfglabs";
 
 * {
   box-sizing: border-box;
@@ -30,8 +31,18 @@ html, body, #admin-container {
       li {
         border: 1px solid lightgrey;
         padding: 5px;
+        margin-bottom: 5px;
         text-transform: uppercase;
         cursor: pointer;
+        &.new-article {
+          border: none;
+          padding: 0;
+          input {
+            font-size: inherit;
+            padding: 5px;
+            width: 100%;
+          }
+        }
         &.active {
           background-color: lightgrey;
         }
