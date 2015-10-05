@@ -25,8 +25,8 @@ exports.getMeta = () => {
 
 exports.getContent = (key) => {
   var load = () => {
-    var fullPath = path.join(__dirname, key + MARKDOWN_EXT);
-    return exports.setContent(key, fs.readFileSync(fullPath), meta[key]);
+    var fullPath = path.join(__dirname, '../content/', key + MARKDOWN_EXT);
+    return exports.setContent(key, fs.readFileSync(fullPath).toString(), meta[key]);
   };
   return cache.hgetallAsync(key).then(
       (content) => content || load(),

@@ -2,6 +2,10 @@
 project_name = 'coy'
 port = 5001
 
+repo = 'eblahm/coy'
+repo_url = 'https://github.com/eblahm/coy'
+content_root = 'src/server/content'
+
 session_secret = '(((((((((( 0-0~ ))))))))))'
 database_url = 'mongodb://localhost:17017/coy'
 

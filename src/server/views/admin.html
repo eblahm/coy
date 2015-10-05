@@ -6,6 +6,8 @@
   <script type="text/javascript" charset="utf-8">
     COY_ADMIN = {};
     COY_ADMIN.articles = {{ articles | stringify | safe }};
+    COY_ADMIN.REPO_URL = '{{repoUrl}}';
+    COY_ADMIN.CONTENT_ROOT = '{{contentRoot}}';
   </script>
 {% endblock %}
 

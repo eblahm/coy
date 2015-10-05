@@ -5,8 +5,10 @@ var assert = require('assert');
 var _ = require('lodash');
 var contentService = require('../service/contentService');
 var NotFoundError = require('../errors/NotFoundError');
+var config = require('config');
 
-var PROJECT_RELATIVE_CONTENT_ROOT = 'src/server/content';
+const CONTENT_ROOT = config.get('content_root');
+const GITHUB_REPO_ID = config.get('repo');
 
 router.post('', (req, res, next) => {
   var content = req.body.content;
@@ -17,7 +19,7 @@ router.post('', (req, res, next) => {
   assert.ok(req.session.githubToken, 'must be logged in');
   assert(!_.contains(req.body.name, '..'), 'file name must not contain ".." ');
 
-  var repo = github.repo('eblahm/coy', req.session.githubToken);
+  var repo = github.repo(GITHUB_REPO_ID, req.session.githubToken);
   console.log('attempting to make commit %j', req.body);
 
   contentService.getMeta().then((articleMeta) => {
@@ -29,11 +31,11 @@ router.post('', (req, res, next) => {
     };
     return repo.commit([
         {
-          fname: `${PROJECT_RELATIVE_CONTENT_ROOT}/${slug}.md`,
+          fname: `${CONTENT_ROOT}/${slug}.md`,
           content: content
         },
         {
-          fname: `${PROJECT_RELATIVE_CONTENT_ROOT}/meta.json`,
+          fname: `${CONTENT_ROOT}/meta.json`,
           content: JSON.stringify(articleMeta, undefined, 2)
         },
       ], `update ${slug}.md`)

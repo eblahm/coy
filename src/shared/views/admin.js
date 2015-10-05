@@ -17,6 +17,13 @@ module.exports = React.createClass({
     };
   },
 
+  getDefaultProps() {
+    return {
+      repoUrl: _.get(window, 'COY_ADMIN.REPO_URL'),
+      contentRoot: _.get(window, 'COY_ADMIN.CONTENT_ROOT', 'eblahm/coy')
+    };
+  },
+
   componentDidMount() {
     this.EPIC_EDITOR = new EpicEditor({
       basePath: '/lib/epiceditor/epiceditor',
@@ -41,17 +48,31 @@ module.exports = React.createClass({
     return anySlug && this.openArticle(anySlug);
   },
 
-  openArticle: function(slug) {
+  openArticle: function(slug, event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     this.EPIC_EDITOR.open(slug);
     this.setState({selectedSlug: slug});
     this.setMarkdownContentForArticle(slug);
+  },
+
+  removeArticle: function(slug, event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    this.EPIC_EDITOR.remove(slug);
+    this.setState({articles: _.omit(this.state.articles, slug)});
+    this.loadInitialActiveArticle();
   },
 
   setMarkdownContentForArticle: function(articleSlug) {
     var editor = this.EPIC_EDITOR;
     var cachedData = editor.getFiles(articleSlug);
 
-    if (_.get(cachedData, 'content', '').trim()) {
+    if (_.get(cachedData, 'content')) {
       return;
     }
 
@@ -65,6 +86,7 @@ module.exports = React.createClass({
     var cachedData = this.EPIC_EDITOR.getFiles();
 
     var combinedArticles = _.reduce(cachedData, (articles, data, key) => {
+      if (key === 'epiceditor') { return articles; }
       if (articles[key]) {
         articles[key].draft = false;
         return articles;
@@ -83,7 +105,8 @@ module.exports = React.createClass({
   onNewArticleCreate: function(articleSlug) {
     var articles = this.state.articles;
     var newArticle = {
-      slug: articleSlug
+      slug: articleSlug,
+      draft: true
     };
 
     this.setState({
@@ -94,6 +117,7 @@ module.exports = React.createClass({
     this.EPIC_EDITOR.open(articleSlug);
 
   },
+
 
   onNewArticleKeyPress: function(event) {
     var val = event.currentTarget.value;
@@ -109,9 +133,24 @@ module.exports = React.createClass({
         onClick={_.curry(this.openArticle, 3)(article.slug)}
         className={cx({active: article.slug === this.state.selectedSlug})}
       >
-        {article.slug}
+        <span className="name">{article.slug}</span>
+        <span className="toolbar">
+          <i
+            className="icon-trash_can"
+            onClick={_.curry(this.removeArticle, 3)(article.slug)}
+            ></i>
+        </span>
       </li>
     );
+  },
+
+  getArticleLink: function(slug) {
+    var fileName = `${slug}.md`;
+    return <a
+        href={`${this.props.repoUrl}/blob/master/${this.props.contentRoot}/${fileName}`}
+      >
+        {fileName}
+      </a>
   },
 
   render() {
@@ -120,7 +159,7 @@ module.exports = React.createClass({
     return (
     <div className="admin-container">
       <div className="files-sidebar">
-        <section className="title vbold">Commited Articles</section>
+        <section className="title vbold">Commited</section>
         <ul>
           {_.chain(this.state.articles)
             .filter((article) => !article.draft)
@@ -131,10 +170,17 @@ module.exports = React.createClass({
           {_.chain(this.state.articles)
             .filter((article) => article.draft)
             .map(this.sidebarItem).value()}
+          <li className="new-article">
+            <input
+              type="text"
+              placeholder="add article..."
+              onKeyPress={this.onNewArticleKeyPress}
+            />
+          </li>
         </ul>
       </div>
       <form className="edit-form-container" method="post" action="/article">
-        <section className="title vbold">Markdown Editor</section>
+        <section className="title vbold">{_.get(this.state.articles, `[${selectedSlug}].draft`) ? `${selectedSlug}.md` : this.getArticleLink(selectedSlug)}</section>
         <div className="article-meta-input">
           <input id="title" name="name" type="text" style={{"display":"none"}} placeholder="Title.." value={selectedSlug}/>
           <textarea id="markdown-content" name="content" style={{"display":"none"}}></textarea>
