@@ -126,6 +126,30 @@ module.exports = React.createClass({
     }
   },
 
+  onSubmit: function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    var slug = this.state.selectedSlug;
+    var markdown = this.EPIC_EDITOR.getFiles(slug).content;
+    var self = this;
+    $.ajax({
+      url: '/article',
+      method: 'POST',
+      data: {
+        content: markdown,
+        slug: slug
+      },
+      dataType: 'json'
+    }).then((data) => {
+      var articles = _.clone(self.state.articles);
+      articles[slug] = data;
+      articles[slug].draft = false;
+      self.setState({articles: articles});
+    }, (err) => {
+      alert('sorry there was an error commiting your article');
+    });
+  },
+
   sidebarItem: function(article) {
     return (
       <li
@@ -179,17 +203,16 @@ module.exports = React.createClass({
           </li>
         </ul>
       </div>
-      <form className="edit-form-container" method="post" action="/article">
+      <form className="edit-form-container">
         <section className="title vbold">{_.get(this.state.articles, `[${selectedSlug}].draft`) ? `${selectedSlug}.md` : this.getArticleLink(selectedSlug)}</section>
         <div className="article-meta-input">
           <input id="title" name="name" type="text" style={{"display":"none"}} placeholder="Title.." value={selectedSlug}/>
-          <textarea id="markdown-content" name="content" style={{"display":"none"}}></textarea>
         </div>
 
         <EpicEditorComponent id="epiceditor" />
 
         <footer>
-          <input type="submit" value="Submit"></input>
+          <button onClick={this.onSubmit}>Commit</button>
         </footer>
       </form>
     </div>)

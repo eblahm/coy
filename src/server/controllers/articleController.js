@@ -12,7 +12,7 @@ const GITHUB_REPO_ID = config.get('repo');
 
 router.post('', (req, res, next) => {
   var content = req.body.content;
-  var slug = req.body.name;
+  var slug = req.body.slug;
 
   assert.ok(content, 'must provide article content');
   assert.ok(slug, 'must provide a name');
