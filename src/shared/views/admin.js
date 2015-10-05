@@ -4,15 +4,16 @@ var EpicEditorComponent = require('./epicEditor');
 var _ = require('lodash');
 var cx = require('classnames');
 var $ = require('jquery');
+var MUST_LOAD = 'loading...';
 
 const KEYPRESS = {ENTER: 13};
 
 module.exports = React.createClass({
 
   getInitialState() {
-    var articlesFromServer = _.get(window, 'COY_ADMIN.articles', {});
     return {
-      articles: articlesFromServer,
+      commitedArticles: _.get(window, 'COY_ADMIN.articles', {}),
+      articles: {},
       selectedSlug: {}
     };
   },
@@ -38,8 +39,11 @@ module.exports = React.createClass({
       }
     }).load();
 
-    this.loadDirtyArticles();
-    this.loadInitialActiveArticle();
+    this.loadArticlesFromServer();
+    this.loadArticlesFromCache();
+    setTimeout(() => {
+      this.loadInitialActiveArticle();
+    }, 0);
   },
 
   loadInitialActiveArticle: function() {
@@ -49,13 +53,25 @@ module.exports = React.createClass({
   },
 
   openArticle: function(slug, event) {
+    var articles = _.clone(this.state.articles);
+    var editor = this.EPIC_EDITOR;
+    var self = this;
+
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
-    this.EPIC_EDITOR.open(slug);
-    this.setState({selectedSlug: slug});
-    this.setMarkdownContentForArticle(slug);
+
+    if (editor.getFiles(slug).content === MUST_LOAD) {
+      this.getArticleFromServer(slug).then((data) => {
+        editor.importFile(slug, data.markdown);
+        articles[slug].unsavedChanges = false;
+        self.setState({articles: articles});
+      });
+    }
+    editor.open(slug);
+    self.setState({selectedSlug: slug});
+
   },
 
   removeArticle: function(slug, event) {
@@ -68,38 +84,44 @@ module.exports = React.createClass({
     this.loadInitialActiveArticle();
   },
 
-  setMarkdownContentForArticle: function(articleSlug) {
-    var editor = this.EPIC_EDITOR;
-    var cachedData = editor.getFiles(articleSlug);
-
-    if (_.get(cachedData, 'content')) {
-      return;
-    }
-
-    $.getJSON(`/article/${articleSlug}`)
+  getArticleFromServer: function(slug) {
+    return $.getJSON(`/article/${slug}`)
       .then(
-        (data) => editor.importFile(data.slug, data.markdown.replace(/\r/g, ''))
+        (data) => {
+          data.markdown = data.markdown.replace(/\r/g, '');
+          return data;
+        }
       );
   },
 
-  loadDirtyArticles: function() {
+  loadArticlesFromServer: function() {
+    var editor = this.EPIC_EDITOR;
+    _.each(this.state.commitedArticles, (article, slug) => {
+      if (!this.EPIC_EDITOR.getFiles(slug)) {
+        editor.importFile(slug, MUST_LOAD);
+      }
+    });
+  },
+
+  loadArticlesFromCache: function() {
     var cachedData = this.EPIC_EDITOR.getFiles();
 
-    var combinedArticles = _.reduce(cachedData, (articles, data, key) => {
+    var cachedArticles = _.reduce(cachedData, (articles, data, key) => {
       if (key === 'epiceditor') { return articles; }
-      if (articles[key]) {
-        articles[key].draft = false;
-        return articles;
-      }
+      var commitedArticle = this.state.commitedArticles[key];
+      var isClean = _.get(commitedArticle, 'markdown') === data.content.replace(/\r/g, '');
       articles[key] = {
         slug: key,
         create: data.created,
         updated: data.modified,
-        draft: true
+        markdown: data.content,
+        unsavedChanges: !isClean,
+        draft: !commitedArticle
       };
+
       return articles;
     }, _.clone(this.state.articles));
-    this.setState({articles: combinedArticles});
+    this.setState({articles: cachedArticles});
   },
 
   onNewArticleCreate: function(articleSlug) {
