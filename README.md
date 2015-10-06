@@ -1,4 +1,4 @@
-#### _Version controlled, database-less blogging with on the fly markdown compilation._
+#### _Version controlled, database-less blogging with on the fly markdown compilation_
 
 Frameworks like Wordpress and Ghost are great because they manage creating, updating, deleting and publishing articles via a fancy admin ui.  All the tools for updating content come bundled.  However, the features of the admin tools are enabled by a database, which is not version controlled.
 
