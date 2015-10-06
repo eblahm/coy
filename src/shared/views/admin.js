@@ -88,7 +88,7 @@ module.exports = React.createClass({
 
     var articles = this.state.articles;
 
-    if (!confirm('Do you sure you really want to delete this article?')) {
+    if (!confirm(`Are you sure you want to delete ${slug}.md?`)) {
       return;
     }
 
@@ -111,7 +111,7 @@ module.exports = React.createClass({
     }
     var isCommited = !!this.state.commitedArticles[slug];
 
-    if (!confirm('Do you sure you really want to flush unsaved changes for this article?')) {
+    if (!confirm(`Are you sure you want to flush the unsaved changes for ${slug}.md`)) {
       return;
     }
 
