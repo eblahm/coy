@@ -19,6 +19,16 @@ html, body, #admin-container {
   margin: 10px;
   section.title {
     font-size: 16px;
+    display: flex;
+    a, span {
+      flex: 1,
+    }
+    .has-unsaved-changes {
+      text-align: right;
+      color: red;
+      font-style: italic;
+      padding: 0 5px;
+    }
   }
 
   .files-sidebar {

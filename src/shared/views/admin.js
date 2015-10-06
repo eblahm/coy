@@ -4,9 +4,10 @@ var EpicEditorComponent = require('./epicEditor');
 var _ = require('lodash');
 var cx = require('classnames');
 var $ = require('jquery');
-var MUST_LOAD = 'loading...';
+
 
 const KEYPRESS = {ENTER: 13};
+const MUST_LOAD = 'loading...'
 
 module.exports = React.createClass({
 
@@ -14,7 +15,8 @@ module.exports = React.createClass({
     return {
       commitedArticles: _.get(window, 'COY_ADMIN.articles', {}),
       articles: {},
-      selectedSlug: {}
+      selectedSlug: 'slug',
+      unsavedChanges: true
     };
   },
 
@@ -39,11 +41,16 @@ module.exports = React.createClass({
       }
     }).load();
 
+    this.EPIC_EDITOR.on('update', this.onArticleUpdate);
     this.loadArticlesFromServer();
     this.loadArticlesFromCache();
     setTimeout(() => {
       this.loadInitialActiveArticle();
     }, 0);
+  },
+
+  onArticleUpdate: function(data) {
+    return this.state.unsavedChanges || this.setState({unsavedChanges: true});
   },
 
   loadInitialActiveArticle: function() {
@@ -55,23 +62,21 @@ module.exports = React.createClass({
   openArticle: function(slug, event) {
     var articles = _.clone(this.state.articles);
     var editor = this.EPIC_EDITOR;
-    var self = this;
 
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
 
-    if (editor.getFiles(slug).content === MUST_LOAD) {
-      this.getArticleFromServer(slug).then((data) => {
-        editor.importFile(slug, data.markdown);
-        articles[slug].unsavedChanges = false;
-        self.setState({articles: articles});
-      });
-    }
     editor.open(slug);
-    self.setState({selectedSlug: slug});
+    this.setState({
+      selectedSlug: slug,
+      unsavedChanges: true
+    });
 
+    if (this.state.commitedArticles[slug]) {
+      return this.loadArticleFromServer(slug);
+    }
   },
 
   removeArticle: function(slug, event) {
@@ -84,12 +89,23 @@ module.exports = React.createClass({
     this.loadInitialActiveArticle();
   },
 
-  getArticleFromServer: function(slug) {
-    return $.getJSON(`/article/${slug}`)
+  loadArticleFromServer: function(slug) {
+    var self = this;
+    var commitedArticles = _.clone(this.state.commitedArticles);
+    var editor = this.EPIC_EDITOR;
+    var cachedMarkdown = editor.getFiles(slug).content.replace(/&nbsp;/, ' ');
+    var shouldLoad = cachedMarkdown === MUST_LOAD;
+
+    $.getJSON(`/article/${slug}`)
       .then(
         (data) => {
-          data.markdown = data.markdown.replace(/\r/g, '');
-          return data;
+          var markdown = data.markdown.replace(/\r/g, '');
+          if (cachedMarkdown === MUST_LOAD) {
+            editor.importFile(slug, markdown);
+            self.setState({unsavedChanges: false});
+          } else {
+            self.setState({unsavedChanges: !(markdown === cachedMarkdown)});
+          }
         }
       );
   },
@@ -109,13 +125,11 @@ module.exports = React.createClass({
     var cachedArticles = _.reduce(cachedData, (articles, data, key) => {
       if (key === 'epiceditor') { return articles; }
       var commitedArticle = this.state.commitedArticles[key];
-      var isClean = _.get(commitedArticle, 'markdown') === data.content.replace(/\r/g, '');
       articles[key] = {
         slug: key,
         create: data.created,
         updated: data.modified,
         markdown: data.content,
-        unsavedChanges: !isClean,
         draft: !commitedArticle
       };
 
@@ -133,7 +147,8 @@ module.exports = React.createClass({
 
     this.setState({
       articles: _.assign(articles, {[articleSlug]: newArticle}),
-      selectedSlug: articleSlug
+      selectedSlug: articleSlug,
+      unsavedChanges: true
     });
 
     this.EPIC_EDITOR.open(articleSlug);
@@ -226,7 +241,10 @@ module.exports = React.createClass({
         </ul>
       </div>
       <form className="edit-form-container">
-        <section className="title vbold">{_.get(this.state.articles, `[${selectedSlug}].draft`) ? `${selectedSlug}.md` : this.getArticleLink(selectedSlug)}</section>
+        <section className="title vbold">
+          {_.get(this.state.articles, `[${selectedSlug}].draft`) ? `${selectedSlug}.md` : this.getArticleLink(selectedSlug)}
+          {this.state.unsavedChanges ? <span className="has-unsaved-changes vll-italic">uncommited changes</span> : ''}
+          </section>
         <div className="article-meta-input">
           <input id="title" name="name" type="text" style={{"display":"none"}} placeholder="Title.." value={selectedSlug}/>
         </div>
