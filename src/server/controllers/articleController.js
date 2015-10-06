@@ -10,13 +10,17 @@ var config = require('config');
 const CONTENT_ROOT = config.get('content_root');
 const GITHUB_REPO_ID = config.get('repo');
 
-router.post('', (req, res, next) => {
+var isLoggedIn = (req, res, next) => {
+  assert.ok(req.session.githubToken, 'must be logged in');
+  next();
+};
+
+router.post('', isLoggedIn, (req, res, next) => {
   var content = req.body.content;
   var slug = req.body.slug;
 
   assert.ok(content, 'must provide article content');
   assert.ok(slug, 'must provide a name');
-  assert.ok(req.session.githubToken, 'must be logged in');
   assert(!_.contains(req.body.name, '..'), 'file name must not contain ".." ');
 
   var repo = github.repo(GITHUB_REPO_ID, req.session.githubToken);
@@ -29,6 +33,7 @@ router.post('', (req, res, next) => {
       created: _.get(articleMeta, `[${slug}].created`, nowISOString),
       updated: nowISOString
     };
+
     return repo.commit([
         {
           fname: `${CONTENT_ROOT}/${slug}.md`,
@@ -44,6 +49,33 @@ router.post('', (req, res, next) => {
     .then((data) => res.json(data).end(), next);
   });
 
+});
+
+router.delete('/:slug', isLoggedIn, (req, res, next) => {
+  var slug = req.params.slug;
+  assert.ok(slug, 'must provide a slug');
+
+  contentService.getMeta().then((articleMeta) => {
+
+    assert.ok(articleMeta[slug], 'slug doesn\'t exists');
+    articleMeta = _.omit(articleMeta, slug);
+
+    var repo = github.repo(GITHUB_REPO_ID, req.session.githubToken);
+    console.log('attempting to delete article (slug:%s)', slug);
+
+    return repo.commit([
+        {
+          fname: `${CONTENT_ROOT}/${slug}.md`,
+          rm: true
+        },
+        {
+          fname: `${CONTENT_ROOT}/meta.json`,
+          content: JSON.stringify(articleMeta, undefined, 2)
+        },
+      ], `delete ${slug}.md`)
+    .then(() => contentService.updateMeta(articleMeta))
+    .then(() => res.status(200).end(), next);
+  });
 });
 
 router.get('/:slug', (req, res, next) => {

@@ -4,10 +4,11 @@ var EpicEditorComponent = require('./epicEditor');
 var _ = require('lodash');
 var cx = require('classnames');
 var $ = require('jquery');
+var resolved = (new $.Deferred()).resolve();
 
 
 const KEYPRESS = {ENTER: 13};
-const MUST_LOAD = 'loading...'
+const MUST_LOAD = 'loading...';
 
 module.exports = React.createClass({
 
@@ -84,9 +85,38 @@ module.exports = React.createClass({
       event.preventDefault();
       event.stopPropagation();
     }
-    this.EPIC_EDITOR.remove(slug);
-    this.setState({articles: _.omit(this.state.articles, slug)});
-    this.loadInitialActiveArticle();
+
+    var articles = this.state.articles;
+
+    if (!confirm('Do you sure you really want to delete this article?')) {
+      return;
+    }
+
+    var removeFromServer = articles[slug].draft ? resolved : $.ajax({url: `/article/${slug}`, method: 'DELETE'});
+    removeFromServer.then(() => {
+      this.EPIC_EDITOR.remove(slug);
+      this.setState({articles: _.omit(articles, slug)});
+      this.loadInitialActiveArticle();
+    }, (err) => {
+      console.error(err);
+      alert('there was an error deleting your article');
+    });
+
+  },
+
+  flushArticle: function(slug, event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    var isCommited = !!this.state.commitedArticles[slug];
+
+    if (!confirm('Do you sure you really want to flush unsaved changes for this article?')) {
+      return;
+    }
+
+    this.EPIC_EDITOR.importFile(slug, isCommited ? MUST_LOAD : '');
+    this.openArticle(slug);
   },
 
   loadArticleFromServer: function(slug) {
@@ -101,7 +131,7 @@ module.exports = React.createClass({
         (data) => {
           var markdown = data.markdown.replace(/\r/g, '');
           if (cachedMarkdown === MUST_LOAD) {
-            editor.importFile(slug, markdown);
+            editor.importFile(slug, markdown); // overwrite existing
             self.setState({unsavedChanges: false});
           } else {
             self.setState({unsavedChanges: !(markdown === cachedMarkdown)});
@@ -198,7 +228,13 @@ module.exports = React.createClass({
         <span className="toolbar">
           <i
             className="icon-trash_can"
+            title="Delete Article"
             onClick={_.curry(this.removeArticle, 3)(article.slug)}
+            ></i>
+          <i
+            className="icon-cross_mark"
+            title="Flush Unsaved Changes"
+            onClick={_.curry(this.flushArticle, 3)(article.slug)}
             ></i>
         </span>
       </li>

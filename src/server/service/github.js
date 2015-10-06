@@ -24,13 +24,13 @@ var commitGenerator = function* (repoObj, updates, message, ref = 'refs/heads/ma
   // fallback indicates new file
 
   // Build the updates array
-  updates = _.map(updates, function(update) {
+  updates = _.map(updates, (update) => {
     var mode = _.get(tree, `[${update.fname}].mode`, modes.file);
-    return {
-      path: update.fname,
-      mode: mode,
-      content: update.content
-    };
+    var jsGitUpdate = {};
+    jsGitUpdate.path = update.fname;
+    jsGitUpdate.mode = update.rm ? undefined : mode;
+    jsGitUpdate.content = update.rm ? undefined : update.content;
+    return jsGitUpdate;
   });
 
   updates.base = commit.tree;
