@@ -7,7 +7,6 @@ repo_url = 'https://github.com/eblahm/coy'
 content_root = 'src/server/content'
 
 session_secret = '(((((((((( 0-0~ ))))))))))'
-database_url = 'mongodb://localhost:17017/coy'
 
 [github]
   client_id = '3a76a08e13f238323cf1'
