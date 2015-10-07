@@ -1,9 +1,14 @@
 
 var lib = {};
 var marked = require('marked');
+var renderer = new marked.Renderer();
+
+renderer.code = (code, lang) => {
+  return `<code class="prettyprint lang-${lang}">${code}</code>`;
+};
 
 lib.parse = marked.setOptions({
-  renderer: new marked.Renderer(),
+  renderer: renderer,
   gfm: true,
   tables: true,
   breaks: false,
