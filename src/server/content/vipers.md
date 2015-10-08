@@ -6,6 +6,5 @@ good deeds and words season after season. An evil person is a blight on
 the orchard. Let me tell you something: Every one of these careless 
 words is going to come back to haunt you. There will be a time of 
 Reckoning. Words are powerful; take them seriously. Words can be your 
-salvation. Words can also be your damnation.”
-> &nbsp;&nbsp; 
-> --- Matthew 12:34-37 (MSG) 
+salvation. Words can also be your damnation.” 
+> <p>--- Matthew 12:34-37 (MSG)</p> 
