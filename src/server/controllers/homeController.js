@@ -1,48 +1,24 @@
 
-var bluebird = require('bluebird');
-var _ = require('lodash');
+var React = require('react');
 
+var reject = require('bluebird').reject;
 var contentService = require('../service/contentService');
 var NotFoundError = require('../errors/NotFoundError');
-
-var React = require('react');
-var reactHome = require('../../shared/views/home');
-
-var sortByLastCreatedDesc = (data) => {
-  return -1 * new Date(data.updated).getTime();
-};
+var reactHome = React.createFactory(require('../../shared/views/home'));
+var articleService = require('../service/articleService');
 
 module.exports = (req, res, next) => {
-  var article = req.params.article;
+  var slug = req.params.article;
 
-  var getSlug = () => {
-    if (article) {
-      return bluebird.resolve(article);
-    }
-    return contentService
-      .getMeta()
-      .then(_)
-      .call('map', (obj, key) => {
-        obj.slug = key;
-        return obj;
-      })
-      .call('sortBy', sortByLastCreatedDesc)
-      .call('value').get(0).get('slug');
-  };
-
-  return getSlug()
-    .then(contentService.getContent)
-    .then((content) => {
-        res.render('home.html', {
-          content: content,
-          title: content.title,
-          reactMarkup: React.renderToStaticMarkup(
-              React.createElement(reactHome, {content: content})
-            )
-        });
-      }, (err) => {
-        console.error(err.stack);
-        return next(new NotFoundError());
-      })
-    .catch(next);
+  return articleService.getAllOrderByCreatedDesc()
+    .then((allArticles) => {
+      return contentService.getContent(slug || allArticles[0].slug)
+        .then((content) => {
+          res.render('home.html', {
+            content: content,
+            allArticles: allArticles,
+            reactMarkup: React.renderToStaticMarkup(reactHome({content: content}))
+          });
+        }, (err) => reject(new NotFoundError(err)));
+    }, next);
 };

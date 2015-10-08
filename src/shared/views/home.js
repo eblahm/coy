@@ -3,26 +3,50 @@ var React = require('react');
 var RightSidebar = require('./rightSidebar.js');
 var LeftSidebar = require('./leftSidebar.js');
 var _ = require('lodash');
+var $ = require('jquery');
+
 var content;
+var articles;
 try {
   content = _.get(window, 'COY_PROPS.content');
+  articles = _.get(window, 'COY_PROPS.articles');
 } catch(err) {
   content = {};
+  articles = [];
 }
 var cx = require('classnames');
 
 module.exports = React.createClass({
   getInitialState() {
     return {
+      page: 0,
       displayLeftSidebar: false,
-      displayRightSidebar: false
+      displayRightSidebar: false,
+      content: content
     };
   },
 
   getDefaultProps() {
     return {
-      content: content
+      articles: articles
     };
+  },
+
+  componentDidMount() {
+  },
+
+  navigateNext: function() {
+    var articles = this.props.articles;
+    var page = this.state.page;
+    var index = page % articles.length;
+    var slug = _.get(articles, `[${index}].slug`);
+    if (!slug) { return; }
+    $.getJSON(`/article/${slug}`).then((content) => {
+      this.setState({
+        content: content,
+        page: page + 1
+      });
+    });
   },
 
   onNavHover: function(event) {
@@ -41,7 +65,10 @@ module.exports = React.createClass({
 
   render() {
     return (
-      <div className="flex-container">
+      <div
+        className="flex-container"
+        onClick={this.navigateNext}
+      >
         <nav
           className={cx({
             "active": this.state.displayLeftSidebar,
@@ -66,7 +93,7 @@ module.exports = React.createClass({
         >
           <div className="article-container">
             <article
-              dangerouslySetInnerHTML={{__html: this.props.content.html}}
+              dangerouslySetInnerHTML={{__html: this.state.content.html}}
             />
           </div>
         </section>

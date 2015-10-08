@@ -4,7 +4,8 @@
   <link rel="stylesheet" href="/css/main.css" type="text/css" media="screen" charset="utf-8">
   <script type="text/javascript" charset="utf-8">
     COY_PROPS = {};
-    COY_PROPS.content = {{ content | stringify | safe }};
+    COY_PROPS.content = {{ content | dump | safe }};
+    COY_PROPS.articles = {{ allArticles | dump | safe }};
   </script>
 {% endblock %}
 
