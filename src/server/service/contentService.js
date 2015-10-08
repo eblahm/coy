@@ -1,10 +1,13 @@
 
-var meta = require('../content/meta.json');
-var cache = require('./cache');
 var path = require('path');
-var markdownService = require('../../shared/service/markdownService');
-var fs = require('fs');
+var bluebird = require('bluebird');
+var fs = bluebird.promisifyAll(require('fs'));
 var _ = require('lodash');
+
+var markdownService = require('../../shared/service/markdownService');
+var cache = require('./cache');
+var meta = require('../content/meta.json');
+var NotFoundError = require('../errors/NotFoundError');
 
 var MARKDOWN_EXT = '.md';
 var META_KEY = 'meta-json';
@@ -26,7 +29,12 @@ exports.getMeta = () => {
 exports.getContent = (key) => {
   var load = () => {
     var fullPath = path.join(__dirname, '../content/', key + MARKDOWN_EXT);
-    return exports.setContent(key, fs.readFileSync(fullPath).toString(), meta[key]);
+    return fs.readFileAsync(fullPath).then(
+      (data) => {
+        return exports.setContent(key, data.toString(), meta[key]);
+      },
+      (err) => bluebird.reject(new NotFoundError(err))
+    );
   };
   return cache.hgetallAsync(key).then(
       (content) => content || load(),
