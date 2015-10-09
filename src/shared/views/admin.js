@@ -123,7 +123,7 @@ module.exports = React.createClass({
     var self = this;
     var commitedArticles = _.clone(this.state.commitedArticles);
     var editor = this.EPIC_EDITOR;
-    var cachedMarkdown = editor.getFiles(slug).content.replace(/&nbsp;/, ' ');
+    var cachedMarkdown = editor.getFiles(slug).content;
     var shouldLoad = cachedMarkdown === MUST_LOAD;
 
     $.getJSON(`/article/${slug}`)
