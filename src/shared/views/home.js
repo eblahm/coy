@@ -19,7 +19,6 @@ var cx = require('classnames');
 module.exports = React.createClass({
   getInitialState() {
     return {
-      page: 0,
       displayLeftSidebar: false,
       displayRightSidebar: false,
       content: content
@@ -33,20 +32,31 @@ module.exports = React.createClass({
   },
 
   componentDidMount() {
+    var slug = _.get(this.props, 'params.slug');
+    if (slug) {
+      this.open(slug);
+    }
   },
 
   navigateNext: function() {
     var articles = this.props.articles;
-    var page = this.state.page;
-    var index = page % articles.length;
-    var slug = _.get(articles, `[${index}].slug`);
-    if (!slug) { return; }
-    $.getJSON(`/article/${slug}`).then((content) => {
-      this.setState({
-        content: content,
-        page: page + 1
-      });
-    });
+    var nextIndex = (this.getCurrentIndex() + 1) % articles.length;
+    var slug = _.get(articles, `[${nextIndex}].slug`);
+
+    if (slug) {
+      this.open(slug);
+    }
+  },
+
+  getCurrentIndex: function() {
+    return _.reduce(this.props.articles, (memo, data, i) => {
+      return this.state.content.slug === data.slug ? i : memo;
+    }, 0);
+  },
+
+  open: function(slug) {
+    $.getJSON(`/article/${slug}`)
+      .then((data) => this.setState({content: data}));
   },
 
   onNavHover: function(event) {
@@ -67,7 +77,6 @@ module.exports = React.createClass({
     return (
       <div
         className="flex-container"
-        onClick={this.navigateNext}
       >
         <nav
           className={cx({
@@ -81,6 +90,8 @@ module.exports = React.createClass({
         <LeftSidebar
           className="sidebar left-sidebar"
           onMouseOut={this.onSidebarLeave}
+          articles={this.props.articles}
+          activeSlug={this.state.content.slug}
         />
 
 
