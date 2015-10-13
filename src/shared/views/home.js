@@ -32,8 +32,16 @@ module.exports = React.createClass({
   },
 
   componentDidMount() {
+    this.onPathChange();
+  },
+
+  componentDidUpdate() {
+    this.onPathChange();
+  },
+
+  onPathChange() {
     var slug = _.get(this.props, 'params.slug');
-    if (slug) {
+    if (slug !== this.state.content.slug) {
       this.open(slug);
     }
   },
@@ -89,9 +97,9 @@ module.exports = React.createClass({
 
         <LeftSidebar
           className="sidebar left-sidebar"
-          onMouseOut={this.onSidebarLeave}
           articles={this.props.articles}
           activeSlug={this.state.content.slug}
+          onMouseLeave={this.onSidebarLeave}
         />
 
 

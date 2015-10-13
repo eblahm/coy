@@ -10,8 +10,9 @@ var Home = require('../shared/views/home');
 React.render((
   <Router
     history={createBrowserHistory()}>
-    <Route path="/" component={Home}></Route>
-    <Route path="/:slug" component={Home}></Route>
+    <Route path="/" component={Home}>
+      <Route path="/:slug" component={Home}></Route>
+    </Route>
   </Router>
 ), document.getElementById('react-container'));
 

@@ -1,7 +1,6 @@
 
 var React = require('react');
 
-var reject = require('bluebird').reject;
 var contentService = require('../service/contentService');
 var NotFoundError = require('../errors/NotFoundError');
 var reactHome = React.createFactory(require('../../shared/views/home'));
@@ -19,6 +18,6 @@ module.exports = (req, res, next) => {
             allArticles: allArticles,
             reactMarkup: React.renderToStaticMarkup(reactHome({content: content}))
           });
-        }, (err) => reject(new NotFoundError(err)));
+        }, (err) => next(new NotFoundError(err)));
     }, next);
 };
