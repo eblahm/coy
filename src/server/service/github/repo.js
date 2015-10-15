@@ -1,5 +1,4 @@
 
-
 var githubDb = require('js-github/mixins/github-db');
 var createTree = require('js-git/mixins/create-tree');
 var memcache = require('js-git/mixins/mem-cache');
@@ -10,7 +9,7 @@ var _ = require('lodash');
 var run = require('gen-run');
 var bluebird = require('bluebird');
 
-var commitGenerator = function* (repoObj, updates, message, ref = 'refs/heads/master') {
+var commitGenerator = function* (repoObj, user, updates, message, ref = 'refs/heads/master') {
 
   console.log(`loading git ref:${ref}`);
   var headHash = yield repoObj.readRef(ref);
@@ -21,7 +20,6 @@ var commitGenerator = function* (repoObj, updates, message, ref = 'refs/heads/ma
   console.log('loading tree for commit:%j', commit);
   var tree = yield repoObj.loadAs('tree', commit.tree);
 
-  // fallback indicates new file
 
   // Build the updates array
   updates = _.map(updates, (update) => {
@@ -43,8 +41,8 @@ var commitGenerator = function* (repoObj, updates, message, ref = 'refs/heads/ma
   var commitHash = yield repoObj.saveAs('commit', {
     tree: treeHash,
     author: {
-      name: 'Matthew Halbe',
-      email: 'matthew@webs.com'
+      name: user.name,
+      email: user.email
     },
     parent: headHash,
     message: message
@@ -54,21 +52,24 @@ var commitGenerator = function* (repoObj, updates, message, ref = 'refs/heads/ma
   yield repoObj.updateRef(ref, commitHash);
 };
 
-var githubService = {};
+var repos = {};
 
-githubService.repo = (repName, githubToken) => {
+module.exports = (repoName, session) => {
   var service = {};
   var repoObj = {};
 
-  githubDb(repoObj, repName, githubToken);
-  createTree(repoObj);
-  memcache(repoObj);
-  readCombiner(repoObj);
-  formats(repoObj);
+  if (!repos[repoName]) {
+    githubDb(repoObj, repoName, session.githubToken);
+    createTree(repoObj);
+    memcache(repoObj);
+    readCombiner(repoObj);
+    formats(repoObj);
+    repos[repoName] = repoObj;
+  }
 
   service.commit = (...args) => {
     return new Promise((resolve, reject) => {
-      run(commitGenerator(repoObj, ...args), (err) => {
+      run(commitGenerator(repos[repoName], session.user, ...args), (err) => {
         return err ? reject(err) : resolve();
       });
     });
@@ -77,5 +78,3 @@ githubService.repo = (repName, githubToken) => {
   return _.assign(service, bluebird.promisifyAll(repoObj));
 
 };
-
-module.exports = githubService;

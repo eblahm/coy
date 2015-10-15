@@ -6,6 +6,7 @@ var config = require('config');
 var assert = require('assert');
 var qs = require('querystring');
 var crypto = require('crypto');
+var githubService = require('../service/github');
 
 router.get('/login', (req, res, next) => {
 
@@ -24,7 +25,9 @@ router.get('/login', (req, res, next) => {
 
 router.get('/callback', (req, res, next) => {
 
-  assert.equal(req.session.githubState, req.query.state);
+  if (req.session.githubState !== req.query.state) {
+    return res.status(400).send('unauthorized');
+  }
 
   request({
     method: 'POST',
@@ -38,8 +41,13 @@ router.get('/callback', (req, res, next) => {
     },
     json: true
   }).spread((resp, body) => {
+    var accessToken = body.access_token;
     assert.equal(body.scope, config.get('github.scope'));
-    req.session.githubToken = body.access_token;
+    req.session.githubToken = accessToken;
+    return githubService.api(accessToken, {url: '/user'});
+  })
+  .then(function(user) {
+    req.session.user = user;
     res.redirect('/admin');
   })
   .catch((err) => {

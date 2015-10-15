@@ -23,7 +23,7 @@ router.post('', isLoggedIn, (req, res, next) => {
   assert.ok(slug, 'must provide a name');
   assert(!_.contains(req.body.name, '..'), 'file name must not contain ".." ');
 
-  var repo = github.repo(GITHUB_REPO_ID, req.session.githubToken);
+  var repo = github.repo(GITHUB_REPO_ID, req.session);
   console.log('attempting to make commit %j', req.body);
 
   contentService.getMeta().then((articleMeta) => {
