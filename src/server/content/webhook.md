@@ -3,7 +3,7 @@ uninitiated in as few words as possible: It's a minimalist, collaborative,
 cloud-based text editor with [git-like version control
 features](https://draftin.com/images/diff_view2.png).
 
-I haven't had much reason to use Draft. &nbsp;I write a lot for work but
+I haven't had much reason to use Draft.  I write a lot for work but
 unfortunately, for draft's sake and my sanity, everyone in my office is
 addicted to Microsoft Word. &nbsp;They're also generally distrustful of free web
 services, regardless of their usefulness. &nbsp;This is true not just for my office,
