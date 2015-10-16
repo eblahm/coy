@@ -7,7 +7,7 @@
   box-sizing: border-box;
 }
 
-html, body, #admin-container {
+html, body, #react-container, .admin-container {
   height:100%;
   margin: 0;
   padding: 0;
@@ -17,6 +17,7 @@ html, body, #admin-container {
 .admin-container {
   display: flex;
   margin: 10px;
+
   section.title {
     font-size: 16px;
     display: flex;
@@ -32,7 +33,7 @@ html, body, #admin-container {
   }
 
   .files-sidebar {
-    flex: 1;
+    flex: 2;
     margin-right: 5px;
     ul {
       list-style: none;
@@ -89,8 +90,15 @@ html, body, #admin-container {
 
   form.edit-form-container {
     z-index: 2;
-    flex: 6;
+    flex: 5;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    .inner-form {
+      max-width: @article-max-width;
+      flex: 1 0;
+      height: 100%;
+    }
 
     .article-meta-input {
       font-size: 20px;

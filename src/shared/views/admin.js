@@ -278,19 +278,21 @@ module.exports = React.createClass({
         </ul>
       </div>
       <form className="edit-form-container">
-        <section className="title vbold">
-          {_.get(this.state.articles, `[${selectedSlug}].draft`) ? `${selectedSlug}.md` : this.getArticleLink(selectedSlug)}
-          {this.state.unsavedChanges ? <span className="has-unsaved-changes vll-italic">uncommited changes</span> : ''}
-          </section>
-        <div className="article-meta-input">
-          <input id="title" name="name" type="text" style={{"display":"none"}} placeholder="Title.." value={selectedSlug}/>
+        <div className="inner-form">
+          <section className="title vbold">
+            {_.get(this.state.articles, `[${selectedSlug}].draft`) ? `${selectedSlug}.md` : this.getArticleLink(selectedSlug)}
+            {this.state.unsavedChanges ? <span className="has-unsaved-changes vll-italic">uncommited changes</span> : ''}
+            </section>
+          <div className="article-meta-input">
+            <input id="title" name="name" type="text" style={{"display":"none"}} placeholder="Title.." value={selectedSlug}/>
+          </div>
+
+          <EpicEditorComponent id="epiceditor" />
+
+          <footer>
+            <button onClick={this.onSubmit}>Commit</button>
+          </footer>
         </div>
-
-        <EpicEditorComponent id="epiceditor" />
-
-        <footer>
-          <button onClick={this.onSubmit}>Commit</button>
-        </footer>
       </form>
     </div>)
   }
