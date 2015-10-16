@@ -7,8 +7,7 @@ I haven't had much reason to use Draft.  I write a lot for work but
 unfortunately, for draft's sake and my sanity, everyone in my office is
 addicted to Microsoft Word.  They're also generally distrustful of free web
 services, regardless of their usefulness.  This is true not just for my office,
-but [the Federal Government as a
-whole](http://readwrite.com/2012/05/31/government-market-drags-microsoft-deeper-into-the-cloud#awesm=~obA3HoQ6Kx7h7O).
+but [the Federal Government as a whole](http://readwrite.com/2012/05/31/government-market-drags-microsoft-deeper-into-the-cloud#awesm=~obA3HoQ6Kx7h7O).
 
 [Draft's creator](https://twitter.com/natekontny) just announced a webhook
 feature, so my personal use may be rising.  A webhook gives me the ability to
@@ -33,8 +32,7 @@ But anyways, its what I use.  So for you .00000000000000000000001% like me,
 blogging on App Engine, here's the primary components for building a blog-style
 webhook between Draft and Google App Engine:
 
-#### 1. a data model that mirrors the [Draft
-payload](https://draftin.com/documents/69898?token=5fjKKlZ0-AeBzqj_RAftAGdzRzl9VBfBHj5wpSWm_gU)
+#### 1. a data model that mirrors the [Draft payload](https://draftin.com/documents/69898?token=5fjKKlZ0-AeBzqj_RAftAGdzRzl9VBfBHj5wpSWm_gU)
 
 ```python
 from google.appengine.ext import db
