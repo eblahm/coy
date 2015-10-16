@@ -18,4 +18,12 @@ lib.parse = marked.setOptions({
   smartypants: true
 });
 
+lib.toHTML = (markdownText) => {
+  return markdownText.replace(/\r/g, '');
+};
+
+lib.fromHTML = (markdownText) => {
+  return markdownText.replace(/\&nbsp;/g, ' ');
+};
+
 module.exports = lib;

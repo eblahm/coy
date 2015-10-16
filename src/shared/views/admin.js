@@ -5,7 +5,7 @@ var _ = require('lodash');
 var cx = require('classnames');
 var $ = require('jquery');
 var resolved = (new $.Deferred()).resolve();
-
+var markdownService = require('../service/markdownService');
 
 const KEYPRESS = {ENTER: 13};
 const MUST_LOAD = 'loading...';
@@ -129,7 +129,7 @@ module.exports = React.createClass({
     $.getJSON(`/article/${slug}`)
       .then(
         (data) => {
-          var markdown = data.markdown.replace(/\r/g, '');
+          var markdown = markdownService.toHTML(data.markdown);
           if (cachedMarkdown === MUST_LOAD) {
             editor.importFile(slug, markdown); // overwrite existing
             self.setState({unsavedChanges: false});
@@ -198,6 +198,7 @@ module.exports = React.createClass({
     event.stopPropagation();
     var slug = this.state.selectedSlug;
     var markdown = this.EPIC_EDITOR.getFiles(slug).content;
+    markdown = markdownService.fromHTML(markdown);
     var self = this;
     $.ajax({
       url: '/article',
