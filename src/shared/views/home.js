@@ -41,7 +41,7 @@ module.exports = React.createClass({
 
   onPathChange() {
     var slug = _.get(this.props, 'params.slug');
-    if (slug !== this.state.content.slug) {
+    if (slug && slug !== this.state.content.slug) {
       this.open(slug);
     }
   },

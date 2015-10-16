@@ -26,7 +26,10 @@ exports.getMeta = () => {
     );
 };
 
-exports.getContent = (key) => {
+exports.getContent = (key, flush) => {
+  if (!key) {
+      return bluebird.reject(new NotFoundError());
+  }
   var load = () => {
     var fullPath = path.join(__dirname, '../content/', key + MARKDOWN_EXT);
     return fs.readFileAsync(fullPath).then(
@@ -36,6 +39,9 @@ exports.getContent = (key) => {
       (err) => bluebird.reject(new NotFoundError(err))
     );
   };
+  if (flush) {
+    return load();
+  }
   return cache.hgetallAsync(key).then(
       (content) => content || load(),
       (err) => load()

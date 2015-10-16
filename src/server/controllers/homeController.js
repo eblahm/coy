@@ -11,7 +11,8 @@ module.exports = (req, res, next) => {
 
   return articleService.getAllOrderByCreatedDesc()
     .then((allArticles) => {
-      return contentService.getContent(slug || allArticles[0].slug)
+      slug = slug || allArticles[0].slug;
+      return contentService.getContent(slug, !!req.query.flush)
         .then((content) => {
           res.render('home.html', {
             content: content,
