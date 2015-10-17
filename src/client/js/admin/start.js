@@ -5,14 +5,13 @@ var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
 
-var Home = require('../shared/views/home');
+var Admin = require('../../../shared/views/admin');
+require('./epicEditor');
 
 React.render((
   <Router
     history={createBrowserHistory()}>
-    <Route path="/" component={Home}>
-      <Route path="/:slug" component={Home}></Route>
-    </Route>
+    <Route path="/admin" component={Admin}></Route>
   </Router>
 ), document.getElementById('react-container'));
 

@@ -17,6 +17,7 @@ module.exports = (req, res, next) => {
           res.render('home.html', {
             content: content,
             allArticles: allArticles,
+            openArticle: content,
             reactMarkup: React.renderToStaticMarkup(reactHome({content: content}))
           });
         }, (err) => next(new NotFoundError(err)));

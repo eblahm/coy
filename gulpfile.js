@@ -60,8 +60,8 @@ var STATIC_CLIENT_DEPENDENCIES = [
 ];
 
 var CLIENT_SIDE_APPS = [
-  './src/client/adminStart.js',
-  './src/client/homeStart.js'
+  './src/client/js/admin/start.js',
+  './src/client/js/home/start.js',
 ];
 
 gulp.task('clean', function(done) {
@@ -74,13 +74,13 @@ gulp.task('bundle', function () {
       .transform(babelify.configure({whitelist: BABEL_TRANFORMS}))
       .bundle()
       .on('error', gutil.log)
-      .pipe(source(path.parse(file).base))
+      .pipe(source(file.replace(/\.\/src\//, '')))
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
       // .pipe(uglify())
       .on('error', gutil.log)
       .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest('./dist/client'));
+      .pipe(gulp.dest('./dist/'));
   });
 });
 
