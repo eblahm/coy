@@ -182,14 +182,13 @@ module.exports = React.createClass({
     });
 
     this.EPIC_EDITOR.open(articleSlug);
-
   },
-
 
   onNewArticleKeyPress: function(event) {
     var val = event.currentTarget.value;
     if (event.charCode === KEYPRESS.ENTER && val) {
       this.onNewArticleCreate(val);
+      event.currentTarget.value = '';
     }
   },
 
