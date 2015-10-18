@@ -10,7 +10,7 @@ smart lists?
 2. foo
 
 
-> "Dont Believe Everything you read on the internet" &nbsp;
+> "Dont Believe Everything you read on the internet"  
 --- Abraham Lincoln
 
 
