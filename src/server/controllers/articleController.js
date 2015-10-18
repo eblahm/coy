@@ -60,7 +60,7 @@ router.delete('/:slug', isLoggedIn, (req, res, next) => {
     assert.ok(articleMeta[slug], 'slug doesn\'t exists');
     articleMeta = _.omit(articleMeta, slug);
 
-    var repo = github.repo(GITHUB_REPO_ID, req.session.githubToken);
+    var repo = github.repo(GITHUB_REPO_ID, req.session);
     console.log('attempting to delete article (slug:%s)', slug);
 
     return repo.commit([
