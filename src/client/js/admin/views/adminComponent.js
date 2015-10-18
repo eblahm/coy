@@ -131,7 +131,7 @@ module.exports = React.createClass({
     var selectedSlug = this.selectedSlug();
     var originalMarkdown = window.localStorage.getItem(`original-${selectedSlug}`);
     var activeMarkdown = this.state.openArticle.markdown;
-    if (!originalMarkdown) return true;
+    if (!originalMarkdown) return false;
     if (!activeMarkdown) return true;
     return originalMarkdown === markdownService.fromHTML(activeMarkdown);
   },

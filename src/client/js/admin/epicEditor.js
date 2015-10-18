@@ -8,7 +8,9 @@ var editor;
 
 var transformCachedFiles = (files) => {
   return _.reduce(files, (articles, data, key) => {
-    if (key === 'epiceditor') { return articles; }
+    if (key === 'epiceditor' || !_.trim(data.content)) {
+      return articles;
+    }
     articles[key] = {
       slug: key,
       created: data.created,
@@ -42,16 +44,15 @@ actions.epicEditorCanMount.listen(() => {
 });
 
 actions.removeArticleFromCache.listen(function(slug) {
-  editor.remove(slug);
+  // there is bug in editor.remove()
+  editor.importFile(slug, '');
   this.completed(slug);
 });
 
 actions.openArticleFromCache.listen(function(slug) {
-  if (!editor.getFiles(slug)) {
-    editor.importFile(slug, '');
-  }
   editor.open(slug);
   var data = editor.getFiles(slug);
+  if (!data) return;
   this.completed(slug, {
     slug: slug,
     created: data.created,
