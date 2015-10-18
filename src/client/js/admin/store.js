@@ -49,7 +49,6 @@ module.exports = Reflux.createStore({
 
   onOpenArticleFromServerCompleted: function(slug, data) {
     state.openArticle = data;
-    state.articlesOnServer[slug] = data;
     this.trigger(state);
   },
 
@@ -78,7 +77,17 @@ module.exports = Reflux.createStore({
 
   // updating stuff
   onArticleDidUpdateInCache: function(data) {
-    state.openArticle.markdown = data;
+    state.openArticle.markdown = data.content;
+    state.openArticle.updated = data.modified;
+    state.articlesInCache[state.openArticle.slug].markdown = data.content;
+
+    if (!this.isUpdating) {
+      this.isUpdating = true;
+      _.delay(() => {
+        this.isUpdating = false;
+        this.trigger(state);
+      }, 1000);
+    }
   },
 
   onSubmitFromCacheCompleted: function(slug, data) {

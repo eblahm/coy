@@ -26,7 +26,8 @@ actions.openArticleFromServer.listen(function(slug) {
   $.getJSON(`/article/${slug}`)
   .then(
     (data) => {
-      this.completed(slug, data)
+      window.localStorage.setItem(`original-${slug}`, data.markdown);
+      this.completed(slug, data);
     },
     (err) => this.failed(err)
   );
@@ -43,16 +44,20 @@ actions.removeArticleOnServer.listen(function(slug) {
 });
 
 actions.submitFromCache.listen(function(slug, markdown) {
+  markdown = markdownService.fromHTML(markdown);
   $.ajax({
     url: '/article',
     method: 'POST',
     dataType: 'json',
     data: {
-      content: markdownService.fromHTML(markdown),
+      content: markdown,
       slug: slug
     }
   }).then(
-    (data) => this.completed(slug, data),
+    (data) => {
+      window.localStorage.setItem(`original-${slug}`, data.markdown);
+      this.completed(slug, data);
+    },
     (err) => this.failed(err)
   );
 });

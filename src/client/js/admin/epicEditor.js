@@ -37,6 +37,7 @@ actions.epicEditorCanMount.listen(() => {
       base: '../../../../css/editor-base-theme.css'
     }
   }).load(actions.epicEditorDidMount);
+  editor.on('update', actions.articleDidUpdateInCache);
   resetCacheState();
 });
 

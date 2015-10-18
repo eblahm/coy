@@ -127,6 +127,15 @@ module.exports = React.createClass({
       </a>
   },
 
+  isOriginalMarkdown: function() {
+    var selectedSlug = this.selectedSlug();
+    var originalMarkdown = window.localStorage.getItem(`original-${selectedSlug}`);
+    var activeMarkdown = this.state.openArticle.markdown;
+    if (!originalMarkdown) return true;
+    if (!activeMarkdown) return true;
+    return originalMarkdown === markdownService.fromHTML(activeMarkdown);
+  },
+
   render() {
     var selectedSlug = this.selectedSlug();
     var articlesOnServer = this.state.articlesOnServer;
@@ -158,7 +167,7 @@ module.exports = React.createClass({
         <div className="inner-form">
           <section className="title vbold">
             {_.contains(draftKeys, selectedSlug) ? `${selectedSlug}.md` : this.getArticleLink(selectedSlug)}
-            {1 == 1 ? <span className="has-unsaved-changes vll-italic">uncommited changes</span> : ''}
+            {this.isOriginalMarkdown() ? '' : <span className="has-unsaved-changes vll-italic">uncommited changes</span>}
             </section>
           <div className="article-meta-input">
             <input id="title" name="name" type="text" style={{"display":"none"}} placeholder="Title.." value={selectedSlug}/>
