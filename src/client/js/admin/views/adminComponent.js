@@ -85,7 +85,7 @@ module.exports = React.createClass({
   onSubmit: function(event) {
     event.preventDefault();
     event.stopPropagation();
-    actions.submit();
+    actions.submit(this.state.openArticle.slug);
   },
 
   selectedSlug: function() {
