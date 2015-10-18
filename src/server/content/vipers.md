@@ -6,4 +6,5 @@ the orchard. Let me tell you something: Every one of these careless
 words is going to come back to haunt you. There will be a time of 
 Reckoning. Words are powerful; take them seriously. Words can be your 
 salvation. Words can also be your damnation.”  
-> --- Matthew 12:34-37 (MSG) 
+> --- Matthew 12:34-37 (MSG)
+ 
