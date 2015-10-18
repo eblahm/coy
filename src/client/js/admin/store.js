@@ -2,11 +2,15 @@
 var Reflux = require('reflux');
 var actions = require('./actions');
 var _ = require('lodash');
+var initialOpenArticle = () => {
+  var articles = _.get(window, 'COY_ADMIN.articles', {});
+  return _.get(_.values(articles), '[0]', {});
+};
 
 var state = {
   articlesOnServer: _.get(window, 'COY_ADMIN.articles', {}),
   articlesInCache: {},
-  openArticle: {}
+  openArticle: initialOpenArticle()
 };
 
 module.exports = Reflux.createStore({
@@ -27,36 +31,49 @@ module.exports = Reflux.createStore({
     this.trigger(state);
   },
 
+  onEpicEditorDidMount: function() {
+    this.openAny();
+  },
+
   // OPENING STUFF
   onOpenArticle: function(slug) {
-    var cachedContent = _.get(state.articlesOnServer, `[${slug}].markdown`);
-    var savedContent = _.get(state.articlesOnServer, `[${slug}].markdown`);
-    if (savedContent && !_.trim(cachedContent)) {
+    var cached = state.articlesInCache;
+    var saved = state.articlesOnServer;
+    if (_.has(saved, slug) &&
+        !_.trim(_.get(cached, `[${slug}].markdown`, ''))) {
       actions.openArticleFromServer(slug);
     } else {
       actions.openArticleFromCache(slug);
     }
   },
 
-  onOpenArticleFromServerCompleted: function(data) {
-    state.onOpenArticle = data;
+  onOpenArticleFromServerCompleted: function(slug, data) {
+    state.openArticle = data;
+    state.articlesOnServer[slug] = data;
     this.trigger(state);
   },
 
-  onOpenArticleFromCacheCompleted: function(data) {
+  onOpenArticleFromCacheCompleted: function(slug, data) {
     state.openArticle = data;
+    state.articlesInCache[slug] = data;
     this.trigger(state);
+  },
+
+  openAny: function() {
+    actions.openArticle(_.keys(state.articlesOnServer)[0]);
   },
 
   // REMOVING STUFF
   onRemoveArticleOnServerCompleted: function(slug) {
     delete state.articlesOnServer[slug];
     actions.removeArticleFromCache(slug);
+    this.openAny();
   },
 
   onRemoveArticleFromCacheCompleted: function(slug) {
     delete state.articlesInCache[slug];
     this.trigger(state);
+    this.openAny();
   },
 
   // updating stuff

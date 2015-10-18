@@ -19,6 +19,11 @@ var transformCachedFiles = (files) => {
   }, {});
 };
 
+var resetCacheState = () => {
+  var articles = transformCachedFiles(editor.getFiles());
+  actions.loadArticlesFromCache(articles);
+};
+
 actions.epicEditorCanMount.listen(() => {
   editor = new window.EpicEditor({
     basePath: '/lib/epiceditor/epiceditor',
@@ -31,19 +36,35 @@ actions.epicEditorCanMount.listen(() => {
       preview: '../../../../css/editor-preview-theme.css',
       base: '../../../../css/editor-base-theme.css'
     }
-  }).load();
-  var articles = transformCachedFiles(editor.getFiles());
-  actions.loadArticlesFromCache(articles);
+  }).load(actions.epicEditorDidMount);
+  resetCacheState();
+});
+
+actions.removeArticleFromCache.listen(function(slug) {
+  editor.remove(slug);
+  this.completed(slug);
 });
 
 actions.openArticleFromCache.listen(function(slug) {
+  if (!editor.getFiles(slug)) {
+    editor.importFile(slug, '');
+  }
   editor.open(slug);
-  var articles = transformCachedFiles(editor.getFiles());
-  actions.loadArticlesFromCache(articles);
-  this.completed(articles[slug]);
+  var data = editor.getFiles(slug);
+  this.completed(slug, {
+    slug: slug,
+    created: data.created,
+    updated: data.modified,
+    markdown: data.content
+  });
+});
+
+actions.openArticleFromServer.completed.listen(function(slug, data) {
+  editor.importFile(slug, data.markdown);
+  resetCacheState();
 });
 
 actions.submit.listen(function(slug) {
-  var article = transformCachedFiles(editor.getFiles(slug))[0];
-  actions.submitFromCache(slug, article.markdown);
+  var data = editor.getFiles(slug);
+  actions.submitFromCache(slug, data.content);
 });

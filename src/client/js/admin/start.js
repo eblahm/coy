@@ -5,7 +5,7 @@ var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
 
-var Admin = require('../../../shared/views/admin');
+var Admin = require('./views/adminComponent');
 require('./epicEditor');
 
 React.render((

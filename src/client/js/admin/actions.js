@@ -5,6 +5,7 @@ var markdownService = require('../../../shared/service/markdownService');
 
 var actions = Reflux.createActions({
   'epicEditorCanMount': {},
+  'epicEditorDidMount': {},
 
   'openArticle': {},
 
@@ -24,7 +25,9 @@ var actions = Reflux.createActions({
 actions.openArticleFromServer.listen(function(slug) {
   $.getJSON(`/article/${slug}`)
   .then(
-    (data) => this.completed(data),
+    (data) => {
+      this.completed(slug, data)
+    },
     (err) => this.failed(err)
   );
 });

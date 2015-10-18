@@ -4,15 +4,14 @@ var Reflux = require('reflux');
 var _ = require('lodash');
 var cx = require('classnames');
 var $ = require('jquery');
-var resolved = (new $.Deferred()).resolve();
+var bluebird = require('bluebird');
 
-var EpicEditorComponent = require('./epicEditor');
-var markdownService = require('../service/markdownService');
-var store = require('../../client/js/admin/store');
-var actions = require('../../client/js/admin/actions');
+var DisabledComponent = require('./disableUpdateComponent');
+var markdownService = require('../../../../shared/service/markdownService');
+var store = require('../store');
+var actions = require('../actions');
 
 const KEYPRESS = {ENTER: 13};
-const MUST_LOAD = 'loading...';
 
 module.exports = React.createClass({
   mixins: [Reflux.connect(store)],
@@ -35,15 +34,6 @@ module.exports = React.createClass({
 
   componentDidMount() {
     actions.epicEditorCanMount();
-    setTimeout(() => {
-      this.loadInitialActiveArticle();
-    }, 3000);
-  },
-
-  loadInitialActiveArticle: function() {
-    // set the editor to some random content
-    var anySlug = _.keys(this.state.articlesOnServer).pop();
-    return anySlug && actions.openArticle(anySlug);
   },
 
   openArticle: function(slug, event) {
@@ -65,7 +55,7 @@ module.exports = React.createClass({
     if (this.state.articlesOnServer[slug]) {
       actions.removeArticleOnServer(slug);
     } else {
-      actions.removeArticleInCache(slug);
+      actions.removeArticleFromCache(slug);
     }
   },
 
@@ -77,11 +67,11 @@ module.exports = React.createClass({
     if (!confirm(`Are you sure you want to flush the unsaved changes for ${slug}.md`)) {
       return;
     }
-    actions.removeArticleInCache(slug);
+    actions.removeArticleFromCache(slug);
   },
 
   onNewArticleCreate: function(articleSlug) {
-    actions.openArticle(articleSlug);
+    actions.openArticleFromCache(articleSlug);
   },
 
   onNewArticleKeyPress: function(event) {
@@ -174,7 +164,7 @@ module.exports = React.createClass({
             <input id="title" name="name" type="text" style={{"display":"none"}} placeholder="Title.." value={selectedSlug}/>
           </div>
 
-          <EpicEditorComponent id="epiceditor" />
+          <DisabledComponent id="epiceditor" />
 
           <footer>
             <button onClick={this.onSubmit}>Commit</button>
