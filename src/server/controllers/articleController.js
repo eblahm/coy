@@ -16,10 +16,10 @@ var isLoggedIn = (req, res, next) => {
 };
 
 router.post('', isLoggedIn, (req, res, next) => {
-  var content = req.body.content;
+  var markdown = req.body.markdown;
   var slug = req.body.slug;
 
-  assert.ok(content, 'must provide article content');
+  assert.ok(markdown, 'must provide article content');
   assert.ok(slug, 'must provide a name');
   assert(!_.contains(req.body.name, '..'), 'file name must not contain ".." ');
 
@@ -29,15 +29,18 @@ router.post('', isLoggedIn, (req, res, next) => {
   contentService.getMeta().then((articleMeta) => {
 
     var nowISOString = new Date().toISOString();
-    articleMeta[slug] = {
-      created: _.get(articleMeta, `[${slug}].created`, nowISOString),
-      updated: nowISOString
-    };
+    articleMeta[slug] = _.assign(
+      _.omit(req.body, ['slug', 'markdown']),
+      {
+        created: _.get(articleMeta, `[${slug}].created`, nowISOString),
+        updated: nowISOString
+      }
+    );
 
     return repo.commit([
         {
           fname: `${CONTENT_ROOT}/${slug}.md`,
-          content: content
+          content: markdown
         },
         {
           fname: `${CONTENT_ROOT}/meta.json`,
@@ -45,7 +48,7 @@ router.post('', isLoggedIn, (req, res, next) => {
         },
       ], `update ${slug}.md`)
     .then(() => contentService.updateMeta(articleMeta))
-    .then(() => contentService.setContent(slug, content, articleMeta[slug]))
+    .then(() => contentService.setContent(slug, markdown, articleMeta[slug]))
     .then((data) => res.json(data).end(), next);
   });
 

@@ -8,6 +8,7 @@ var bluebird = require('bluebird');
 
 var DisabledComponent = require('./disableUpdateComponent');
 var markdownService = require('../../../../shared/service/markdownService');
+var browserCache = require('../service/browserCacheService');
 var store = require('../store');
 var actions = require('../actions');
 
@@ -71,7 +72,7 @@ module.exports = React.createClass({
   },
 
   onNewArticleCreate: function(articleSlug) {
-    actions.openArticleFromCache(articleSlug);
+    actions.openArticleFromCache(_.kebabCase(articleSlug));
   },
 
   onNewArticleKeyPress: function(event) {
@@ -82,10 +83,25 @@ module.exports = React.createClass({
     }
   },
 
+  onMetaChange: function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    var openArticle = _.clone(this.state.openArticle);
+    var currentTarget = event.currentTarget;
+    var slug = this.selectedSlug();
+    var name = currentTarget.getAttribute('name');
+    var val = currentTarget.value;
+    if (slug && name) {
+      openArticle[name] = val;
+      browserCache.setMetaProp(slug, name, val);
+      this.setState({openArticle: openArticle});
+    }
+  },
+
   onSubmit: function(event) {
     event.preventDefault();
     event.stopPropagation();
-    actions.submit(this.state.openArticle.slug);
+    actions.submit(this.state.openArticle);
   },
 
   selectedSlug: function() {
@@ -101,7 +117,7 @@ module.exports = React.createClass({
         onClick={_.curry(this.openArticle, 3)(article.slug)}
         className={cx({active: article.slug === selectedSlug})}
       >
-        <span className="name">{article.slug}</span>
+        <span className="name">/{article.slug}</span>
         <span className="toolbar">
           <i
             className="icon-trash_can"
@@ -129,7 +145,7 @@ module.exports = React.createClass({
 
   isOriginalMarkdown: function() {
     var selectedSlug = this.selectedSlug();
-    var originalMarkdown = window.localStorage.getItem(`original-${selectedSlug}`);
+    var originalMarkdown = browserCache.getOriginalMarkdown(selectedSlug);
     var activeMarkdown = this.state.openArticle.markdown;
     if (!originalMarkdown) return false;
     if (!activeMarkdown) return true;
@@ -137,6 +153,7 @@ module.exports = React.createClass({
   },
 
   render() {
+    var openArticle = this.state.openArticle;
     var selectedSlug = this.selectedSlug();
     var articlesOnServer = this.state.articlesOnServer;
     var articlesInCache = this.state.articlesInCache;
@@ -168,9 +185,21 @@ module.exports = React.createClass({
           <section className="title vbold">
             {_.contains(draftKeys, selectedSlug) ? `${selectedSlug}.md` : this.getArticleLink(selectedSlug)}
             {this.isOriginalMarkdown() ? '' : <span className="has-unsaved-changes vll-italic">uncommited changes</span>}
-            </section>
+          </section>
           <div className="article-meta-input">
-            <input id="title" name="name" type="text" style={{"display":"none"}} placeholder="Title.." value={selectedSlug}/>
+            <input
+              name="slug"
+              type="text"
+              style={{"display":"none"}}
+              placeholder="slug.."
+              value={selectedSlug}/>
+            <input
+              name="title"
+              type="text"
+              placeholder="Title.."
+              value={_.get(openArticle, 'title', '')}
+              onChange={this.onMetaChange}
+              />
           </div>
 
           <DisabledComponent id="epiceditor" />
