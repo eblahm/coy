@@ -36,6 +36,7 @@ module.exports = React.createClass({
   },
 
   componentDidUpdate() {
+    document.title = this.state.content.title;
     this.onPathChange();
   },
 

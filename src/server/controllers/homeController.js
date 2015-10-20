@@ -15,6 +15,7 @@ module.exports = (req, res, next) => {
       return contentService.getContent(slug, !!req.query.flush)
         .then((content) => {
           res.render('home.html', {
+            title: content.title,
             content: content,
             allArticles: allArticles,
             openArticle: content,
