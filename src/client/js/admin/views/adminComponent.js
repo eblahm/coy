@@ -7,6 +7,7 @@ var $ = require('jquery');
 var bluebird = require('bluebird');
 
 var DisabledComponent = require('./disableUpdateComponent');
+var Saving = require('./saving');
 var markdownService = require('../../../../shared/service/markdownService');
 var browserCache = require('../service/browserCacheService');
 var store = require('../store');
@@ -15,14 +16,18 @@ var actions = require('../actions');
 const KEYPRESS = {ENTER: 13};
 
 module.exports = React.createClass({
-  mixins: [Reflux.connect(store)],
+  mixins: [
+    Reflux.ListenerMixin,
+    Reflux.connect(store)
+  ],
 
   getInitialState() {
     return {
       articlesOnServer: {},
       articlesInCache: {},
       openArticle: {},
-      unsavedChanges: true
+      unsavedChanges: true,
+      isSaving: false
     };
   },
 
@@ -35,6 +40,8 @@ module.exports = React.createClass({
 
   componentDidMount() {
     actions.epicEditorCanMount();
+    this.listenTo(actions.submit.completed, this.onSubmitCompleted);
+    this.listenTo(actions.submit.failed, this.onSubmitFailed);
   },
 
   openArticle: function(slug, event) {
@@ -102,6 +109,15 @@ module.exports = React.createClass({
     event.preventDefault();
     event.stopPropagation();
     actions.submit(this.state.openArticle);
+    this.setState({saving: true});
+  },
+
+  onSubmitCompleted: function() {
+    this.setState({saving: false});
+  },
+
+  onSubmitFailed: function() {
+    this.setState({saving: false});
   },
 
   selectedSlug: function() {
@@ -152,6 +168,15 @@ module.exports = React.createClass({
     return originalMarkdown === markdownService.fromHTML(activeMarkdown);
   },
 
+  getSavedStatus: function() {
+    if (this.state.saving) {
+      return <Saving renderSpeedInMillis={300} />
+    }
+    if (!this.isOriginalMarkdown()) {
+      return <span className="has-unsaved-changes vll-italic">uncommited changes</span>
+    }
+  },
+
   render() {
     var openArticle = this.state.openArticle;
     var selectedSlug = this.selectedSlug();
@@ -184,7 +209,7 @@ module.exports = React.createClass({
         <div className="inner-form">
           <section className="title vbold">
             {_.contains(draftKeys, selectedSlug) ? `${selectedSlug}.md` : this.getArticleLink(selectedSlug)}
-            {this.isOriginalMarkdown() ? '' : <span className="has-unsaved-changes vll-italic">uncommited changes</span>}
+            {this.getSavedStatus()}
           </section>
           <div className="article-meta-input">
             <input

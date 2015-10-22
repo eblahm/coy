@@ -64,8 +64,7 @@ actions.openArticleFromServer.completed.listen(function(slug, data) {
   resetCacheState();
 });
 
-actions.submit.listen(function(data) {
+actions.submit.preEmit(function(data) {
   var editorData = editor.getFiles(data.slug);
-  data = _.assign(data, {markdown: editorData.content});
-  actions.submitFromCache(data);
+  return _.assign(data, {markdown: editorData.content});
 });

@@ -19,8 +19,7 @@ var actions = Reflux.createActions({
   'removeArticleFromCache': {children: ['completed','failed']},
   'articleDidUpdateInCache': {},
 
-  'submit': {},
-  'submitFromCache': {children: ['completed','failed']},
+  'submit': {children: ['completed','failed']},
 });
 
 actions.openArticleFromServer.listen(function(slug) {
@@ -44,7 +43,7 @@ actions.removeArticleOnServer.listen(function(slug) {
   );
 });
 
-actions.submitFromCache.listen(function(data) {
+actions.submit.listen(function(data) {
   data.markdown = markdownService.fromHTML(data.markdown);
   $.ajax({
     url: '/article',

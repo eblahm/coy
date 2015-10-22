@@ -21,14 +21,18 @@ html, body, #react-container, .admin-container {
   section.title {
     font-size: 16px;
     display: flex;
-    a, span {
-      flex: 1,
+    a, span:nth-child(1) {
+      flex: 7;
     }
-    .has-unsaved-changes {
+    span:nth-child(2) {
+      flex: 7;
       text-align: right;
       color: red;
       font-style: italic;
-      padding: 0 5px;
+      &.saving-animation {
+        flex: 1;
+        text-align: left;
+      }
     }
   }
 
