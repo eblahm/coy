@@ -5,9 +5,9 @@ alert(':)');
 ```
 
 smart lists?
-1. lets see
-2. foo
-3. Bar
+- lets see
+- foo
+
 
 > "Dont Believe Everything you read on the internet"  
 > --- Abraham Lincoln
