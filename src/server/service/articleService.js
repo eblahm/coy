@@ -12,7 +12,7 @@ lib.getAllOrderByCreatedDesc = () => {
       obj.slug = key;
       return obj;
     })
-    .call('sortBy', (data) => -1 * new Date(data.updated).getTime())
+    .call('sortBy', (data) => -1 * new Date(data.created).getTime())
     .call('value');
 };
 
