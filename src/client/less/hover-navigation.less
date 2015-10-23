@@ -84,18 +84,18 @@ section.content-container {
   &:before {
     font-size: 25px;
     content: "\f009"; // list icon
-    position: absolute;
+    position: fixed;
     top: 5px;
     left: 10px;
   }
 
-  &:after {
-    font-size: @nav-icon-font-size;
-    content: "\2754"; // question mark icon
-    margin-left: -35px;
-    position: absolute;
-    top: 2px;
-  }
+  // &:after {
+  //   font-size: @nav-icon-font-size;
+  //   content: "\2754"; // question mark icon
+  //   margin-left: -35px;
+  //   position: fixed;
+  //   top: 2px;
+  // }
 
   &.show-right-sidebar {
     &:after {
