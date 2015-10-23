@@ -21,7 +21,7 @@ nav.enable-left-sidebar {
 }
 
 section.sidebar {
-  position: absolute;
+  position: fixed;
   z-index: 1;
 
   height: 100%;
@@ -40,8 +40,6 @@ section.sidebar {
 section.content-container {
   z-index: 2;
 
-  border-right: 1px solid lightgrey;
-  border-left: 1px solid lightgrey;
   transition: margin .5s ease-in-out .2s;
 
   &.show-right-sidebar {
@@ -61,6 +59,11 @@ section.content-container {
 // icons
 section.content-container {
   background-color: white;
+  border-right: 1px solid lightgrey;
+  border-left: 1px solid lightgrey;
+  .article-container {
+    background-color: inherit;
+  }
 
   &:before, &:after {
     font-family: @icons-font;
