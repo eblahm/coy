@@ -22,5 +22,11 @@
     "title": "Resume",
     "created": "2015-10-23T12:32:02.577Z",
     "updated": "2015-10-23T12:32:02.577Z"
+  },
+  "about-me": {
+    "category": "other",
+    "title": "About Me",
+    "updated": "2015-10-23T12:40:06.730Z",
+    "created": "2015-10-23T12:40:06.730Z"
   }
 }
