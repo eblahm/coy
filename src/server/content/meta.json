@@ -1,8 +1,9 @@
 {
   "hello": {
     "title": "Hello Markdown Parser",
+    "category": "fragments",
     "created": "2015-09-16T01:59:13.455Z",
-    "updated": "2015-10-22T01:11:06.076Z"
+    "updated": "2015-10-23T03:18:01.671Z"
   },
   "vipers": {
     "title": "Vipers",
