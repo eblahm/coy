@@ -16,5 +16,11 @@
     "category": "articles",
     "created": "2015-10-14T19:56:23.202Z",
     "updated": "2015-10-23T03:16:58.516Z"
+  },
+  "resume": {
+    "category": "other",
+    "title": "Resume",
+    "created": "2015-10-23T12:32:02.577Z",
+    "updated": "2015-10-23T12:32:02.577Z"
   }
 }
