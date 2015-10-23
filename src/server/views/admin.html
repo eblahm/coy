@@ -5,9 +5,10 @@
   <link rel="stylesheet" href="/css/admin.css" />
   <script type="text/javascript" charset="utf-8">
     COY_ADMIN = {};
-    COY_ADMIN.articles = {{ articles | stringify | safe }};
+    COY_ADMIN.articles = {{ articles | dump | safe }};
     COY_ADMIN.REPO_URL = '{{repoUrl}}';
     COY_ADMIN.CONTENT_ROOT = '{{contentRoot}}';
+    COY_ADMIN.BLOG_CONFIG = {{ config | dump | safe }};
   </script>
 {% endblock %}
 

@@ -16,7 +16,8 @@ module.exports = (req, res, next) => {
       isAdmin: !!req.session.githubToken,
       articles: data,
       repoUrl: REPO_URL,
-      contentRoot: CONTENT_ROOT
+      contentRoot: CONTENT_ROOT,
+      config: config.get('blog')
     });
   }, next);
 

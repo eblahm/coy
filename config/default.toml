@@ -19,3 +19,6 @@ session_secret = '(((((((((( 0-0~ ))))))))))'
   port = 6379
   url = '127.0.0.1'
 
+[blog]
+  categories='fragments,articles,other'
+

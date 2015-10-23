@@ -6,35 +6,43 @@ var Link = require('react-router').Link;
 module.exports = React.createClass({
   getDefaultProps() {
     return {
-      articles: []
+      categoryOrder: [],
+      articles: [],
+      fixedSidebar: false,
+      categoryExplainers: {
+        'fragments': '...Just thoughts that come to mind, not fully formed enough to be blog posts.  Or maybe just a quote or picture or some other media...'
+      }
     };
   },
 
   render: function() {
+    var groups = _.groupBy(this.props.articles, 'category');
+    var categoryOrder = this.props.categoryOrder;
+    if (!this.props.categoryOrder.length) {
+      categoryOrder = _.keys(groups);
+    }
     return (
       <section {...this.props}>
         <div className="inner-sidebar">
+
           <nav>
-            <h2 className="content-type-title">Fragments</h2>
-            <p>...Just thoughts that come to mind, not fully formed enough to be blog
-            posts.  Or maybe just a quote or picture or some other media...</p>
-            <ul>
-              {_.map(this.props.articles, (data) => {
-                return (
-                  <li className={cx({active: this.props.activeSlug === data.slug})}>
-                    <Link to={`/${data.slug}`} state={{displayLeftSidebar: true}}>{data.slug}</Link>
-                  </li>
-                )
-              })}
-            </ul>
-
-            <h2 className="content-type-title other-content">Other Content</h2>
-            <ul>
-                <li className={cx({active: false})}>
-                  <a href="/resume">Resume</a>
-                </li>
-            </ul>
-
+          {_.map(categoryOrder, (category) => {
+            return <div>
+              <h2 className={`${_.kebabCase(category)}-content content-type-title`}>{_.capitalize(category)}</h2>
+              <p>{this.props.categoryExplainers[category]}</p>
+              <ul>
+                {_.map(groups[category], (data) => {
+                  return (
+                    <li className={cx({active: this.props.activeSlug === data.slug})}>
+                    {this.props.fixedSidebar ?
+                      <a href={`/${data.slug}`}>{data.slug}</a> :
+                      <Link to={`/${data.slug}`} state={{displayLeftSidebar: true}}>{data.slug}</Link>}
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          })}
           </nav>
         </div>
       </section>

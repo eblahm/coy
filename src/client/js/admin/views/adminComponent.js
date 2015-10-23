@@ -34,7 +34,8 @@ module.exports = React.createClass({
   getDefaultProps() {
     return {
       repoUrl: _.get(window, 'COY_ADMIN.REPO_URL'),
-      contentRoot: _.get(window, 'COY_ADMIN.CONTENT_ROOT', 'eblahm/coy')
+      contentRoot: _.get(window, 'COY_ADMIN.CONTENT_ROOT', 'eblahm/coy'),
+      categories: _.get(window, 'COY_ADMIN.BLOG_CONFIG.categories', '').split(',')
     };
   },
 
@@ -225,6 +226,15 @@ module.exports = React.createClass({
               value={_.get(openArticle, 'title', '')}
               onChange={this.onMetaChange}
               />
+            <select
+                name="category"
+                value={_.get(openArticle, 'category', '')}
+                onChange={this.onMetaChange}
+              >
+              {_.map(this.props.categories, (category) => {
+                return <option value={category}>{category}</option>
+              })}
+            </select>
           </div>
 
           <DisabledComponent id="epiceditor" />

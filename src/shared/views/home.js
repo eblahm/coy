@@ -4,16 +4,6 @@ var RightSidebar = require('./rightSidebar.js');
 var LeftSidebar = require('./leftSidebar.js');
 var _ = require('lodash');
 var $ = require('jquery');
-
-var content;
-var articles;
-try {
-  content = _.get(window, 'COY_PROPS.content');
-  articles = _.get(window, 'COY_PROPS.articles');
-} catch(err) {
-  content = {};
-  articles = [];
-}
 var cx = require('classnames');
 
 module.exports = React.createClass({
@@ -21,13 +11,16 @@ module.exports = React.createClass({
     return {
       displayLeftSidebar: false,
       displayRightSidebar: false,
-      content: content
+      content: this.props.content
     };
   },
 
   getDefaultProps() {
     return {
-      articles: articles
+      articles: {},
+      content: [],
+      categories: [],
+      fixedSidebar: true
     };
   },
 
@@ -89,7 +82,7 @@ module.exports = React.createClass({
       >
         <nav
           className={cx({
-            "active": this.state.displayLeftSidebar,
+            "active": this.props.fixedSidebar || this.state.displayLeftSidebar,
             "enable-left-sidebar": true,
             "secret-nav": true
           })}
@@ -101,13 +94,15 @@ module.exports = React.createClass({
           articles={this.props.articles}
           activeSlug={this.state.content.slug}
           onMouseLeave={this.onSidebarLeave}
+          categoryOrder={this.props.categories}
+          fixedSidebar={this.props.fixedSidebar}
         />
 
 
         <section
           className={cx({
-            "show-right-sidebar": this.state.displayRightSidebar,
-            "show-left-sidebar": this.state.displayLeftSidebar,
+            "show-right-sidebar": this.props.fixedSidebar || this.state.displayRightSidebar,
+            "show-left-sidebar": this.props.fixedSidebar || this.state.displayLeftSidebar,
             "content-container": true
           })}
         >
@@ -124,7 +119,7 @@ module.exports = React.createClass({
           />
         <nav
           className={cx({
-            "active": this.state.displayRightSidebar,
+            "active": this.props.fixedSidebar || this.state.displayRightSidebar,
             "enable-right-sidebar": true,
             "secret-nav": true
           })}

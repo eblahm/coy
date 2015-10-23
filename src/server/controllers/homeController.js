@@ -5,6 +5,7 @@ var contentService = require('../service/contentService');
 var NotFoundError = require('../errors/NotFoundError');
 var reactHome = React.createFactory(require('../../shared/views/home'));
 var articleService = require('../service/articleService');
+var categories = require('config').get('blog.categories').split(',');
 
 module.exports = (req, res, next) => {
   var slug = req.params.article;
@@ -17,9 +18,14 @@ module.exports = (req, res, next) => {
           res.render('home.html', {
             title: content.title,
             content: content,
+            categories: categories,
             allArticles: allArticles,
             openArticle: content,
-            reactMarkup: React.renderToStaticMarkup(reactHome({content: content}))
+            reactMarkup: React.renderToStaticMarkup(reactHome({
+              content: content,
+              articles: allArticles,
+              categories: categories
+            }))
           });
         }, (err) => next(new NotFoundError(err)));
     }, next);
