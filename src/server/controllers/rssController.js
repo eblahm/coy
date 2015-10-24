@@ -9,11 +9,11 @@ var _ = require('lodash');
 
 // cache the xml to send to clients
 var rssDateFormat = (momentObj) => {
-  return momentObj.utc().format('ddd, DD MMM YYYY HH:mm:ss GMT');
+  return momentObj.utc().format('ddd, DD MMM YYYY HH:mm:ss [GMT]');
 };
 
 module.exports = (req, res, next) => {
-  var lastMonday = moment().day(-1);
+  var lastMonday = moment().day(-6);
   articleService.getAllFullOrderByCreatedDesc().then((articles) => {
     var lastBuild = moment(articles[0].created);
 
