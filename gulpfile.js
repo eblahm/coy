@@ -74,13 +74,13 @@ gulp.task('bundle', function () {
       .transform(babelify.configure({whitelist: BABEL_TRANFORMS}))
       .bundle()
       .on('error', gutil.log)
-      .pipe(source(file.replace(/\.\/src\//, '')))
+      .pipe(source(file.replace(/\.\/src\/client\//, '')))
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
       // .pipe(uglify())
       .on('error', gutil.log)
       .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest('./dist/'));
+      .pipe(gulp.dest('./dist/client/'));
   });
 });
 
