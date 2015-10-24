@@ -35,7 +35,7 @@ module.exports = React.createClass({
     return {
       repoUrl: _.get(window, 'COY_ADMIN.REPO_URL'),
       contentRoot: _.get(window, 'COY_ADMIN.CONTENT_ROOT', 'eblahm/coy'),
-      categories: _.get(window, 'COY_ADMIN.BLOG_CONFIG.categories', '').split(',')
+      categories: _.get(window, 'COY_ADMIN.BLOG_CONFIG.categories', '')
     };
   },
 

@@ -1,6 +1,7 @@
 # default config
 project_name = 'coy'
 port = 5001
+ssl = true
 
 repo = 'eblahm/coy'
 repo_url = 'https://github.com/eblahm/coy'
@@ -20,5 +21,16 @@ session_secret = '(((((((((( 0-0~ ))))))))))'
   url = '127.0.0.1'
 
 [blog]
-  categories='fragments,articles,other'
+  categories=['fragments','articles','other']
+  [rss]
+    included_categories=['fragments', 'articles']
+    title='the works of Matthew Halbe'
+    description="""
+      the title pretty much sums it up.  you'd be bored if I summed
+      it up using several comma separtated 6-12 letter words. So, Ill just let
+      you imagine the subject matter enstead"""
+    managingEditor='Matthew Halbe'
+    language='en'
+    image_url='http://www.gravatar.com/avatar/6af8e2870fd7c4a74b8692f0c997522e'
+
 

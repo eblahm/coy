@@ -29,6 +29,7 @@ app.get('/', controllers.home);
 app.get('/admin', controllers.admin);
 app.use('/github', controllers.auth);
 app.use('/article', controllers.article);
+app.get('/rss', controllers.rss);
 app.get('/icons', (req, res) => res.render('icons.html'));
 
 app.get('/:article', controllers.home);
