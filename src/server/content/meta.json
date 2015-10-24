@@ -28,10 +28,8 @@
     "slug": "resume"
   },
   "about-me": {
+    "title": "about me",
     "created": "2015-10-23T12:40:06.730Z",
-    "category": "other",
-    "updated": "2015-10-24T15:06:30.932Z",
-    "title": "About Me",
-    "html": "<h1 id=\"about-me\">About Me</h1>\n<p><img src=\"https://halbe.works/img/me1.jpg\" alt=\"me\"></p>\n<p>Hi! My name is Matthew Halbe. I’m a web developer working at Webs Inc. I have two kids, August and Liesel, and a wonderful wife, Dory.</p>\n<p>I spent 6 years as an enlisted soldier in the Army before coming out to the DC area for school and work.</p>\n<p>My main interests are web development, US-Iran Relations and documentary films.</p>\n"
+    "updated": "2015-10-24T15:12:20.489Z"
   }
 }
