@@ -1,0 +1,9 @@
+# load nested config from the environment
+
+session_secret = 'SESSION_SECRET'
+port = 'PORT'
+
+[github]
+  client_id = 'GITHUB_CLIENT_ID'
+  client_secret = 'GITHUB_CLIENT_SECRET'
+  redirect_uri = 'GITHUB_REDIRECT_URL'

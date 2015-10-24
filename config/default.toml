@@ -11,8 +11,8 @@ session_secret = '(((((((((( 0-0~ ))))))))))'
 
 [github]
   api_url = 'https://api.github.com'
-  client_id = '3a76a08e13f238323cf1'
-  client_secret = 'f10633beddeb5c2512d852260af60f29ecb2f38a'
+  client_id = '~~id here~~'
+  client_secret = '~~~ secret here ~~~'
   redirect_uri = 'http://127.0.0.1:5001/github/callback'
   scope = 'repo,user'
 
