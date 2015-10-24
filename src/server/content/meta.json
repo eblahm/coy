@@ -3,30 +3,33 @@
     "title": "Hello Markdown Parser",
     "category": "fragments",
     "created": "2015-09-16T01:59:13.455Z",
-    "updated": "2015-10-23T03:18:01.671Z"
+    "updated": "2015-10-23T03:18:01.671Z",
+    "slug": "hello"
   },
   "vipers": {
-    "title": "Vipers",
+    "title": "vipers",
     "category": "fragments",
     "created": "2015-10-08T13:08:04.681Z",
-    "updated": "2015-10-23T03:18:08.492Z"
+    "updated": "2015-10-24T15:13:39.433Z"
   },
   "webhook": {
     "title": "Building a Webhook Between Draft and Google App Engine",
     "category": "articles",
     "created": "2015-10-14T19:56:23.202Z",
-    "updated": "2015-10-23T03:16:58.516Z"
+    "updated": "2015-10-23T03:16:58.516Z",
+    "slug": "webhook"
   },
   "resume": {
     "category": "other",
     "title": "Resume",
     "created": "2015-10-23T12:32:02.577Z",
-    "updated": "2015-10-23T12:32:02.577Z"
+    "updated": "2015-10-23T12:32:02.577Z",
+    "slug": "resume"
   },
   "about-me": {
+    "title": "about me",
     "category": "other",
-    "title": "About Me",
-    "updated": "2015-10-23T12:40:06.730Z",
-    "created": "2015-10-23T12:40:06.730Z"
+    "created": "2015-10-23T12:40:06.730Z",
+    "updated": "2015-10-24T15:13:51.904Z"
   }
 }
