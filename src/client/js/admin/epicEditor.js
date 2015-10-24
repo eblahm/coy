@@ -61,6 +61,7 @@ actions.openArticleFromCache.listen(function(slug) {
 
 actions.openArticleFromServer.completed.listen(function(slug, data) {
   editor.importFile(slug, data.markdown);
+  browserCache.setMeta(slug, data);
   resetCacheState();
 });
 
