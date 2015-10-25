@@ -41,7 +41,7 @@ module.exports = (req, res, next) => {
       });
     });
 
-    res.set('Content-Type', 'application/rss+xml');
+    res.set('Content-Type', 'application/xml');
     res.send(feed.xml()).end();
   }, next);
 };
