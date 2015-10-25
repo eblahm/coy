@@ -9,7 +9,7 @@ var cache = require('./cache');
 var meta = require('../content/meta.json');
 var NotFoundError = require('../errors/NotFoundError');
 
-const HEAD = require('../../../build.json').HEAD;
+const HEAD = require('../../../build.json').HEAD.substring(0, 6);
 const MARKDOWN_EXT = '.md';
 const META_KEY = HEAD + '-meta-json';
 
@@ -27,16 +27,18 @@ exports.getMeta = () => {
     );
 };
 
-exports.getContent = (key, flush) => {
-  if (!key) {
+exports.getContent = (slug, flush) => {
+  if (!slug) {
       return bluebird.reject(new NotFoundError());
   }
-  key = `${HEAD}-key`;
+  var cacheKey = `${HEAD}-${slug}`;
   var load = () => {
-    var fullPath = path.join(__dirname, '../content/', key + MARKDOWN_EXT);
+    console.log(`couldn't find ${cacheKey} in cache, falling back on filesystem`);
+    var fullPath = path.join(__dirname, '../content/', slug + MARKDOWN_EXT);
     return fs.readFileAsync(fullPath).then(
       (data) => {
-        return exports.setContent(key, data.toString(), meta[key]);
+        console.log('attempting to set cache from data on filesystem');
+        return exports.setContent(slug, data.toString(), meta[slug]);
       },
       (err) => bluebird.reject(new NotFoundError(err))
     );
@@ -44,22 +46,37 @@ exports.getContent = (key, flush) => {
   if (flush) {
     return load();
   }
-  return cache.hgetallAsync(key).then(
-      (content) => content || load(),
-      (err) => load()
-    );
+  console.log('getting cached data (key:%s) (slug:%s)', cacheKey, slug);
+  return exports.getMeta()
+    .then((meta) => {
+      if (!meta[slug]) {
+        return bluebird.reject(new NotFoundError());
+      }
+      return cache.hgetallAsync(cacheKey)
+        .then(
+          (content) => {
+            return content || load();
+          },
+          (err) => {
+            console.error(err);
+            return load();
+          }
+        );
+    });
 };
 
-exports.setContent = (key, markdownContent, articleMeta) => {
-  key = `${HEAD}-key`;
+exports.setContent = (slug, markdownContent, articleMeta) => {
+  var cacheKey = `${HEAD}-${slug}`;
   var html = markdownService.parse(markdownContent);
   var data = _.assign({
-    slug: key,
+    slug: slug,
     html: html,
     markdown: markdownContent
   }, articleMeta);
 
-  return cache.hmsetAsync(key, data).then(
+  console.log('setting data in cache key:%s', cacheKey);
+
+  return cache.hmsetAsync(cacheKey, data).then(
     () => data,
     (err) => {
       console.error(err);
@@ -70,9 +87,4 @@ exports.setContent = (key, markdownContent, articleMeta) => {
 };
 
 // refresh the cache on startup
-_.each(fs.readdirSync(__dirname), (fname) => {
-  var parsedfname = path.parse(fname);
-  if (parsedfname.ext === MARKDOWN_EXT) {
-    exports.getContent(parsedfname.name);
-  }
-});
+bluebird.map(_.keys(meta), (slug) => exports.getContent(slug));
