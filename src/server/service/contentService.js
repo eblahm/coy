@@ -9,8 +9,9 @@ var cache = require('./cache');
 var meta = require('../content/meta.json');
 var NotFoundError = require('../errors/NotFoundError');
 
-var MARKDOWN_EXT = '.md';
-var META_KEY = 'meta-json';
+const HEAD = require('../../../build.json').HEAD;
+const MARKDOWN_EXT = '.md';
+const META_KEY = HEAD + '-meta-json';
 
 exports.updateMeta = (update) => {
   return cache.setAsync(META_KEY, JSON.stringify(update));
@@ -30,6 +31,7 @@ exports.getContent = (key, flush) => {
   if (!key) {
       return bluebird.reject(new NotFoundError());
   }
+  key = `${HEAD}-key`;
   var load = () => {
     var fullPath = path.join(__dirname, '../content/', key + MARKDOWN_EXT);
     return fs.readFileAsync(fullPath).then(
@@ -49,6 +51,7 @@ exports.getContent = (key, flush) => {
 };
 
 exports.setContent = (key, markdownContent, articleMeta) => {
+  key = `${HEAD}-key`;
   var html = markdownService.parse(markdownContent);
   var data = _.assign({
     slug: key,
@@ -69,7 +72,6 @@ exports.setContent = (key, markdownContent, articleMeta) => {
 // refresh the cache on startup
 _.each(fs.readdirSync(__dirname), (fname) => {
   var parsedfname = path.parse(fname);
-
   if (parsedfname.ext === MARKDOWN_EXT) {
     exports.getContent(parsedfname.name);
   }
