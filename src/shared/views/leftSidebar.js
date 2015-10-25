@@ -7,6 +7,7 @@ module.exports = React.createClass({
   getDefaultProps() {
     return {
       categoryOrder: [],
+      isServer: typeof window === 'undefined',
       articles: [],
       categoryExplainers: {
         'fragments': '...Just thoughts that come to mind, not fully formed enough to be blog posts.  Or maybe just a quote or picture or some other media...'
@@ -26,14 +27,16 @@ module.exports = React.createClass({
 
           <nav>
           {_.map(categoryOrder, (category) => {
-            return <div>
+            return <div key={category}>
               <h2 className={`${_.kebabCase(category)}-content content-type-title`}>{_.capitalize(category)}</h2>
               <p>{this.props.categoryExplainers[category]}</p>
               <ul>
                 {_.map(groups[category], (data) => {
                   return (
-                    <li className={cx({active: this.props.activeSlug === data.slug})}>
-                      <Link to={`/${data.slug}`} state={{displayLeftSidebar: true}}>{data.slug}</Link>
+                    <li key={data.slug} className={cx({active: this.props.activeSlug === data.slug})}>
+                    {this.props.isServer ?
+                      <a href={`/${data.slug}`}>{data.slug}</a> :
+                      <Link to={`/${data.slug}`} state={{displayLeftSidebar: true}}>{data.slug}</Link>}
                     </li>
                   )
                 })}
