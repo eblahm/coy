@@ -7,10 +7,10 @@
     "slug": "hello"
   },
   "vipers": {
-    "title": "vipers",
+    "title": "Vipers",
     "category": "fragments",
-    "created": "2015-10-08T13:08:04.681Z",
-    "updated": "2015-10-24T15:13:39.433Z"
+    "updated": "2015-10-25T16:19:02.187Z",
+    "created": "2015-10-08T13:08:04.681Z"
   },
   "webhook": {
     "title": "Building a Webhook Between Draft and Google App Engine",
@@ -30,6 +30,7 @@
     "title": "about me",
     "category": "other",
     "created": "2015-10-23T12:40:06.730Z",
-    "updated": "2015-10-24T15:13:51.904Z"
+    "updated": "2015-10-24T15:13:51.904Z",
+    "slug": "about-me"
   }
 }
