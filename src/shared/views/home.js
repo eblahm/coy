@@ -19,8 +19,7 @@ module.exports = React.createClass({
     return {
       articles: {},
       content: [],
-      categories: [],
-      fixedSidebar: true
+      categories: []
     };
   },
 
@@ -82,7 +81,7 @@ module.exports = React.createClass({
       >
         <nav
           className={cx({
-            "active": this.props.fixedSidebar || this.state.displayLeftSidebar,
+            "active": this.state.displayLeftSidebar,
             "enable-left-sidebar": true,
             "secret-nav": true
           })}
@@ -95,14 +94,13 @@ module.exports = React.createClass({
           activeSlug={this.state.content.slug}
           onMouseLeave={this.onSidebarLeave}
           categoryOrder={this.props.categories}
-          fixedSidebar={this.props.fixedSidebar}
         />
 
 
         <section
           className={cx({
-            "show-right-sidebar": this.props.fixedSidebar || this.state.displayRightSidebar,
-            "show-left-sidebar": this.props.fixedSidebar || this.state.displayLeftSidebar,
+            "show-right-sidebar": this.state.displayRightSidebar,
+            "show-left-sidebar": this.state.displayLeftSidebar,
             "content-container": true
           })}
         >
@@ -119,7 +117,7 @@ module.exports = React.createClass({
           />
         <nav
           className={cx({
-            "active": this.props.fixedSidebar || this.state.displayRightSidebar,
+            "active": this.state.displayRightSidebar,
             "enable-right-sidebar": true,
             "secret-nav": true
           })}

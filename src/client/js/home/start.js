@@ -14,7 +14,6 @@ var Home = React.createClass({
       content={_.get(window, 'COY_PROPS.content', {})}
       articles={_.get(window, 'COY_PROPS.articles', [])}
       categories={_.get(window, 'COY_PROPS.categories', [])}
-      fixedSidebar={false}
     />
   }
 });
