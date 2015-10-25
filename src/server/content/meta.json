@@ -7,10 +7,11 @@
     "slug": "hello"
   },
   "vipers": {
-    "title": "Vipers",
+    "created": "2015-10-08T13:08:04.681Z",
     "category": "fragments",
-    "updated": "2015-10-25T16:19:02.187Z",
-    "created": "2015-10-08T13:08:04.681Z"
+    "updated": "2015-10-25T16:28:57.939Z",
+    "title": "vipers",
+    "html": "<blockquote>\n<p>“You have minds like a snake pit! How do you suppose what you say is worth \nanything when you are so foul-minded? It’s your heart, not the \ndictionary, that gives meaning to your words. A good person produces \ngood deeds and words season after season. An evil person is a blight on \nthe orchard. Let me tell you something: Every one of these careless \nwords is going to come back to haunt you. There will be a time of \nReckoning. Words are powerful; take them seriously. Words can be your \nsalvation. Words can also be your damnation.” \n— Matthew 12:34-37 (MSG)</p>\n</blockquote>\n"
   },
   "webhook": {
     "title": "Building a Webhook Between Draft and Google App Engine",
