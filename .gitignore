@@ -26,3 +26,4 @@ node_modules/*
 .envrc
 dist
 deploy
+build.json

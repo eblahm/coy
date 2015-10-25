@@ -4,7 +4,8 @@
   "description": "a dynamic generated static site framework with git, rss and full text search",
   "main": "server/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "gitData": "/bin/sh -c \"echo '{\\\"HEAD\\\": \\\"\"`git rev-parse HEAD`\"\\\"'}\" > build.json",
+    "postinstall": "npm run gitData && ./node_modules/.bin/gulp",
     "start": "node dist/server/bin/www.js"
   },
   "engines": {
