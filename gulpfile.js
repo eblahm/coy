@@ -18,7 +18,7 @@ var cleancss = new LessPluginCleanCSS({advanced: true});
 var autoprefix = new LessPluginAutoPrefix({browsers: ['last 2 versions']});
 var runSequence = require('run-sequence');
 var _ = require('lodash');
-var path = require('path');
+var shell = require('gulp-shell');
 
 var BABEL_TRANFORMS = [
   'es6.arrowFunctions',
@@ -131,6 +131,8 @@ gulp.task('nodemon', ['buildServer', 'buildClient', 'watchClient'], function() {
   .on('error', gutil.log);
 });
 
+gulp.task('gitData', shell.task(['npm run gitData']));
+
 gulp.task('watchClient', function() {
   gulp.watch(CLIENT_SIDE_JS, ['bundle']).on('error', gutil.log);
   gulp.watch(CLIENT_SIDE_LESS, ['less']).on('error', gutil.log);
@@ -140,7 +142,7 @@ gulp.task('start', function(callback) {
   return runSequence('clean', ['nodemon']);
 });
 
-gulp.task('start', ['nodemon']);
+gulp.task('start', ['gitData', 'nodemon']);
 gulp.task('buildClient', ['less', 'bundle']);
 gulp.task('default', ['buildServer', 'buildClient']);
 
