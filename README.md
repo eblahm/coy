@@ -24,6 +24,8 @@ repo_url = 'https://github.com/eblahm/coy' # full url to your forkd github repo
 # configurable via env var SESSION_SECRET='foo'
 session_secret = '(((((((((( 0-0~ ))))))))))'
 
+google_analytics_id='UA-12345678-1'
+
 [github]
   api_url = 'https://api.github.com'
   

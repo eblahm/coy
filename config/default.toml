@@ -6,8 +6,9 @@ ssl = true
 repo = 'eblahm/coy'
 repo_url = 'https://github.com/eblahm/coy'
 content_root = 'src/server/content'
-
 session_secret = '(((((((((( 0-0~ ))))))))))'
+
+google_analytics_id='UA-54099734-1'
 
 [github]
   api_url = 'https://api.github.com'
@@ -26,9 +27,9 @@ session_secret = '(((((((((( 0-0~ ))))))))))'
     included_categories=['fragments', 'articles']
     title='the works of Matthew Halbe'
     description="""
-      the title pretty much sums it up.  you'd be bored if I summed
-      it up using several comma separtated 6-12 letter words. So, Ill just let
-      you imagine the subject matter enstead"""
+the title pretty much sums it up.  you'd be bored if I summed
+it up using several comma separtated 6-12 letter words. So, Ill just let
+you imagine the subject matter enstead"""
     managingEditor='Matthew Halbe'
     language='en'
     image_url='http://www.gravatar.com/avatar/6af8e2870fd7c4a74b8692f0c997522e'

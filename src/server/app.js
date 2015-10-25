@@ -14,6 +14,9 @@ var _ = require('lodash');
 
 var app = express();
 
+// what configuration should be exposed to the html templates
+app.locals.config = _.pick(config, ['google_analytics_id']);
+
 app.use(session({
   secret: config.get('session_secret'),
   store: new RedisStore({client: cache})
