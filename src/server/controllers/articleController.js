@@ -30,7 +30,7 @@ router.post('', isLoggedIn, (req, res, next) => {
 
     var nowISOString = new Date().toISOString();
     articleMeta[slug] = _.assign(
-      _.omit(req.body, ['slug', 'markdown']),
+      _.omit(req.body, ['slug', 'markdown', 'html']),
       {
         created: _.get(articleMeta, `[${slug}].created`, nowISOString),
         updated: nowISOString
