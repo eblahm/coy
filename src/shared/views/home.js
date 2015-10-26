@@ -11,14 +11,15 @@ module.exports = React.createClass({
     return {
       displayLeftSidebar: false,
       displayRightSidebar: false,
-      content: this.props.content
+      content: this.props.content,
+      html: ''
     };
   },
 
   getDefaultProps() {
     return {
-      articles: {},
-      content: [],
+      articles: [],
+      content: {},
       categories: []
     };
   },
@@ -56,8 +57,14 @@ module.exports = React.createClass({
   },
 
   open: function(slug) {
+    var content = _.find(this.props.articles, (data) => data.slug === slug);
     $.getJSON(`/article/${slug}`)
-      .then((data) => this.setState({content: data}));
+      .then((data) => {
+        this.setState({
+          content: content,
+          html: data.html
+        });
+      });
   },
 
   onNavHover: function(event) {
@@ -106,7 +113,7 @@ module.exports = React.createClass({
         >
           <div className="article-container">
             <article
-              dangerouslySetInnerHTML={{__html: this.state.content.html}}
+              dangerouslySetInnerHTML={{__html: this.state.content.html || this.state.html}}
             />
           </div>
         </section>

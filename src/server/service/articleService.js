@@ -28,8 +28,8 @@ lib.getAllFullOrderByCreatedDesc = () => {
     .call('sortBy', sortCreatedDesc)
     .call('value')
     .map(function(obj) {
-      return contentService.getContent(obj.slug).then((content) => {
-        obj.content = content;
+      return contentService.getHTML(obj.slug).then((html) => {
+        obj.html = html;
         return obj;
       });
     });

@@ -53,7 +53,7 @@ router.post('', isLoggedIn, (req, res, next) => {
         },
       ], `update ${slug}.md`)
     .then(() => contentService.updateMeta(articleMeta))
-    .then(() => contentService.setContent(slug, markdown, articleMeta[slug]))
+    .then(() => contentService.setHTML(slug, markdown))
     .then((data) => res.json(data).end(), next);
   });
 
@@ -90,8 +90,8 @@ router.get('/:slug', (req, res, next) => {
   var slug = req.params.slug;
   assert.ok(slug);
 
-  contentService.getContent(slug).then(
-    (data) => data ? res.json(data).end() : new NotFoundError(),
+  contentService.getHTML(slug).then(
+    (html) => html ? res.json({html: html}).end() : new NotFoundError(),
     (err) => next(err)
   );
 });

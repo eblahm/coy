@@ -21,24 +21,24 @@ exports.getMeta = () => {
   return cache.getAsync(META_KEY).then(
       (data) => data ? JSON.parse(data) : _.clone(meta),
       (err) => {
-        console.error(err);
+        console.error(err.stack);
         return _.clone(meta);
       }
     );
 };
 
-exports.getContent = (slug, flush) => {
+exports.getHTML = (slug, flush) => {
   if (!slug) {
       return bluebird.reject(new NotFoundError());
   }
-  var cacheKey = `${HEAD}-${slug}`;
+  var cacheKey = `${HEAD}-${slug}-html`;
   var load = () => {
     console.log(`couldn't find ${cacheKey} in cache, falling back on filesystem`);
     var fullPath = path.join(__dirname, '../content/', slug + MARKDOWN_EXT);
     return fs.readFileAsync(fullPath).then(
       (data) => {
         console.log('attempting to set cache from data on filesystem');
-        return exports.setContent(slug, data.toString(), meta[slug]);
+        return exports.setHTML(slug, data.toString());
       },
       (err) => bluebird.reject(new NotFoundError(err))
     );
@@ -52,39 +52,34 @@ exports.getContent = (slug, flush) => {
       if (!meta[slug]) {
         return bluebird.reject(new NotFoundError());
       }
-      return cache.hgetallAsync(cacheKey)
+      return cache.getAsync(cacheKey)
         .then(
-          (content) => {
-            return content || load();
+          (html) => {
+            return html || load();
           },
           (err) => {
-            console.error(err);
+            console.error(err.stack);
             return load();
           }
         );
     });
 };
 
-exports.setContent = (slug, markdownContent, articleMeta) => {
-  var cacheKey = `${HEAD}-${slug}`;
+exports.setHTML = (slug, markdownContent) => {
+  var cacheKey = `${HEAD}-${slug}-html`;
   var html = markdownService.parse(markdownContent);
-  var data = _.assign({
-    slug: slug,
-    html: html,
-    markdown: markdownContent
-  }, articleMeta);
 
   console.log('setting data in cache key:%s', cacheKey);
 
-  return cache.hmsetAsync(cacheKey, data).then(
-    () => data,
+  return cache.setAsync(cacheKey, html).then(
+    () => html,
     (err) => {
-      console.error(err);
-      return data;
+      console.error(err.stack);
+      return html;
     }
   );
 
 };
 
 // refresh the cache on startup
-bluebird.map(_.keys(meta), (slug) => exports.getContent(slug));
+bluebird.map(_.keys(meta), (slug) => exports.getHTML(slug));
