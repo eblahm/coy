@@ -1,5 +1,6 @@
 
 var _ = require('lodash');
+var actions = require('../actions');
 
 var lib = {};
 
@@ -21,12 +22,23 @@ lib.setMetaProp = (slug, key, val) => {
   lib.setMeta(slug, data);
 };
 
-lib.setOriginalMarkdown = (slug, markdown) => {
-  window.localStorage.setItem(`original-${slug}`, markdown);
-};
+actions.articleMetaDidUpdate.listen((data) => {
+  lib.setMeta(data.slug, data);
+});
 
-lib.getOriginalMarkdown = (slug, markdown) => {
-  return window.localStorage.getItem(`original-${slug}`);
-};
+actions.loadArticlesFromServer.completed.listen((articles) => {
+  _.each(articles, (article) => {
+    var dataFromCache = lib.getMeta(article.slug);
+    var completeData;
+
+    if (!_.keys(dataFromCache).length) {
+      console.log('setting inital data in the browser cache');
+      completeData = article;
+    } else {
+      completeData =  _.assign(article, dataFromCache);
+    }
+    actions.articleMetaDidUpdate(article);
+  });
+});
 
 module.exports = lib;

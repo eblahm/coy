@@ -10,6 +10,7 @@ var initialOpenArticle = () => {
 var state = {
   articlesOnServer: _.get(window, 'COY_ADMIN.articles', {}),
   articlesInCache: {},
+  openSlug: '',
   openArticle: initialOpenArticle()
 };
 
@@ -17,7 +18,8 @@ module.exports = Reflux.createStore({
 
   init: function() {
     this.listenToMany(actions);
-    this.trigger(state);
+    actions.openArticle(_.keys(state.articlesOnServer)[0]);
+    actions.loadArticlesFromServer.completed(state.articlesOnServer);
   },
 
   // LOADING STUFF
@@ -48,13 +50,13 @@ module.exports = Reflux.createStore({
   },
 
   onOpenArticleFromServerCompleted: function(slug, data) {
-    state.openArticle = data;
+    state.openSlug = slug;
+    state.articlesOnServer[slug] = data;
     this.trigger(state);
   },
 
-  onOpenArticleFromCacheCompleted: function(slug, data) {
-    state.openArticle = data;
-    state.articlesInCache[slug] = data;
+  onOpenArticleFromCache: function(slug) {
+    state.openSlug = slug;
     this.trigger(state);
   },
 
@@ -76,10 +78,8 @@ module.exports = Reflux.createStore({
   },
 
   // updating stuff
-  onArticleDidUpdateInCache: function(data) {
-    state.openArticle.markdown = data.content;
-    state.openArticle.updated = data.modified;
-    state.articlesInCache[state.openArticle.slug].markdown = data.content;
+  onArticleMarkdownDidUpdate: function(slug, markdown) {
+    state.articlesInCache[slug] = _.assign(state.articlesInCache[slug] || {}, {markdown: markdown});
 
     if (!this.isUpdating) {
       this.isUpdating = true;
@@ -88,6 +88,11 @@ module.exports = Reflux.createStore({
         this.trigger(state);
       }, 1000);
     }
+  },
+
+  onArticleMetaDidUpdate: function(data) {
+    state.articlesInCache[data.slug] = _.assign(state.articlesInCache[data.slug] || {}, data);
+    this.trigger(state);
   },
 
   onSubmitFromCacheCompleted: function(slug, data) {

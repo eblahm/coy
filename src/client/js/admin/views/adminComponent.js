@@ -8,7 +8,6 @@ var bluebird = require('bluebird');
 
 var DisabledComponent = require('./disableUpdateComponent');
 var Saving = require('./saving');
-var markdownService = require('../../../../shared/service/markdownService');
 var browserCache = require('../service/browserCacheService');
 var store = require('../store');
 var actions = require('../actions');
@@ -25,7 +24,7 @@ module.exports = React.createClass({
     return {
       articlesOnServer: {},
       articlesInCache: {},
-      openArticle: {},
+      openSlug: {},
       unsavedChanges: true,
       isSaving: false
     };
@@ -91,25 +90,31 @@ module.exports = React.createClass({
     }
   },
 
+  getOpenArticleData: function() {
+    var openArticle = this.state.articlesInCache[this.state.openSlug];
+    if (!openArticle) {
+      return {};
+    }
+    return _.clone(openArticle);
+  },
+
   onMetaChange: function(event) {
     event.preventDefault();
     event.stopPropagation();
-    var openArticle = _.clone(this.state.openArticle);
+    var openArticle = this.getOpenArticleData();
     var currentTarget = event.currentTarget;
-    var slug = this.selectedSlug();
     var name = currentTarget.getAttribute('name');
     var val = currentTarget.value;
-    if (slug && name) {
+    if (this.state.openSlug && name) {
       openArticle[name] = val;
-      browserCache.setMetaProp(slug, name, val);
-      this.setState({openArticle: openArticle});
+      actions.articleMetaDidUpdate(openArticle, true);
     }
   },
 
   onSubmit: function(event) {
     event.preventDefault();
     event.stopPropagation();
-    actions.submit(this.state.openArticle);
+    actions.submit(this.getOpenArticleData());
     this.setState({saving: true});
   },
 
@@ -121,18 +126,13 @@ module.exports = React.createClass({
     this.setState({saving: false});
   },
 
-  selectedSlug: function() {
-    return _.get(this.state.openArticle, 'slug');
-  },
-
   sidebarItem: function(article) {
     if (!article) { return; }
-    var selectedSlug = this.selectedSlug();
     return (
       <li
         key={article.slug}
         onClick={_.curry(this.openArticle, 3)(article.slug)}
-        className={cx({active: article.slug === selectedSlug})}
+        className={cx({active: article.slug === this.state.openSlug})}
       >
         <span className="name">/{article.slug}</span>
         <span className="toolbar">
@@ -161,12 +161,11 @@ module.exports = React.createClass({
   },
 
   isOriginalMarkdown: function() {
-    var selectedSlug = this.selectedSlug();
-    var originalMarkdown = browserCache.getOriginalMarkdown(selectedSlug);
-    var activeMarkdown = this.state.openArticle.markdown;
-    if (!originalMarkdown) return false;
-    if (!activeMarkdown) return true;
-    return originalMarkdown === markdownService.fromHTML(activeMarkdown);
+    var fields = ['category', 'title', 'markdown'];
+    var onServer = _.get(this.state.articlesOnServer, `[${this.state.openSlug}]`, {})
+    onServer = _.pick(onServer, fields);
+    var inCache = _.pick(this.getOpenArticleData(), fields);
+    return _.isEqual(onServer, inCache);
   },
 
   getSavedStatus: function() {
@@ -179,8 +178,8 @@ module.exports = React.createClass({
   },
 
   render() {
-    var openArticle = this.state.openArticle;
-    var selectedSlug = this.selectedSlug();
+    var openSlug = this.state.openSlug;
+    var openArticle = this.state.articlesInCache[openSlug];
     var articlesOnServer = this.state.articlesOnServer;
     var articlesInCache = this.state.articlesInCache;
     var draftKeys = _.difference(_.keys(articlesInCache), _.keys(articlesOnServer));
@@ -209,7 +208,7 @@ module.exports = React.createClass({
       <form className="edit-form-container">
         <div className="inner-form">
           <section className="title vbold">
-            {_.contains(draftKeys, selectedSlug) ? `${selectedSlug}.md` : this.getArticleLink(selectedSlug)}
+            {_.contains(draftKeys, openSlug) ? `${openSlug}.md` : this.getArticleLink(openSlug)}
             {this.getSavedStatus()}
           </section>
           <div className="article-meta-input">
@@ -218,7 +217,7 @@ module.exports = React.createClass({
               type="text"
               style={{"display":"none"}}
               placeholder="slug.."
-              value={selectedSlug}/>
+              value={openSlug}/>
             <input
               name="title"
               type="text"

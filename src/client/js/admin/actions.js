@@ -1,8 +1,6 @@
 
 var Reflux = require('reflux');
 var $ = require('jquery');
-var markdownService = require('../../../shared/service/markdownService');
-var browserCache = require('./service/browserCacheService');
 
 var actions = Reflux.createActions({
   'epicEditorCanMount': {},
@@ -17,7 +15,8 @@ var actions = Reflux.createActions({
   'openArticleFromCache': {children: ['completed','failed']},
   'loadArticlesFromCache': {},
   'removeArticleFromCache': {children: ['completed','failed']},
-  'articleDidUpdateInCache': {},
+  'articleMarkdownDidUpdate': {},
+  'articleMetaDidUpdate': {},
 
   'submit': {children: ['completed','failed']},
 });
@@ -26,7 +25,6 @@ actions.openArticleFromServer.listen(function(slug) {
   $.getJSON(`/article/${slug}`)
   .then(
     (data) => {
-      browserCache.setOriginalMarkdown(slug, data.markdown);
       this.completed(slug, data);
     },
     (err) => this.failed(err)
@@ -44,7 +42,6 @@ actions.removeArticleOnServer.listen(function(slug) {
 });
 
 actions.submit.listen(function(data) {
-  data.markdown = markdownService.fromHTML(data.markdown);
   $.ajax({
     url: '/article',
     method: 'POST',
@@ -52,7 +49,6 @@ actions.submit.listen(function(data) {
     data: data
   }).then(
     (data) => {
-      browserCache.setOriginalMarkdown(data.slug, data.markdown);
       this.completed(data.slug, data);
     },
     (err) => this.failed(err)

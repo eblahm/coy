@@ -1,5 +1,5 @@
 
-var contentService = require('../service/contentService');
+var articleService = require('../service/articleService');
 var _ = require('lodash');
 var config = require('config');
 
@@ -8,13 +8,18 @@ const CONTENT_ROOT = config.get('content_root');
 
 module.exports = (req, res, next) => {
 
-  contentService.getMeta().then((data) => {
+  articleService.getAllFullOrderByCreatedDesc().then((articles) => {
 
-    _.each(data, (articleData, key) => data[key].slug = key);
+    articles = _.reduce(articles, (memo, article) => {
+      article.markdown = article.content.markdown;
+      delete article.content;
+      memo[article.slug] = article;
+      return memo;
+    }, {});
 
     res.render('admin.html', {
       isAdmin: !!req.session.githubToken,
-      articles: data,
+      articles: articles,
       repoUrl: REPO_URL,
       contentRoot: CONTENT_ROOT,
       config: config.get('blog')

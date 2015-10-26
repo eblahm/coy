@@ -4,26 +4,16 @@ var _ = require('lodash');
 var actions = require('./actions');
 
 var markdownService = require('../../../shared/service/markdownService');
-var browserCache = require('./service/browserCacheService');
 var editor;
 
-var transformCachedFiles = (files) => {
-  return _.reduce(files, (articles, data, slug) => {
-    if (slug === 'epiceditor' || !_.trim(data.content)) {
-      return articles;
-    }
-    var meta = browserCache.getMeta(slug);
-    articles[slug] = _.assign(meta, {
-      slug: slug,
-      markdown: data.content
-    });
-    return articles;
-  }, {});
-};
-
 var resetCacheState = () => {
-  var articles = transformCachedFiles(editor.getFiles());
-  actions.loadArticlesFromCache(articles);
+  _.each(editor.getFiles(), (data, slug) => {
+    if (slug === 'epiceditor' || !_.trim(data.content)) {
+      return;
+    }
+    var content = markdownService.fromHTML(data.content);
+    actions.articleMarkdownDidUpdate(slug, content);
+  });
 };
 
 actions.epicEditorCanMount.listen(() => {
@@ -39,7 +29,10 @@ actions.epicEditorCanMount.listen(() => {
       base: '../../../../css/editor-base-theme.css'
     }
   }).load(actions.epicEditorDidMount);
-  editor.on('update', actions.articleDidUpdateInCache);
+  editor.on('update', (data) => {
+    var content = markdownService.fromHTML(data.content);
+    actions.articleMarkdownDidUpdate(editor.settings.file.name, content);
+  });
   resetCacheState();
 });
 
@@ -51,21 +44,16 @@ actions.removeArticleFromCache.listen(function(slug) {
 
 actions.openArticleFromCache.listen(function(slug) {
   editor.open(slug);
-  var data = editor.getFiles(slug);
-  if (!data) { return; }
-  this.completed(slug, _.assign(browserCache.getMeta(slug), {
-    slug: slug,
-    markdown: data.content
-  }));
+  resetCacheState();
 });
 
 actions.openArticleFromServer.completed.listen(function(slug, data) {
   editor.importFile(slug, data.markdown);
-  browserCache.setMeta(slug, data);
   resetCacheState();
 });
 
 actions.submit.preEmit(function(data) {
   var editorData = editor.getFiles(data.slug);
-  return _.assign(data, {markdown: editorData.content});
+  var markdown = markdownService.fromHTML(editorData.content);
+  return _.assign(data, {markdown: markdown});
 });
