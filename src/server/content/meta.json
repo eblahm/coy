@@ -3,9 +3,7 @@
     "title": "Hello Markdown Parser",
     "category": "fragments",
     "created": "2015-09-16T01:59:13.455Z",
-    "updated": "2015-10-23T03:18:01.671Z",
-    "slug": "hello",
-    "markdown": "# Hello Markdown Parser!\n\n```javascript\nalert(':)');\nalert(':p');\n```\n\nsmart lists?\n- lets see\n- foo\n\n> \"Don't believe everything you read on the internet.\"  \n> --- Abraham Lincoln\n\n"
+    "updated": "2015-10-26T02:07:06.097Z"
   },
   "vipers": {
     "created": "2015-10-08T13:08:04.681Z",
