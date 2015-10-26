@@ -18,13 +18,13 @@ module.exports = Reflux.createStore({
 
   init: function() {
     this.listenToMany(actions);
-    actions.openArticle(_.keys(state.articlesOnServer)[0]);
     actions.loadArticlesFromServer.completed(state.articlesOnServer);
   },
 
   // LOADING STUFF
   onLoadArticlesFromServerCompleted: function(articles) {
     state.articlesOnServer = articles;
+    actions.openArticle(_.keys(state.articlesOnServer)[0]);
     this.trigger(state);
   },
 
@@ -39,14 +39,7 @@ module.exports = Reflux.createStore({
 
   // OPENING STUFF
   onOpenArticle: function(slug) {
-    var cached = state.articlesInCache;
-    var saved = state.articlesOnServer;
-    if (_.has(saved, slug) &&
-        !_.trim(_.get(cached, `[${slug}].markdown`, ''))) {
-      actions.openArticleFromServer(slug);
-    } else {
-      actions.openArticleFromCache(slug);
-    }
+    actions.openArticleFromCache(slug);
   },
 
   onOpenArticleFromServerCompleted: function(slug, data) {

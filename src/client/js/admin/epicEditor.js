@@ -5,6 +5,7 @@ var actions = require('./actions');
 
 var markdownService = require('../../../shared/service/markdownService');
 var editor;
+var imports = [];
 
 var resetCacheState = () => {
   _.each(editor.getFiles(), (data, slug) => {
@@ -14,6 +15,12 @@ var resetCacheState = () => {
     var content = markdownService.fromHTML(data.content);
     actions.articleMarkdownDidUpdate(slug, content);
   });
+};
+
+var importIfNeccessary = (article) => {
+  if (!editor.getFiles(article.slug)) {
+    editor.importFile(article.slug, article.markdown);
+  }
 };
 
 actions.epicEditorCanMount.listen(() => {
@@ -33,23 +40,33 @@ actions.epicEditorCanMount.listen(() => {
     var content = markdownService.fromHTML(data.content);
     actions.articleMarkdownDidUpdate(editor.settings.file.name, content);
   });
+  while (imports.length) {
+    importIfNeccessary(imports.pop());
+  }
   resetCacheState();
 });
 
 actions.removeArticleFromCache.listen(function(slug) {
-  // there is bug in editor.remove()
-  editor.importFile(slug, '');
+  editor.remove(slug);
   this.completed(slug);
 });
 
 actions.openArticleFromCache.listen(function(slug) {
   editor.open(slug);
-  resetCacheState();
 });
 
 actions.openArticleFromServer.completed.listen(function(slug, data) {
   editor.importFile(slug, data.markdown);
-  resetCacheState();
+  editor.open(slug);
+});
+
+actions.loadArticlesFromServer.completed.listen((articles) => {
+  articles = _.values(articles);
+  if (editor) {
+    _.each(articles, importIfNeccessary);
+  } else {
+    imports = articles;
+  }
 });
 
 actions.submit.preEmit(function(data) {
