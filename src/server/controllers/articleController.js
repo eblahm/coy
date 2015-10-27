@@ -29,10 +29,6 @@ router.post('', isLoggedIn, (req, res, next) => {
   console.log('attempting to make commit %j', req.body);
 
   contentService.getMeta().then((articleMeta) => {
-    articleMeta = _.reduce(articleMeta, (memo, data, key) => {
-      memo[key] = _.omit(data, OMITTED_META);
-      return memo;
-    }, {});
 
     var nowISOString = new Date().toISOString();
     articleMeta[slug] = _.assign(
