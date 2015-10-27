@@ -45,7 +45,9 @@ module.exports = React.createClass({
     var slug = _.get(articles, `[${nextIndex}].slug`);
 
     if (slug) {
-      this.open(slug);
+      if (!this.opening) {
+        this.open(slug);
+      }
     }
   },
 
@@ -56,8 +58,10 @@ module.exports = React.createClass({
   },
 
   open: function(slug) {
+    this.opening = true;
     $.getJSON(`/article/${slug}`)
       .then((data) => {
+        this.opening = false;
         this.setState({content: data});
       });
   },
