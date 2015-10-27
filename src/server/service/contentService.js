@@ -48,8 +48,8 @@ exports.getHTML = (slug, flush) => {
   }
   console.log('getting cached data (key:%s) (slug:%s)', cacheKey, slug);
   return exports.getMeta()
-    .then((meta) => {
-      if (!meta[slug]) {
+    .then((cachedMeta) => {
+      if (!cachedMeta[slug]) {
         return bluebird.reject(new NotFoundError());
       }
       return cache.getAsync(cacheKey)

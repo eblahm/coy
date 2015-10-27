@@ -10,8 +10,7 @@ lib.getAllOrderByCreatedDesc = () => {
     .getMeta()
     .then(_)
     .call('map', (obj, key) => {
-      obj.slug = key;
-      return obj;
+      return _.assign({slug: key}, obj);
     })
     .call('sortBy', sortCreatedDesc)
     .call('value');
@@ -22,15 +21,13 @@ lib.getAllFullOrderByCreatedDesc = () => {
     .getMeta()
     .then(_)
     .call('map', (obj, key) => {
-      obj.slug = key;
-      return obj;
+      return _.assign({slug: key}, obj);
     })
     .call('sortBy', sortCreatedDesc)
     .call('value')
-    .map(function(obj) {
+    .map((obj) => {
       return contentService.getHTML(obj.slug).then((data) => {
-        obj = _.assign(obj, data);
-        return obj;
+        return _.assign(obj, data);
       });
     });
 };
