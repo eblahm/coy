@@ -34,7 +34,7 @@ module.exports = (req, res, next) => {
       }
       feed.item({
         title: item.title,
-        description: item.content.html,
+        description: item.html,
         url: `${protocol}://${req.hostname}/${item.slug}`,
         author: 'Matthew Halbe', // TODO: get this content into article meta
         date: item.created
