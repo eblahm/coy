@@ -6,14 +6,15 @@ var _ = require('lodash');
 
 var markdownService = require('../../shared/service/markdownService');
 var cache = require('./cache');
-var meta = require('../content/meta.json');
 var NotFoundError = require('../errors/NotFoundError');
 
+const meta = require('../content/meta.json');
 const HEAD = require('../../../build.json').HEAD.substring(0, 6);
 const MARKDOWN_EXT = '.md';
 const META_KEY = HEAD + '-meta-json';
 
 exports.updateMeta = (update) => {
+  console.log(`updating ${META_KEY}`);
   return cache.setAsync(META_KEY, JSON.stringify(update));
 };
 
