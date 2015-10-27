@@ -230,7 +230,7 @@ module.exports = React.createClass({
                 value={_.get(openArticle, 'category', '')}
                 onChange={this.onMetaChange}
               >
-              {_.map(this.props.categories, (category) => {
+              {_.map(this.props.categories, (description, category) => {
                 return <option value={category}>{category}</option>
               })}
             </select>
