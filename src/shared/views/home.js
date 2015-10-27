@@ -11,8 +11,7 @@ module.exports = React.createClass({
     return {
       displayLeftSidebar: false,
       displayRightSidebar: false,
-      content: this.props.content,
-      html: ''
+      content: this.props.content
     };
   },
 
@@ -57,13 +56,9 @@ module.exports = React.createClass({
   },
 
   open: function(slug) {
-    var content = _.find(this.props.articles, (data) => data.slug === slug);
     $.getJSON(`/article/${slug}`)
       .then((data) => {
-        this.setState({
-          content: content,
-          html: data.html
-        });
+        this.setState({content: data});
       });
   },
 
@@ -113,7 +108,7 @@ module.exports = React.createClass({
         >
           <div className="article-container">
             <article
-              dangerouslySetInnerHTML={{__html: this.state.content.html || this.state.html}}
+              dangerouslySetInnerHTML={{__html: this.state.content.html}}
             />
           </div>
         </section>

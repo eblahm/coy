@@ -14,9 +14,12 @@ module.exports = (req, res, next) => {
   return articleService.getAllOrderByCreatedDesc()
     .then((allArticles) => {
       var selectedArticle = slug ? _.find(allArticles, (data) => data.slug === slug) : allArticles[0];
+      if (!selectedArticle) {
+        return next(new NotFoundError());
+      }
       return contentService.getHTML(selectedArticle.slug, !!req.query.flush)
         .then((html) => {
-          selectedArticle.html = html;
+          selectedArticle = _.assign(_.clone(selectedArticle), {html: html});
           res.render('home.html', {
             title: selectedArticle.title,
             content: selectedArticle,
@@ -29,6 +32,6 @@ module.exports = (req, res, next) => {
               categories: categories
             }))
           });
-        }, (err) => next(new NotFoundError(err)));
+        });
     }, next);
 };

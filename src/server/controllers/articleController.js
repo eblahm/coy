@@ -6,6 +6,7 @@ var _ = require('lodash');
 var contentService = require('../service/contentService');
 var NotFoundError = require('../errors/NotFoundError');
 var config = require('config');
+var bluebird = require('bluebird');
 
 const CONTENT_ROOT = config.get('content_root');
 const GITHUB_REPO_ID = config.get('repo');
@@ -89,11 +90,17 @@ router.delete('/:slug', isLoggedIn, (req, res, next) => {
 router.get('/:slug', (req, res, next) => {
   var slug = req.params.slug;
   assert.ok(slug);
-
-  contentService.getHTML(slug).then(
-    (html) => html ? res.json({html: html}).end() : new NotFoundError(),
-    (err) => next(err)
-  );
+  bluebird.join(
+    contentService.getHTML(slug),
+    contentService.getMeta(),
+    (html, meta) => {
+      if (!html) {
+        return bluebird.reject(new NotFoundError());
+      }
+      var payload = _.assign(meta[slug], {html: html});
+      res.json(payload).end();
+    })
+    .catch(next);
 });
 
 module.exports = router;
