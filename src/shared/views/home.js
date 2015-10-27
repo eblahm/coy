@@ -34,7 +34,7 @@ module.exports = React.createClass({
 
   onPathChange() {
     var slug = _.get(this.props, 'params.slug');
-    if (slug && slug !== this.state.content.slug) {
+    if (slug && slug !== this.state.content.slug && !this.opening) {
       this.open(slug);
     }
   },
@@ -44,10 +44,8 @@ module.exports = React.createClass({
     var nextIndex = (this.getCurrentIndex() + 1) % articles.length;
     var slug = _.get(articles, `[${nextIndex}].slug`);
 
-    if (slug) {
-      if (!this.opening) {
-        this.open(slug);
-      }
+    if (slug && !this.opening) {
+      this.open(slug);
     }
   },
 
