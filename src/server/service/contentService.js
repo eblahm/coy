@@ -8,7 +8,10 @@ var markdownService = require('../../shared/service/markdownService');
 var cache = require('./cache');
 var NotFoundError = require('../errors/NotFoundError');
 
-const meta = require('../content/meta.json');
+const meta = _.reduce(require('../content/meta.json'), (memo, val, key) => {
+  memo[key] = Object.freeze(val);
+  return memo;
+}, {});
 const HEAD = require('../../../build.json').HEAD.substring(0, 6);
 const MARKDOWN_EXT = '.md';
 const META_KEY = HEAD + '-meta-json';
