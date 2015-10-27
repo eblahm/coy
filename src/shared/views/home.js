@@ -19,7 +19,7 @@ module.exports = React.createClass({
     return {
       articles: [],
       content: {},
-      categories: []
+      categories: {}
     };
   },
 
@@ -97,7 +97,7 @@ module.exports = React.createClass({
           articles={this.props.articles}
           activeSlug={this.state.content.slug}
           onMouseLeave={this.onSidebarLeave}
-          categoryOrder={this.props.categories}
+          categories={this.props.categories}
         />
 
 

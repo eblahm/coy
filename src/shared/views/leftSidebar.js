@@ -6,30 +6,24 @@ var Link = require('react-router').Link;
 module.exports = React.createClass({
   getDefaultProps() {
     return {
-      categoryOrder: [],
+      categories: {},
       isServer: typeof window === 'undefined',
-      articles: [],
-      categoryExplainers: {
-        'fragments': '...Just thoughts that come to mind, not fully formed enough to be blog posts.  Or maybe just a quote or picture or some other media...'
-      }
+      articles: []
     };
   },
 
   render: function() {
     var groups = _.groupBy(this.props.articles, 'category');
-    var categoryOrder = this.props.categoryOrder;
-    if (!this.props.categoryOrder.length) {
-      categoryOrder = _.keys(groups);
-    }
+
     return (
       <section {...this.props}>
         <div className="inner-sidebar">
 
           <nav>
-          {_.map(categoryOrder, (category) => {
+          {_.map(this.props.categories, (description, category) => {
             return <div key={category}>
               <h2 className={`${_.kebabCase(category)}-content content-type-title`}>{_.capitalize(category)}</h2>
-              <p>{this.props.categoryExplainers[category]}</p>
+              <p>{description}</p>
               <ul>
                 {_.map(groups[category], (data) => {
                   return (

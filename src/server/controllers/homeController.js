@@ -5,7 +5,8 @@ var contentService = require('../service/contentService');
 var NotFoundError = require('../errors/NotFoundError');
 var reactHome = React.createFactory(require('../../shared/views/home'));
 var articleService = require('../service/articleService');
-var categories = require('config').get('blog.categories');
+var config = require('config');
+var categories = config.get('blog.categories');
 var _ = require('lodash');
 
 module.exports = (req, res, next) => {

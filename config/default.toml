@@ -22,8 +22,13 @@ google_analytics_id='UA-54099734-1'
   url = '127.0.0.1'
 
 [blog]
-  categories=['fragments','articles','other']
-  [rss]
+  [blog.categories]
+    # key = 'description'
+    # add as many as you like
+    fragments = '...Just thoughts that come to mind, not fully formed enough to be blog posts.  Or maybe just a quote or picture or some other media...'
+    articles = '...longer form stuff...'
+    other = '...other stuff...'
+  [blog.rss]
     included_categories=['fragments', 'articles']
     title='the works of Matthew Halbe'
     description="""

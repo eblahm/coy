@@ -1,7 +1,7 @@
 
 var RSS = require('rss');
 var config = require('config');
-var rssConfig = config.get('rss');
+var rssConfig = config.get('blog.rss');
 var protocol = config.get('ssl') ? 'https' : 'http';
 var moment = require('moment');
 var articleService = require('../service/articleService');
