@@ -2,6 +2,7 @@
 var React = require('react');
 var RightSidebar = require('./rightSidebar.js');
 var LeftSidebar = require('./leftSidebar.js');
+var Keys = require('./keys');
 var _ = require('lodash');
 var $ = require('jquery');
 var cx = require('classnames');
@@ -108,6 +109,7 @@ module.exports = React.createClass({
             "content-container": true
           })}
         >
+          <Keys />
           <div className="article-container">
             <article
               dangerouslySetInnerHTML={{__html: this.state.content.html}}
