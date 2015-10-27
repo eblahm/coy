@@ -93,7 +93,7 @@ router.get('/:slug', (req, res, next) => {
       if (!html) {
         return bluebird.reject(new NotFoundError());
       }
-      var payload = _.assign(meta[slug], {html: html});
+      var payload = _.assign(_.clone(meta[slug]), {html: html});
       res.json(payload).end();
     })
     .catch(next);
