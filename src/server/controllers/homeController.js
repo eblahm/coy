@@ -18,8 +18,8 @@ module.exports = (req, res, next) => {
         return next(new NotFoundError());
       }
       return contentService.getHTML(selectedArticle.slug, !!req.query.flush)
-        .then((html) => {
-          selectedArticle = _.assign(_.clone(selectedArticle), {html: html});
+        .then((data) => {
+          selectedArticle = _.assign(_.clone(selectedArticle), data);
           res.render('home.html', {
             title: selectedArticle.title,
             content: selectedArticle,
@@ -27,7 +27,6 @@ module.exports = (req, res, next) => {
             allArticles: allArticles,
             reactMarkup: React.renderToStaticMarkup(reactHome({
               content: selectedArticle,
-              html: html,
               articles: allArticles,
               categories: categories
             }))

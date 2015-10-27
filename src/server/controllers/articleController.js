@@ -89,11 +89,11 @@ router.get('/:slug', (req, res, next) => {
   bluebird.join(
     contentService.getHTML(slug),
     contentService.getMeta(),
-    (html, meta) => {
-      if (!html) {
+    (data, meta) => {
+      if (!data) {
         return bluebird.reject(new NotFoundError());
       }
-      var payload = _.assign(_.clone(meta[slug]), {html: html});
+      var payload = _.assign(_.clone(meta[slug]), data);
       res.json(payload).end();
     })
     .catch(next);

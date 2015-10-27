@@ -53,15 +53,11 @@ exports.getHTML = (slug, flush) => {
         return bluebird.reject(new NotFoundError());
       }
       return cache.getAsync(cacheKey)
-        .then(
-          (html) => {
-            return html || load();
-          },
-          (err) => {
+        .then((data) => (JSON.parse(data) || load()))
+        .then(null, (err) => {
             console.error(err.stack);
             return load();
-          }
-        );
+          });
     });
 };
 
@@ -71,11 +67,12 @@ exports.setHTML = (slug, markdownContent) => {
 
   console.log('setting data in cache key:%s', cacheKey);
 
-  return cache.setAsync(cacheKey, html).then(
-    () => html,
+  var data = {html: html, markdown: markdownContent};
+  return cache.setAsync(cacheKey, JSON.stringify(data)).then(
+    () => data,
     (err) => {
       console.error(err.stack);
-      return html;
+      return data;
     }
   );
 

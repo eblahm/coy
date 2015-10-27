@@ -9,10 +9,7 @@ const CONTENT_ROOT = config.get('content_root');
 module.exports = (req, res, next) => {
 
   articleService.getAllFullOrderByCreatedDesc().then((articles) => {
-
     articles = _.reduce(articles, (memo, article) => {
-      article.markdown = article.content.markdown;
-      delete article.content;
       memo[article.slug] = article;
       return memo;
     }, {});
