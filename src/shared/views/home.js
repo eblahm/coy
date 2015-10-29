@@ -7,12 +7,19 @@ var _ = require('lodash');
 var $ = require('jquery');
 var cx = require('classnames');
 
+const LEFT_ARROW = 37;
+const RIGHT_ARROW = 39;
+const UP_ARROW = 38;
+const DOWN_ARROW = 40;
+
 module.exports = React.createClass({
   getInitialState() {
     return {
       displayLeftSidebar: false,
       displayRightSidebar: false,
-      content: this.props.content
+      content: this.props.content,
+      keyPress: false,
+      keyDirection: 'right'
     };
   },
 
@@ -26,6 +33,44 @@ module.exports = React.createClass({
 
   componentDidMount() {
     this.onPathChange();
+    window.addEventListener('keydown', (event) => {
+      var keyCode = event.keyCode;
+      switch (keyCode) {
+        case LEFT_ARROW:
+          return this.keyDown('left');
+        case DOWN_ARROW:
+          return this.keyDown('down');
+        case RIGHT_ARROW:
+          return this.keyDown('right');
+        case UP_ARROW:
+          return this.keyDown('up');
+        default:
+          return;
+      }
+    });
+    window.addEventListener('keyup', (event) => {
+      var keyCode = event.keyCode;
+      switch (keyCode) {
+        case LEFT_ARROW:
+          return this.keyUp('left');
+        case DOWN_ARROW:
+          return this.keyUp('down');
+        case RIGHT_ARROW:
+          return this.keyUp('right');
+        case UP_ARROW:
+          return this.keyUp('up');
+        default:
+          return;
+      }
+    });
+  },
+
+  keyDown: function(direction) {
+    this.setState({keyPress: true, keyDirection: direction});
+  },
+
+  keyUp: function(direction) {
+    this.setState({keyPress: false, keyDirection: direction});
   },
 
   componentDidUpdate() {
@@ -132,7 +177,10 @@ module.exports = React.createClass({
               dangerouslySetInnerHTML={{__html: this.state.content.html}}
             />
           </div>
-          <Keys />
+          <Keys
+            keyPress={this.state.keyPress}
+            keyDirection={this.state.keyDirection}
+            />
         </section>
 
         <RightSidebar
