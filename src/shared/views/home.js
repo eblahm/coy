@@ -79,6 +79,21 @@ module.exports = React.createClass({
     });
   },
 
+  getArticlesByCategory: function(category) {
+    var groupedArticles = _.groupBy(this.props.articles, 'category');
+    return _.get(groupedArticles, `.${category}`, []);
+  },
+
+  getIndexOfCategory: function() {
+    return _.reduce(this.getArticlesByCategory(this.state.content.category), (memo, data, i) => {
+      return this.state.content.slug === data.slug ? i : memo;
+    }, 0) + 1;
+  },
+
+  getSizeOfCategory: function() {
+    return this.getArticlesByCategory(this.state.content.category).length;
+  },
+
   render() {
     return (
       <div
@@ -109,12 +124,15 @@ module.exports = React.createClass({
             "content-container": true
           })}
         >
-          <Keys />
+          <div className="num-of-section vmediumi">
+            {this.getIndexOfCategory()} of {this.getSizeOfCategory()} {this.state.content.category}
+          </div>
           <div className="article-container">
             <article
               dangerouslySetInnerHTML={{__html: this.state.content.html}}
             />
           </div>
+          <Keys />
         </section>
 
         <RightSidebar
