@@ -63,3 +63,36 @@ section.right-sidebar {
   left: 0;
   margin: 20px;
 }
+
+.tester {
+  animation-name: revolve;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  text-align: center;
+  width: 100%;
+  font-size: 50px;
+  margin: 20px;
+}
+
+@keyframes revolve {
+  0% {
+    transform: rotate3d(0, 1, 0, 0deg);
+  }
+  33% {
+    transform: rotate3d(0, 1, 0, 90deg);
+    transform-origin: 0 0 0;
+  }
+  33.1% {
+    transform-origin: 100% 0 0;
+  }
+  66% {
+    transform: rotate3d(0, 1, 0, 270deg);
+    transform-origin: 100% 0 0;
+  }
+  100% {
+    transform: rotate3d(0, 1, 0, 360deg);
+    transform-origin: inherit;
+  }
+}
+
+
