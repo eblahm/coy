@@ -41,6 +41,9 @@ section.content-container {
   z-index: 2;
 
   transition: margin .5s ease-in-out .2s;
+  .num-of-section {
+    transition: margin .5s ease-in-out .2s;
+  }
 
   &.show-right-sidebar {
     margin-right: 100% * @right-flex-ratio;
@@ -53,6 +56,10 @@ section.content-container {
   &.show-left-sidebar {
     transition: margin-left .5s ease-in-out;
     margin-left: 100% * @left-flex-ratio;
+    .num-of-section {
+      transition: margin-left .5s ease-in-out;
+      margin-left: 105% * @left-flex-ratio;
+    }
   }
 }
 
