@@ -66,11 +66,43 @@ module.exports = React.createClass({
   },
 
   keyDown: function(direction) {
-    this.setState({keyPress: true, keyDirection: direction});
+    var groupedArticles = _.groupBy(this.props.articles, 'category');
+    var categories = _.keys(groupedArticles);
+    var categoryIndex = categories.indexOf(this.state.content.category);
+    var indexWithinCategory = this.getIndexWithinCategory();
+    var articlesWithinCategory = this.getArticlesWithinCategory();
+    var nextIndex;
+    var slug;
+    if (direction === 'right') {
+      nextIndex = (indexWithinCategory + 1) % articlesWithinCategory.length;
+      slug = articlesWithinCategory[nextIndex].slug;
+    }
+    if (direction === 'left') {
+      nextIndex = (articlesWithinCategory.length + (indexWithinCategory - 1)) % articlesWithinCategory.length;
+      slug = articlesWithinCategory[nextIndex].slug;
+    }
+    if (direction === 'up') {
+      nextIndex = (categoryIndex + 1) % categories.length;
+      articlesWithinCategory = groupedArticles[categories[nextIndex]];
+      slug = articlesWithinCategory[0].slug;
+    }
+    if (direction === 'down') {
+      nextIndex = (categories.length + (categoryIndex - 1)) % categories.length;
+      articlesWithinCategory = groupedArticles[categories[nextIndex]];
+      slug = articlesWithinCategory[0].slug;
+    }
+    this.open(slug);
+    this.setState({
+      keyPress: true,
+      keyDirection: direction
+    });
   },
 
   keyUp: function(direction) {
-    this.setState({keyPress: false, keyDirection: direction});
+    this.setState({
+      keyPress: false,
+      keyDirection: direction
+    });
   },
 
   componentDidUpdate() {
@@ -80,28 +112,13 @@ module.exports = React.createClass({
 
   onPathChange() {
     var slug = _.get(this.props, 'params.slug');
-    if (slug && slug !== this.state.content.slug && !this.opening) {
+    if (slug && slug !== this.state.content.slug) {
       this.open(slug);
     }
-  },
-
-  navigateNext: function() {
-    var articles = this.props.articles;
-    var nextIndex = (this.getCurrentIndex() + 1) % articles.length;
-    var slug = _.get(articles, `[${nextIndex}].slug`);
-
-    if (slug && !this.opening) {
-      this.open(slug);
-    }
-  },
-
-  getCurrentIndex: function() {
-    return _.reduce(this.props.articles, (memo, data, i) => {
-      return this.state.content.slug === data.slug ? i : memo;
-    }, 0);
   },
 
   open: function(slug) {
+    if (this.opening) { return; }
     this.opening = true;
     $.getJSON(`/article/${slug}`)
       .then((data) => {
@@ -124,19 +141,22 @@ module.exports = React.createClass({
     });
   },
 
-  getArticlesByCategory: function(category) {
+  getArticlesWithinCategory: function() {
     var groupedArticles = _.groupBy(this.props.articles, 'category');
-    return _.get(groupedArticles, `.${category}`, []);
+    return _.get(groupedArticles, `.${this.state.content.category}`, []);
+  },
+
+  getIndexWithinCategory: function() {
+    var articlesInCategory = this.getArticlesWithinCategory();
+    return _.reduce(articlesInCategory, (memo, data, i) => {
+      return this.state.content.slug === data.slug ? i : memo;
+    }, 0);
   },
 
   getIndexOfCategory: function() {
-    return _.reduce(this.getArticlesByCategory(this.state.content.category), (memo, data, i) => {
+    return _.reduce(this.getArticlesWithinCategory(), (memo, data, i) => {
       return this.state.content.slug === data.slug ? i : memo;
     }, 0) + 1;
-  },
-
-  getSizeOfCategory: function() {
-    return this.getArticlesByCategory(this.state.content.category).length;
   },
 
   render() {
@@ -170,7 +190,7 @@ module.exports = React.createClass({
           })}
         >
           <div className="num-of-section vmediumi">
-            {this.getIndexOfCategory()} of {this.getSizeOfCategory()} {this.state.content.category}
+            {this.getIndexOfCategory()} of {this.getArticlesWithinCategory().length} {this.state.content.category}
           </div>
           <div className="article-container">
             <article
