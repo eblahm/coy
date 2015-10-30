@@ -1,5 +1,6 @@
 
 var React = require('react');
+var History = require('react-router').History;
 var RightSidebar = require('./rightSidebar.js');
 var LeftSidebar = require('./leftSidebar.js');
 var Keys = require('./keys');
@@ -13,6 +14,9 @@ const UP_ARROW = 38;
 const DOWN_ARROW = 40;
 
 module.exports = React.createClass({
+
+  mixins: [History],
+
   getInitialState() {
     return {
       displayLeftSidebar: false,
@@ -33,39 +37,25 @@ module.exports = React.createClass({
 
   componentDidMount() {
     this.onPathChange();
-    window.addEventListener('keydown', (event) => {
-      var keyCode = event.keyCode;
-      switch (keyCode) {
-        case LEFT_ARROW:
-          return this.keyDown('left');
-        case DOWN_ARROW:
-          return this.keyDown('down');
-        case RIGHT_ARROW:
-          return this.keyDown('right');
-        case UP_ARROW:
-          return this.keyDown('up');
-        default:
-          return;
-      }
-    });
-    window.addEventListener('keyup', (event) => {
-      var keyCode = event.keyCode;
-      switch (keyCode) {
-        case LEFT_ARROW:
-          return this.keyUp('left');
-        case DOWN_ARROW:
-          return this.keyUp('down');
-        case RIGHT_ARROW:
-          return this.keyUp('right');
-        case UP_ARROW:
-          return this.keyUp('up');
-        default:
-          return;
-      }
-    });
+    window.addEventListener('keydown', this.keyDown);
+    window.addEventListener('keyup', this.keyUp);
   },
 
-  keyDown: function(direction) {
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.keyDown);
+    window.removeEventListener('keyup', this.keyUp);
+  },
+
+  isDirectionPad: function(keyCode) {
+    return _.contains([LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW], keyCode);
+  },
+
+  keyDown: function(event) {
+    var keyCode = event.keyCode;
+    if (!this.isDirectionPad(keyCode)) {
+      return;
+    }
+
     var groupedArticles = _.groupBy(this.props.articles, 'category');
     var categories = _.keys(groupedArticles);
     var categoryIndex = categories.indexOf(this.state.content.category);
@@ -73,36 +63,39 @@ module.exports = React.createClass({
     var articlesWithinCategory = this.getArticlesWithinCategory();
     var nextIndex;
     var slug;
-    if (direction === 'right') {
+    var direction;
+    if (keyCode === RIGHT_ARROW) {
       nextIndex = (indexWithinCategory + 1) % articlesWithinCategory.length;
       slug = articlesWithinCategory[nextIndex].slug;
+      direction = 'right';
     }
-    if (direction === 'left') {
+    if (keyCode === LEFT_ARROW) {
       nextIndex = (articlesWithinCategory.length + (indexWithinCategory - 1)) % articlesWithinCategory.length;
       slug = articlesWithinCategory[nextIndex].slug;
+      direction = 'left';
     }
-    if (direction === 'up') {
+    if (keyCode === UP_ARROW) {
       nextIndex = (categoryIndex + 1) % categories.length;
       articlesWithinCategory = groupedArticles[categories[nextIndex]];
       slug = articlesWithinCategory[0].slug;
+      direction = 'up';
     }
-    if (direction === 'down') {
+    if (keyCode === DOWN_ARROW) {
       nextIndex = (categories.length + (categoryIndex - 1)) % categories.length;
       articlesWithinCategory = groupedArticles[categories[nextIndex]];
       slug = articlesWithinCategory[0].slug;
+      direction = 'down';
     }
-    this.open(slug);
-    this.setState({
-      keyPress: true,
-      keyDirection: direction
-    });
+    var update = {keyPress: true, keyDirection: direction};
+    this.setState(update);
+    this.history.pushState(_.defaults(this.state, update), `/${slug}`);
   },
 
-  keyUp: function(direction) {
-    this.setState({
-      keyPress: false,
-      keyDirection: direction
-    });
+  keyUp: function(event) {
+    var keyCode = event.keyCode;
+    if (this.isDirectionPad(keyCode)) {
+      this.setState({keyPress: false});
+    }
   },
 
   componentDidUpdate() {
