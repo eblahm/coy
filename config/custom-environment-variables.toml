@@ -2,6 +2,7 @@
 
 session_secret = 'SESSION_SECRET'
 port = 'PORT'
+google_analytics_id = 'GOOGLE_ANALYTICS_ID'
 
 [github]
   client_id = 'GITHUB_CLIENT_ID'
