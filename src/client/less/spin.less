@@ -1,0 +1,76 @@
+.spin-left,
+.spin-right,
+.spin-up,
+.spin-down {
+  animation-iteration-count: 1;
+  animation-duration: 1s;
+  transform-origin: 50% 50% 200px;
+}
+
+
+.spin-left { animation-name: spin-left; }
+.spin-right { animation-name: spin-right; }
+.spin-up { animation-name: spin-up; }
+.spin-down { animation-name: spin-down; }
+
+
+@keyframes spin-left {
+  0% {
+    transform: rotate3d(0, 1, 0, 0deg);
+  }
+  50% {
+    transform: rotate3d(0, 1, 0, 90deg);
+  }
+  50.001% {
+    transform: rotate3d(0, 1, 0, 270deg);
+  }
+  100% {
+    transform: rotate3d(0, 1, 0, 360deg);
+  }
+}
+
+@keyframes spin-right {
+  0% {
+    transform: rotate3d(0, 1, 0, 0deg);
+  }
+  50% {
+    transform: rotate3d(0, 1, 0, -90deg);
+  }
+  50.001% {
+    transform: rotate3d(0, 1, 0, -270deg);
+  }
+  100% {
+    transform: rotate3d(0, 1, 0, -360deg);
+  }
+}
+
+@keyframes spin-down {
+  0% {
+    transform: rotate3d(1, 0, 0, 0deg);
+  }
+  50% {
+    transform: rotate3d(1, 0, 0, 90deg);
+  }
+  50.001% {
+    transform: rotate3d(1, 0, 0, -90deg);
+  }
+  100% {
+    transform: rotate3d(1, 0, 0, 0deg);
+  }
+}
+
+@keyframes spin-up {
+  0% {
+    transform: rotate3d(1, 0, 0, 0deg);
+  }
+  50% {
+    transform: rotate3d(1, 0, 0, -90deg);
+  }
+  50.001% {
+    transform: rotate3d(1, 0, 0, 90deg);
+  }
+  100% {
+    transform: rotate3d(1, 0, 0, 0deg);
+  }
+}
+
