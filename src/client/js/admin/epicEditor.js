@@ -72,5 +72,5 @@ actions.loadArticlesFromServer.completed.listen((articles) => {
 actions.submit.preEmit(function(data) {
   var editorData = editor.getFiles(data.slug);
   var markdown = markdownService.fromHTML(editorData.content);
-  return _.assign(data, {markdown: markdown});
+  return _.defaults(data, {markdown: markdown});
 });
