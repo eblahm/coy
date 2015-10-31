@@ -2,6 +2,7 @@
 var Reflux = require('reflux');
 var actions = require('./actions');
 var _ = require('lodash');
+var defaultArticleProps = {category: 'fragments', title: ''};
 var initialOpenArticle = () => {
   var articles = _.get(window, 'COY_ADMIN.articles', {});
   return _.get(_.values(articles), '[0]', {});
@@ -50,6 +51,11 @@ module.exports = Reflux.createStore({
 
   onOpenArticleFromCache: function(slug) {
     state.openSlug = slug;
+    if (!_.contains(_.keys(state.articlesInCache), slug)) {
+      var update = _.defaults(defaultArticleProps, {slug: slug});
+      state.articlesInCache[slug] = update;
+      actions.articleMetaDidUpdate(update);
+    }
     this.trigger(state);
   },
 
