@@ -7,14 +7,12 @@
 ### Web Developer
 #### Webs Inc
 #### Nov 2013 to Present
-<div class="webs-bullets">
 *   Primary author of the integration layer between a standalone Node/React single page application and a legacy Java/Spring backend
 *   Helped establish a continuous integration process (lint, test, deploy) for nodejs and react applications within the organization
 *   Wrote a web app to help the marketing team create site-wide sales and sale banners without the need for static code changes, using Node, Backbone, Mongodb, AWS S3 and AWS Cloudflare
 *   Created first of its kind automation (primarily for data analytics) using an Oracle, Postgres, Gruntjs, Node and PM2
 *   Contributed directly to the [webs.com](http://www.webs.com) external presence, using Javascript, CSS, HTML and Spring MVC ([plans](http://web.archive.org/web/20140913164143/http://www.webs.com/plans), [relogin](http://web.archive.org/web/20140911033259/http://www.webs.com/s/login/relogin) and [report abuse](http://web.archive.org/web/20140913164711/http://www.webs.com/report-abuse))
 *   Contributed directly to webs.com shopping cart using backbone and groovy on grails
-<div>
 
 ### Open Source Developer
 #### On the Internet, in my free time
