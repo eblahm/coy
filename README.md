@@ -4,7 +4,7 @@ Static site generators like [Jekyll](https://github.com/jekyll/jekyll) are great
 
 I find this process to be a hassle.  I'd much rather have an admin ui in the browser to update the markdown. Also, why should updating version controlled content be more complex than database driven content? I'd like to have a website that is version controlled but still knows how to update itself.
 
-#### _Intended Audience_
+#### Intended Audience
 This project is mainly intended for my personal usage on [halbe.works](https://halbe.works).  If you find it interesting or useful, feel free to fork.
 
 #### Prerequisites
@@ -12,46 +12,7 @@ This project is mainly intended for my personal usage on [halbe.works](https://h
 - redis
 
 #### Configuration
-In the config directory create a config file that is namespaced by the NODE_ENV environmental variable.  So for example if you are running via `NODE_ENV=production node ...`, create a config/production.toml file.
-```toml
-# default config
-project_name = 'coy'
-port = 5001
-
-repo = 'eblahm/coy' # your forked github repo
-repo_url = 'https://github.com/eblahm/coy' # full url to your forkd github repo
-
-# configurable via env var SESSION_SECRET='foo'
-session_secret = '(((((((((( 0-0~ ))))))))))'
-
-google_analytics_id='UA-12345678-1'
-
-[github]
-  api_url = 'https://api.github.com'
-  
-  # these two are also configurable via evn var eg GITHUB_CLIENT_ID=123
-  client_id = 'your github app id'
-  client_secret = 'your github app id'
-  
-  # make sure this next property is the same in github admin and below
-  # replace 127.0.0.1:5001 with your domain if necessary
-  redirect_uri = 'http://127.0.0.1:5001/github/callback'
-  scope = 'repo,user'
-
-[redis]
-  port = 6379
-  url = '127.0.0.1'
-  
-[blog]
-  categories=['fragments','articles','other']
-  [rss]
-    included_categories=['fragments', 'articles']
-    title='the works of Matthew Halbe'
-    description='New content is not frequent'
-    language='en'
-    image_url='http://www.gravatar.com/avatar/6af8e2870fd7c4a74b8692f0c997522e'
-
-```
+In the config directory create a config file that is namespaced by the NODE_ENV environmental variable. So for example if you are running via `NODE_ENV=production node ...`, create a config/production.toml file.   The key value pairs that you specify in this environment based config file will override the [defaults values]()  Sensitive values can be passed via Environmental variables.
 
 #### Usage
 ```bash
@@ -59,6 +20,12 @@ google_analytics_id='UA-12345678-1'
 gulp start
 
 # production 
+export NODE_ENV='production'
+export GITHUB_CLIENT_ID='asdf'
+export GITHUB_CLIENT_SECRET='asdf'
+export GITHUB_REDIRECT_URL='http://example.com/github/callback'
+export SESSION_SECRET='asdf'
+export GOOGLE_ANALYTICS_ID='UA-asdf-1'
 npm install
 npm start
 
