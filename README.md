@@ -12,7 +12,7 @@ This project is mainly intended for my personal usage on [halbe.works](https://h
 - redis
 
 #### Configuration
-In the config directory create a config file that is namespaced by the NODE_ENV environmental variable. So for example if you are running via `NODE_ENV=production node ...`, create a config/production.toml file.   The key value pairs that you specify in this environment based config file will override the [defaults values]()  Sensitive values can be passed via Environmental variables.
+In the config directory create a config file that is namespaced by the NODE_ENV environmental variable. So for example if you are running via `NODE_ENV=production node ...`, create a config/production.toml file.   The key value pairs that you specify in this environment based config file will override the [defaults values](https://github.com/eblahm/coy/blob/master/config/default.toml)  Sensitive values can be passed via Environmental variables.
 
 #### Usage
 ```bash
