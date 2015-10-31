@@ -5,12 +5,6 @@
     "created": "2015-09-16T01:59:13.455Z",
     "updated": "2015-10-26T02:07:06.097Z"
   },
-  "vipers": {
-    "created": "2015-10-08T13:08:04.681Z",
-    "category": "fragments",
-    "updated": "2015-10-26T02:07:00.384Z",
-    "title": "vipers"
-  },
   "webhook": {
     "title": "Building a Webhook Between Draft and Google App Engine",
     "category": "articles",
