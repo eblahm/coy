@@ -100,7 +100,7 @@
 
 
 * based on [NIH competency table](http://hr.od.nih.gov/workingatnih/competencies/proficiencyscale.htm)
-*   [s:1]= Funamental Awareness
+*   Funamental Awareness = [s:1]
 *   [s:2]= Novice
 *   [s:3]= Intermediate
 *   [s:4]= Advanced
