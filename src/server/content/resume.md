@@ -54,54 +54,50 @@
 
 * 
 #### Tools
-    * git
-    * Microsoft Office Suite
-
-* 
-#### Database
-    * mongo
-    * postgres
-    * mysql
-    * oracle
+    * git [s:4]
+    * docker [s:2.5]
+    * bamboo [s:4]
+    * jenkins [s:4]
 
 
 * 
 #### Programming Languages
-* JavaScript
-* HTML
-* CSS
-* Python
-* SQL
-* Groovy
-* Java
-* Puppet
-* Scala
-* Ruby
-* PHP  
+* JavaScript [s:4]
+* HTML  [s:4]
+* CSS  [s:4]
+* Java [s:4]
+* Python  [s:3.5]
+* SQL [s:3.5]
+* Groovy [s:3]
+* Puppet [s:2.5]
+* Scala [s:2]
+* Ruby [s:2]
+* PHP  [s:1]
 
 
 * 
-#### Frameworks
+#### Frameworks &amp; Tools
 * javascript
-* Node
-* React
-* Express
-* Meteor
-* Backbone
-* jQuery
-* Angular
+    * Node [s:4]
+    * React  [s:4]
+    * Express  [s:4]
+    * Meteor  [s:3]
+    * Backbone  [s:4]
+    * jQuery [s:4]
+    * Angular [s:2]
 * python
-* Django
-* google appengine
-* Groovy
-* grails
+    * Django [s:3.5]
 * Java
-* Spring
+    * Spring  [s:3.5]
+    * Hibernate [s:3.5]
+* Groovy
+    * grails [s:2]
+
 
 
 * based on [NIH competency table](http://hr.od.nih.gov/workingatnih/competencies/proficiencyscale.htm)
 *   Funamental Awareness = [s:1]
-*   [s:2]= Novice
-*   [s:3]= Intermediate
-*   [s:4]= Advanced
-*   [s:5]= Expert
+*   Novice = [s:2]
+*   Intermediate = [s:3]
+*   Advanced = [s:4]
+*   Expert = [s:5]
