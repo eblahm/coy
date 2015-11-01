@@ -46,55 +46,62 @@
 #### Defense Language Institute, Monterey CA
 
 # Developer Skills
-* Areas
+* 
+#### Areas
     * Frontend [s:4]
     * Backend [s:4]
     * Ops [s:3.5]
 
-* Tools
+* 
+#### Tools
     * git
     * Microsoft Office Suite
 
-* Database
+* 
+#### Database
     * mongo
     * postgres
     * mysql
     * oracle
 
-* Programing Languages
-    * Javascript
-    * HTML
-    * CSS
-    * Python
-    * SQL
-    * Groovy
-    * Java
-    * Puppet
-    * Scala
-    * Ruby
-    * PHP
 
-* Frameworks
-    * javascript
-    * Node
-    * React
-    * Express
-    * Meteor
-    * Backbone
-    * jQuery
-    * Angular
-    * python
-    * Django
-    * google appengine
-    * Groovy
-    * grails
-    * Java
-    * Spring
+* 
+#### Programming Languages
+* JavaScript
+* HTML
+* CSS
+* Python
+* SQL
+* Groovy
+* Java
+* Puppet
+* Scala
+* Ruby
+* PHP  
 
-based on [NIH competency table](http://hr.od.nih.gov/workingatnih/competencies/proficiencyscale.htm)
 
-*   1= Funamental Awareness
-*   2= Novice
-*   3= Intermediate
-*   4= Advanced
-*   5= Expert
+* 
+#### Frameworks
+* javascript
+* Node
+* React
+* Express
+* Meteor
+* Backbone
+* jQuery
+* Angular
+* python
+* Django
+* google appengine
+* Groovy
+* grails
+* Java
+* Spring
+
+
+* based on [NIH competency table](http://hr.od.nih.gov/workingatnih/competencies/proficiencyscale.htm)
+*   [s:1]= Funamental Awareness
+*   [s:2]= Novice
+*   [s:3]= Intermediate
+*   [s:4]= Advanced
+*   [s:5]= Expert
