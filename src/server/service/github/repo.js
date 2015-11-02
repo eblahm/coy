@@ -9,7 +9,8 @@ var _ = require('lodash');
 var run = require('gen-run');
 var bluebird = require('bluebird');
 
-var commitGenerator = function* (repoObj, user, updates, message, ref = 'refs/heads/master') {
+var commitGenerator = function* (repoObj, user, updates, message, ref) {
+  ref = ref || 'refs/heads/master';
 
   console.log(`loading git ref:${ref}`);
   var headHash = yield repoObj.readRef(ref);
@@ -19,7 +20,6 @@ var commitGenerator = function* (repoObj, user, updates, message, ref = 'refs/he
 
   console.log('loading tree for commit:%j', commit);
   var tree = yield repoObj.loadAs('tree', commit.tree);
-
 
   // Build the updates array
   updates = _.map(updates, (update) => {

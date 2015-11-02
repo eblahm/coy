@@ -20,16 +20,6 @@ var runSequence = require('run-sequence');
 var _ = require('lodash');
 var shell = require('gulp-shell');
 
-var BABEL_TRANFORMS = [
-  'es6.arrowFunctions',
-  'es6.parameters',
-  'es6.spread',
-  'react',
-  'strict',
-  'es6.properties.computed',
-  'es6.properties.shorthand'
-].join(',');
-
 var SERVER_SIDE_JS = [
   'src/**/*.js',
   'src/*.js',
@@ -76,7 +66,7 @@ gulp.task('clean', function(done) {
 gulp.task('bundle', function () {
   return _.map(CLIENT_SIDE_APPS, function(file) {
     return browserify(file, {debug: true})
-      .transform(babelify.configure({whitelist: BABEL_TRANFORMS}))
+      .transform(babelify.configure({presets: ['es2015', 'react']}))
       .bundle()
       .on('error', gutil.log)
       .pipe(source(file.replace(/\.\/src\/client\//, '')))
@@ -117,7 +107,14 @@ gulp.task('copy', function() {
 
 gulp.task('buildServer', ['copy', 'copy-static-lib'], function() {
   return gulp.src(SERVER_SIDE_JS)
-    .pipe(babel({whitelist: BABEL_TRANFORMS}))
+    .pipe(babel({presets: ['react'], plugins: [
+        'transform-es2015-block-scoped-functions',
+        'transform-es2015-computed-properties',
+        'transform-es2015-shorthand-properties',
+        'transform-es2015-arrow-functions',
+        'transform-es2015-parameters',
+        'transform-es2015-spread'
+    ]}))
     .pipe(gulp.dest('dist'))
     .on('error', gutil.log);
 });
