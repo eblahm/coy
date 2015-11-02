@@ -64,6 +64,11 @@ var CLIENT_SIDE_APPS = [
   './src/client/js/home/start.js',
 ];
 
+function handleError(err) {
+  console.log(err.toString());
+  this.emit('end');
+}
+
 gulp.task('clean', function(done) {
   del(['dist'], done);
 });
@@ -96,8 +101,8 @@ gulp.task('less', function() {
     .pipe(less({
       plugins: [autoprefix, cleancss]
     }))
-    .pipe(gulp.dest('./dist/client/css'))
-    .on('error', gutil.log);
+    .on('error', handleError)
+    .pipe(gulp.dest('./dist/client/css'));
 });
 
 gulp.task('copy-static-lib', function() {
@@ -134,8 +139,8 @@ gulp.task('nodemon', ['buildServer', 'buildClient', 'watchClient'], function() {
 gulp.task('gitData', shell.task(['npm run gitData']));
 
 gulp.task('watchClient', function() {
-  gulp.watch(CLIENT_SIDE_JS, ['bundle']).on('error', gutil.log);
-  gulp.watch(CLIENT_SIDE_LESS, ['less']).on('error', gutil.log);
+  gulp.watch(CLIENT_SIDE_JS, ['bundle']);
+  gulp.watch(CLIENT_SIDE_LESS, ['less']);
 });
 
 gulp.task('start', function(callback) {
