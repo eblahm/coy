@@ -187,6 +187,7 @@ module.exports = React.createClass({
           </div>
           <div className="article-container">
             <article
+              className={this.state.content.slug}
               dangerouslySetInnerHTML={{__html: this.state.content.html}}
             />
           </div>

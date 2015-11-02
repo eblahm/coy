@@ -1,0 +1,50 @@
+article.resume {
+  + ul {
+    display: none;
+  }
+  display: flex;
+  flex-wrap: wrap;
+  h1, h2 {
+    flex: 1 1 100%;
+  }
+  h3 {
+    flex: 1 0 50%;
+  }
+  h3 + h3 {
+    text-align: right;
+  }
+
+  h1#education ~ h3 {
+    flex: 1 1 100%;
+  }
+  h1#developer-skills {
+    ~ ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex: 1 1 33%;
+      ul {
+        list-style: none;
+      }
+      li {
+        position: relative;
+      }
+      i {
+        position: absolute;
+        right: 10%;
+        width: 75px;
+      }
+    }
+  }
+
+}
+i.five-stars:before { content: "\2605\2605\2605\2605\2605"; }
+i.four-stars:before { content: "\2605\2605\2605\2605"; }
+i.three-stars:before { content: "\2605\2605\2605"; }
+i.two-stars:before { content: "\2605\2605"; }
+i.one-stars:before { content: "\2605"; }
+
+i.four-and-half-stars:before {content: "\2605\2605\2605\2605\f022";}
+i.three-and-half-stars:before {content: "\2605\2605\2605\f022";}
+i.two-and-half-stars:before {content: "\2605\2605\f022";}
+i.one-and-half-stars:before {content: "\2605\f022";}
