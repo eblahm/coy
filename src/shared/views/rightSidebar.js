@@ -1,4 +1,5 @@
 var React = require('react');
+var SocialLinks = require('./socialLinks');
 
 module.exports = React.createClass({
 
@@ -18,14 +19,7 @@ module.exports = React.createClass({
           <p>
             My main interests are web development, US-Iran Relations and documentary films.
           </p>
-          <div className="social-links">
-            <ul>
-              <li><a href="mailto:matthew.c.halbe@gmail.com"><i className="icon-mail"></i></a></li>
-              <li><a href="https://github.com/eblahm"><i className="icon-git"></i></a></li>
-              <li><a href="https://www.linkedin.com/pub/matthew-halbe/2b/a37/911"><i className="icon-linked_in"></i></a></li>
-              <li><a href="https://twitter.com/_yonant"><i className="icon-twitter"></i></a></li>
-            </ul>
-          </div>
+          <SocialLinks />
         </div>
       </section>
     )

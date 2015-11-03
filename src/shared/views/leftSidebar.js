@@ -2,6 +2,7 @@ var React = require('react');
 var _ = require('lodash');
 var cx = require('classnames');
 var Link = require('react-router').Link;
+var SocialLinks = require('./socialLinks');
 
 module.exports = React.createClass({
   getDefaultProps() {
@@ -39,6 +40,7 @@ module.exports = React.createClass({
           })}
           </nav>
         </div>
+        <SocialLinks />
       </section>
     )
   }
