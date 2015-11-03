@@ -1,24 +1,20 @@
-*   [email](mailto:matthew.c.halbe@gmail.com)
-*   [github](https://github.com/eblahm)
-*   [linkedin](https://www.linkedin.com/pub/matthew-halbe/2b/a37/911)
-*   [twitter](https://twitter.com/_yonant)
-
 # Experience
 ## Web Developer
-### Webs Inc
+### Vistaprint
 ### Nov 2013 to Present
-*   Primary author of the integration layer between a standalone Node/React single page application and a legacy Java/Spring backend
-*   Helped establish a continuous integration process (lint, test, deploy) for nodejs and react applications within the organization
-*   Wrote a web app to help the marketing team create site-wide sales and sale banners without the need for static code changes, using Node, Backbone, Mongodb, AWS S3 and AWS Cloudflare
-*   Created first of its kind automation (primarily for data analytics) using an Oracle, Postgres, Gruntjs, Node and PM2
-*   Contributed directly to the [webs.com](http://www.webs.com) external presence, using Javascript, CSS, HTML and Spring MVC ([plans](http://web.archive.org/web/20140913164143/http://www.webs.com/plans), [relogin](http://web.archive.org/web/20140911033259/http://www.webs.com/s/login/relogin) and [report abuse](http://web.archive.org/web/20140913164711/http://www.webs.com/report-abuse))
-*   Contributed directly to webs.com shopping cart using backbone and groovy on grails
+* Part of a seven person scrum team, tasked with moving the Vistaprint Digital account and subscriptions system to a more public-cloud based, microservice oriented architecture
+* Lead contributor on the second generation Local Listings product, a standalone Node/React app, marketed on Vistaprint and webs.com
+* Helped establish a continuous integration process (lint, test, deploy) for nodejs and react applications within the organization
+* Wrote a web app to help the marketing team create site-wide sales and sale banners
+* Helped architect and write a referral program on webs.com
+* Wrote several standalone programs to automate data analytics tasks
+* Contributed directly to the [webs.com](http://www.webs.com) front end. ([plans](http://web.archive.org/web/20140913164143/http://www.webs.com/plans), [relogin](http://web.archive.org/web/20140911033259/http://www.webs.com/s/login/relogin) and [report abuse](http://web.archive.org/web/20140913164711/http://www.webs.com/report-abuse)).  And also the shopping cart.
 
 ## Open Source Developer
 ### On the Internet, in my free time
 ### 2012 to Present
-*   Built a Python based, open source [blogging application](https://github.com/eblahm/eblahg) for Google App Engine that successfully integrates a text editing web service called Draft and the Dropbox REST API
-*   As a participant in the National Day of Civic Hacking on June 1-2 2013, built a prototype application to help Peace Corps Medical Secretaries and Volunteers manage resupply of Medical Kit items.
+* Built a Node based [blogging application](https://github.com/eblahm/coy), that supports live updating, version controlled, markdown
+*   Built a Python based, open source [blogging application](https://github.com/eblahm/eblahg) for Google App Engine that successfully integrates a text editing web service called Draft
 *   Built an application called [ncap-share](https://github.com/eblahm/ncap-share) to help my wife share swim workouts with other swim coaches. The app uses meteor, integrates with TeamUnify and includes file sharing and post tagging.
 
 
