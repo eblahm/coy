@@ -7,8 +7,9 @@ var bodyParser = require('body-parser');
 var RedisStore = require('connect-redis')(session);
 var config = require('config');
 var logger = require('morgan');
-var cache = require('./service/cache');
+var compression = require('compression');
 
+var cache = require('./service/cache');
 var controllers = require('./controllers');
 var _ = require('lodash');
 
@@ -25,6 +26,7 @@ app.use(session({
 require('./middleware/templating')(app);
 
 app.use(logger('dev'));
+app.use(compression());
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(bodyParser.urlencoded({extended: true}));
 
