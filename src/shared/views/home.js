@@ -23,7 +23,7 @@ module.exports = React.createClass({
       displayRightSidebar: false,
       content: this.props.content,
       keyPress: false,
-      keyDirection: 'right'
+      keyDirection: ''
     };
   },
 
@@ -92,8 +92,12 @@ module.exports = React.createClass({
     $.getJSON(`/article/${slug}`).then(data => {
       this.setState(update);
       setTimeout(() => {
-        this.setState({content: data});
-        this.opening = false;
+        this.setState({content: data}, () => {
+          setTimeout(() => {
+            this.setState({keyDirection: ''});
+            this.opening = false;
+          }, 500);
+        });
       }, 500);
     });
   },
@@ -210,7 +214,10 @@ module.exports = React.createClass({
           <div className="article-container">
             <article
               style={{
-                transformOrigin: '50% 50% ' +  (_.contains(['left', 'right'], this.state.keyDirection) ? `${this.bodyWidth() / 2.01}px`: `${this.bodyHeight() / 2.01}px`)
+                transformOrigin: '50% 50% ' +
+                  (_.contains(['left', 'right'], this.state.keyDirection)
+                    ? `${this.bodyWidth() / 2.01}px`
+                    : `${this.bodyHeight() / 2.01}px`)
               }}
               className={`${this.state.content.slug} spin-${this.state.keyDirection}`}
               dangerouslySetInnerHTML={{__html: this.state.content.html}}
