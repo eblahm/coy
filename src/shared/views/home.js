@@ -23,7 +23,7 @@ module.exports = React.createClass({
       displayRightSidebar: false,
       content: this.props.content,
       keyPress: false,
-      keyDirection: 'right'
+      keyDirection: ''
     };
   },
 
@@ -87,8 +87,19 @@ module.exports = React.createClass({
       direction = 'down';
     }
     var update = {keyPress: true, keyDirection: direction};
-    this.setState(update);
-    this.history.pushState(_.defaults(this.state, update), `/${slug}`);
+    this.opening = true;
+    this.history.pushState(`/${slug}`);
+    $.getJSON(`/article/${slug}`).then(data => {
+      this.setState(update);
+      setTimeout(() => {
+        this.setState({content: data}, () => {
+          setTimeout(() => {
+            this.setState({keyDirection: ''});
+            this.opening = false;
+          }, 500);
+        });
+      }, 500);
+    });
   },
 
   keyUp: function(event) {
@@ -104,6 +115,7 @@ module.exports = React.createClass({
   },
 
   onPathChange() {
+    if (this.opening) { return; }
     var slug = _.get(this.props, 'params.slug');
     if (slug && slug !== this.state.content.slug) {
       this.open(slug);
@@ -113,7 +125,7 @@ module.exports = React.createClass({
   open: function(slug) {
     if (this.opening) { return; }
     this.opening = true;
-    $.getJSON(`/article/${slug}`)
+    return $.getJSON(`/article/${slug}`)
       .then((data) => {
         this.opening = false;
         this.setState({content: data});
@@ -152,6 +164,20 @@ module.exports = React.createClass({
     }, 0) + 1;
   },
 
+  bodyWidth: function() {
+    if (typeof document !== 'undefined') {
+      return document.body.offsetWidth;
+    }
+    return 1400;
+  },
+
+  bodyHeight: function() {
+    if (typeof document !== 'undefined') {
+      return document.body.offsetHeight;
+    }
+    return 600;
+  },
+
   render() {
     return (
       <div
@@ -182,18 +208,18 @@ module.exports = React.createClass({
             "content-container": true
           })}
         >
-          <a href={`https://github.com/eblahm/coy/blob/master/src/server/content/${this.state.content.slug}.md`}>
-            <img style={{position: 'absolute', top: 0, right: 0, border: 0}}
-              src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67"
-              alt="Fork me on GitHub"
-              data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" />
-            </a>
           <div className="num-of-section vmediumi">
             {this.getIndexOfCategory()} of {this.getArticlesWithinCategory().length} {this.state.content.category}
           </div>
           <div className="article-container">
             <article
-              className={this.state.content.slug}
+              style={{
+                transformOrigin: '50% 50% ' +
+                  (_.contains(['left', 'right'], this.state.keyDirection)
+                    ? `${this.bodyWidth() / 2.01}px`
+                    : `${this.bodyHeight() / 2.01}px`)
+              }}
+              className={`${this.state.content.slug} spin-${this.state.keyDirection}`}
               dangerouslySetInnerHTML={{__html: this.state.content.html}}
             />
           </div>
