@@ -2,9 +2,9 @@
 ## Web Developer
 ### Vistaprint
 ### Nov 2013 to Present
-* Lead contributor on the component based design infrastructure that powers matching print+digital websites
-* Personally built an orchestration tool on top of docker compose called "Orcawhale", to build selected microservices and their dependencies, so that features can be easily tested across microservice boundaries.  The app aggregates  data from the bamboo build system and docker hub.  It supports fixed urls via a traefik proxy. It streams aggregated container logs in the browser.
-* Part of a small team tasked with moving the Vistaprint Digital account and subscriptions system to a more public-cloud, microservice oriented architecture
+* Lead contributor on the component based design infrastructure that powers matching print+digital websites
+* Personally built an orchestration tool on top of docker compose called "Orcawhale", to build selected microservices and their dependencies, so that features can be easily tested across microservice boundaries.  The app aggregates  data from the bamboo build system and docker hub.  It supports fixed urls via a traefik proxy. It streams aggregated container logs in the browser.
+* Part of a small team tasked with moving the Vistaprint Digital account and subscriptions system to a more public-cloud, microservice oriented architecture
 * Lead contributor on the second generation Local Listings product, a standalone Node/React app, marketed on Vistaprint and webs.com
 * Helped establish a continuous integration process (lint, test, deploy) for nodejs and react applications within the organization
 * Wrote a web app to help the marketing team create site-wide sales and sale banners
@@ -53,7 +53,9 @@
 * 
 #### Tools
     * git [s:4]
-    * docker [s:2.5]
+    * docker [s:4]
+    * docker-compose [s:4]
+    * terraform [s:3]
     * bamboo [s:4]
     * jenkins [s:4]
 
@@ -86,7 +88,7 @@
 * python
     * Django [s:3.5]
 * Java
-    * Spring  [s:3.5]
+    * Spring  [s:4]
     * Hibernate [s:3.5]
 * Groovy
     * grails [s:2]
