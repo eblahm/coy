@@ -8,7 +8,7 @@ I find this process to be a hassle.  I'd much rather have an admin ui in the bro
 This project is mainly intended for my personal usage on [halbe.works](https://halbe.works).  If you find it interesting or useful, feel free to fork.
 
 #### Prerequisites
-- lastest version of iojs
+- node
 - redis
 
 #### Configuration
